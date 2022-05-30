@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="10sp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageBoxChat"
+        android:layout_width="70sp"
+        android:layout_height="70sp"
+        android:layout_marginStart="10sp"
+        android:src="@drawable/imageprofile"
+        android:scaleType="fitXY"
+        android:theme="@style/roundImageView" />
+
+    <TextView
+        android:id="@+id/nameBoxChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imageBoxChat"
+        android:text="name"
+        android:maxLines="1"
+        android:lines="1"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"/>
+
+    <TextView
+        android:id="@+id/lastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cầm lên ấn 1 và 3, 1 để đi lên 3 là đi xuống"
+        android:textColor="#808080"
+        android:layout_toRightOf="@+id/imageBoxChat"
+        android:layout_below="@+id/nameBoxChat"
+        android:maxLines="1"
+        android:lines="1"
+        android:textSize="18sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"/>
+
+</RelativeLayout>

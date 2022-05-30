@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_chat_bubble_outline_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_contacts_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_help_outline_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_mail_outline_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_more_horiz_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_notifications_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_phone_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_add_a_photo_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_arrow_back_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_arrow_back_ios_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_chevron_right_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_collections_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/baseline_notifications_none_24.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/border_line.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/button_styles.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/circular.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/custom_input.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/ic_more.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/ic_search.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/icon_btn_back.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/image.xml" value="0.352" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable/otp_background.xml" value="0.3685" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_confirm_otp.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_list_mesage.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_main.xml" value="0.3578125" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_send_otp.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_anhbia.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_anhdaidien.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_doimatkhau.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_doisodienthoai.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_lichsudangnhap.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_account.xml" value="0.5" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_account2.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_account_information.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_account_information_1.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_more.xml" value="0.5" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_password.xml" value="0.33" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_phone_number.xml" value="0.5" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_privacy.xml" value="0.5" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/layout/message_row.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/menu/bottom_navigation.xml" value="0.371875" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3145" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3145" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

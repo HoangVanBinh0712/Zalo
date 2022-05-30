@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SearchViewStyle" parent="Theme.AppCompat.Light">
+        <item name="android:editTextColor">@color/black</item>
+        <item name="android:textColorHint">#dddddd</item>
+    </style>
+
+    <style name="roundImageView"  parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">35sp</item> 
+    </style>
+</resources>

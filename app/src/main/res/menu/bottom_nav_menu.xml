@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navcontacts"
+        android:title="Contacts"
+        android:icon="@drawable/baseline_contacts_24"/>
+    <item
+        android:id="@+id/navchats"
+        android:title="Chats"
+        android:icon="@drawable/baseline_chat_bubble_outline_24"/>
+    <item
+        android:id="@+id/navphones"
+        android:icon="@drawable/baseline_phone_24"
+        android:title="Phones"
+        />
+    <item
+        android:id="@+id/navMore"
+        android:title="More"
+        android:icon="@drawable/baseline_more_horiz_24"/>
+</menu>
