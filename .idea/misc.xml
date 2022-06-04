@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_confirm_otp.xml" value="0.225" />
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_list_mesage.xml" value="0.225" />
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/activity_send_otp.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/dialog_anhdaidien.xml" value="0.225" />
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_account.xml" value="0.225" />
+        <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/fragment_password.xml" value="0.225" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_chat_bubble_outline_24.xml" value="0.352" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_contacts_24.xml" value="0.352" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_help_outline_24.xml" value="0.352" />
