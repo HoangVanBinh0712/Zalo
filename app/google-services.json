@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "279565620065",
+    "project_id": "zalo-b0715",
+    "storage_bucket": "zalo-b0715.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279565620065:android:65f1721e24e9e65771eb20",
+        "android_client_info": {
+          "package_name": "hcmute.zalo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279565620065-dajd549g98p4l5261a88v77fkguv8239.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBay8xa7hjomfA9JecmR1QNH_x4mMWozGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279565620065-dajd549g98p4l5261a88v77fkguv8239.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
