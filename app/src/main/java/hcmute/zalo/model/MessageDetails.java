@@ -1,13 +1,23 @@
 package hcmute.zalo.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageDetails {
-    public MessageDetails(String messageId, String senderId, Date timeSended, String content) {
+    public MessageDetails(String messageId, String senderId, Date timeSended, String content,ArrayList<String> viewer) {
         this.messageId = messageId;
         this.senderId = senderId;
         this.timeSended = timeSended;
         this.content = content;
+        this.viewer = viewer;
+    }
+
+    public void setViewer(ArrayList<String> viewer) {
+        this.viewer = viewer;
+    }
+
+    public ArrayList<String> getViewer() {
+        return viewer;
     }
 
     public String getMessageId() {
@@ -46,5 +56,6 @@ public class MessageDetails {
     private String senderId;
     private Date timeSended;
     private String content;
+    private ArrayList<String> viewer;
 
 }

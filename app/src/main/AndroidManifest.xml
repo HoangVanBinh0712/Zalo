@@ -12,11 +12,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ListMessageActivity"
@@ -24,16 +19,32 @@
         <activity
             android:name=".SendOtpActivity"
             android:exported="true" >
+
+        </activity>
+        <activity
+            android:name=".ConfirmOtpActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".loginActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".BeginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ConfirmOtpActivity"
-            android:exported="false">
-
-        </activity>
+        android:name=".chat_activity"
+        android:exported="false">
+    </activity>
 
     </application>
 
