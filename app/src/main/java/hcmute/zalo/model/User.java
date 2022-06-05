@@ -75,6 +75,9 @@ public class User {
         this.background = background;
     }
 
+    public User() {
+    }
+
     private String userid;
     public String fullname;
     public String phone;
@@ -96,6 +99,20 @@ public class User {
         this.background = background;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userid='" + userid + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", birthday=" + birthday +
+                ", description='" + description + '\'' +
+                ", sex=" + sex +
+                ", avatar='" + avatar + '\'' +
+                ", background='" + background + '\'' +
+                '}';
+    }
 }
 
 
