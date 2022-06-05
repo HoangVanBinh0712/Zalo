@@ -3,13 +3,6 @@ package hcmute.zalo.model;
 import java.util.Date;
 
 public class User {
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
 
     public String getFullname() {
         return fullname;
@@ -78,7 +71,6 @@ public class User {
     public User() {
     }
 
-    private String userid;
     public String fullname;
     public String phone;
     private String password;
@@ -87,8 +79,7 @@ public class User {
     public Boolean sex;
     public String avatar;
     public String background;
-    public User(String userid, String fullname, String phone, String password, Date birthday, String description, Boolean sex, String avatar, String background) {
-        this.userid = userid;
+    public User(String fullname, String phone, String password, Date birthday, String description, Boolean sex, String avatar, String background) {
         this.fullname = fullname;
         this.phone = phone;
         this.password = password;
@@ -102,7 +93,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userid='" + userid + '\'' +
                 ", fullname='" + fullname + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +

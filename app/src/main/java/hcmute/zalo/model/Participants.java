@@ -2,10 +2,10 @@ package hcmute.zalo.model;
 
 public class Participants {
     private String messageid;
-    private String userid;
-    public Participants(String messageid, String userid) {
+    private String userPhone;
+    public Participants(String messageid, String userPhone) {
         this.messageid = messageid;
-        this.userid = userid;
+        this.userPhone = userPhone;
     }
 
     public String getMessageid() {
@@ -16,12 +16,12 @@ public class Participants {
         this.messageid = messageid;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
 

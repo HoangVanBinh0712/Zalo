@@ -1,22 +1,22 @@
 package hcmute.zalo.model;
 
 public class Friends {
-    private String friendId;
+    private String friendPhone;
     private String friendName;
     private String friendPhoneNumber;
 
-    public Friends(String friendId, String friendName, String friendPhoneNumber) {
-        this.friendId = friendId;
+    public Friends(String friendPhone, String friendName, String friendPhoneNumber) {
+        this.friendPhone = friendPhone;
         this.friendName = friendName;
         this.friendPhoneNumber = friendPhoneNumber;
     }
 
-    public String getFriendId() {
-        return friendId;
+    public String getFriendPhone() {
+        return friendPhone;
     }
 
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
+    public void setFriendPhone(String friendPhone) {
+        this.friendPhone = friendPhone;
     }
 
     public String getFriendName() {

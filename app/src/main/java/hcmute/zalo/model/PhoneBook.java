@@ -1,22 +1,22 @@
 package hcmute.zalo.model;
 
 public class PhoneBook {
-    private String userId;
+    private String userPhone;
     private String phonebookName;
     private String phonebookNumber;
 
-    public PhoneBook(String userId, String phonebookName, String phonebookNumber) {
-        this.userId = userId;
+    public PhoneBook(String userPhone, String phonebookName, String phonebookNumber) {
+        this.userPhone = userPhone;
         this.phonebookName = phonebookName;
         this.phonebookNumber = phonebookNumber;
     }
 
     public String getUserId() {
-        return userId;
+        return userPhone;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserId(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public String getPhonebookName() {

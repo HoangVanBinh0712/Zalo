@@ -1,6 +1,8 @@
 package hcmute.zalo.model;
 
 public class Message {
+    // Random -> kiem tra co chua. Random -> co chua
+    // 1000000000 - 9999999999
     private String messageId;
     private String messageName;
     public Message(String messageId, String messageName) {

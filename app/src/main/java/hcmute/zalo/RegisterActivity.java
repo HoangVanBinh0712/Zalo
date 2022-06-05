@@ -106,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                User user = new User(phone,name,phone,pass,birth,"",sex,"","");
+                User user = new User(name,phone,pass,birth,"",sex,"","");
                 Log.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
 
@@ -115,14 +115,15 @@ public class RegisterActivity extends AppCompatActivity {
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.hasChild(user.getUserid()))
+                        if(snapshot.hasChild(user.getPhone()))
                         {
                             Toast.makeText(RegisterActivity.this, "Phone number is already Taken !", Toast.LENGTH_SHORT).show();
                             isAvailable = false;
                         }
                         if(isAvailable == true) {
-                            myRef.child(user.getUserid()).setValue(user);
+                            myRef.child(user.getPhone()).setValue(user);
                             Toast.makeText(RegisterActivity.this, "Register Successfully", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
 

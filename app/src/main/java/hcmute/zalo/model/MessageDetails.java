@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageDetails {
-    public MessageDetails(String messageId, String senderId, Date timeSended, String content,ArrayList<String> viewer) {
+    public MessageDetails(String messageId, String senderPhone, Date timeSended, String content, ArrayList<String> viewer) {
         this.messageId = messageId;
-        this.senderId = senderId;
+        this.senderPhone = senderPhone;
         this.timeSended = timeSended;
         this.content = content;
         this.viewer = viewer;
@@ -28,12 +28,12 @@ public class MessageDetails {
         this.messageId = messageId;
     }
 
-    public String getSenderId() {
-        return senderId;
+    public String getSenderPhone() {
+        return senderPhone;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
+    public void setSenderPhone(String senderPhone) {
+        this.senderPhone = senderPhone;
     }
 
     public Date getTimeSended() {
@@ -53,7 +53,7 @@ public class MessageDetails {
     }
 
     private String messageId;
-    private String senderId;
+    private String senderPhone;
     private Date timeSended;
     private String content;
     private ArrayList<String> viewer;

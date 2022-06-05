@@ -22,12 +22,6 @@ public class BeginActivity extends AppCompatActivity {
         materialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Write a message to the database
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("message");
-
-                myRef.setValue("Hello, World!");
-                Log.d("TAG", "onClick: ");
                 startActivity(new Intent(BeginActivity.this,loginActivity.class));
             }
         });

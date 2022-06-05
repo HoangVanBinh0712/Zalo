@@ -1,32 +1,32 @@
 package hcmute.zalo.model;
 
 public class FriendRequest {
-    private String senderId;
-    private String receiverId;
+    private String senderphone;
+    private String receiverPhone;
     private String invitation;
     private boolean accept;
 
-    public FriendRequest(String senderId, String receiverId, String invitation, boolean accept) {
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+    public FriendRequest(String senderphone, String receiverPhone, String invitation, boolean accept) {
+        this.senderphone = senderphone;
+        this.receiverPhone = receiverPhone;
         this.invitation = invitation;
         this.accept = accept;
     }
 
-    public String getSenderId() {
-        return senderId;
+    public String getSenderphone() {
+        return senderphone;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
+    public void setSenderphone(String senderphone) {
+        this.senderphone = senderphone;
     }
 
-    public String getReceiverId() {
-        return receiverId;
+    public String getReceiverPhone() {
+        return receiverPhone;
     }
 
-    public void setReceiverId(String receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
     }
 
     public String getInvitation() {

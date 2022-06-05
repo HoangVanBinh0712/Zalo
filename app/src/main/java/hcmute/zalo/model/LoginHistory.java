@@ -3,22 +3,22 @@ package hcmute.zalo.model;
 import java.util.Date;
 
 public class LoginHistory {
-    private String userId;
+    private String userPhone;
     private Date dateLogin;
     private String locationName;
     private String deviceName;
 
-    public LoginHistory(String userId, Date dateLogin) {
-        this.userId = userId;
+    public LoginHistory(String userPhone, Date dateLogin) {
+        this.userPhone = userPhone;
         this.dateLogin = dateLogin;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public Date getDateLogin() {
