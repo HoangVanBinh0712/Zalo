@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.model.User;
 
 public class loginActivity extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class loginActivity extends AppCompatActivity {
     private EditText edtPhonenum, edtPassword1;
     private Button btnLogin;
     private CheckBox checkbox_showPassword;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,57 +52,55 @@ public class loginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProgressDialog progressDialog = new ProgressDialog(loginActivity.this);
-                progressDialog.setTitle("Uploading...");
+                progressDialog = new ProgressDialog(loginActivity.this);
+                progressDialog.setTitle("Loging in...");
+                progressDialog.setMessage("Please wait");
                 progressDialog.show();
                 String phone = edtPhonenum.getText().toString();
                 String pass = edtPassword1.getText().toString();
-                if(phone.equals("") || pass.equals("") || phone.length() != 10)
+                if(phone.equals("") || pass.equals("") || phone.length() != 10 || pass.length() < 6)
                 {
-                    Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
+                    Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
+                }else
+                {
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("users");
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            DataSnapshot dataSnapshot = snapshot.child(phone);
+                            if(dataSnapshot.exists() == false)
+                            {
+                                progressDialog.dismiss();
+                                Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            User user = dataSnapshot.getValue(User.class);
+                            String validPass = user.getPassword();
 
-                    return;
+                            if(validPass.equals(pass))
+                            {
+                                progressDialog.dismiss();
+                                User_SingeTon user_singeTon = User_SingeTon.getInstance();
+                                user_singeTon.setUser(user);
+                                //Dang nhap thanh cong
+                                //Toast.makeText(loginActivity.this, "Login Successfully !", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(loginActivity.this, MainActivity.class));
+
+                            }else{
+                                progressDialog.dismiss();
+                                Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("users");
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        DataSnapshot dataSnapshot = snapshot.child(phone);
-                        if(dataSnapshot.exists() == false)
-                        {
-                            Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
-
-                            return;
-                        }
-                        String validPass = dataSnapshot.getValue(User.class).getPassword();
-
-                        if(validPass.equals(pass))
-                        {
-
-                            SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", MODE_MULTI_PROCESS);
-                            sharedPreferences.edit().putString("userphone",phone);
-                            sharedPreferences.edit().commit();
-                            progressDialog.dismiss();
-                            //Dang nhap thanh cong
-                            //Toast.makeText(loginActivity.this, "Login Successfully !", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(loginActivity.this, MainActivity.class));
-
-                        }else{
-                            progressDialog.dismiss();
-                            Toast.makeText(loginActivity.this, "Wrong phonenumber or password !", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        progressDialog.dismiss();
-
-                    }
-                });
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
             }
         });
         checkbox_showPassword.setOnClickListener(new View.OnClickListener() {

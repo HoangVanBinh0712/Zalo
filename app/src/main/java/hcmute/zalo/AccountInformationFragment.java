@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.model.User;
 
 /**
@@ -109,9 +110,12 @@ public class AccountInformationFragment extends Fragment {
             }
         });
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
-        String userphone = sharedPreferences.getString("userphone","");
-        if(userphone == "")
+        User_SingeTon user_singeTon = User_SingeTon.getInstance();
+
+        User user = user_singeTon.getUser();
+
+        Log.d("TAG", "onCreateView: " + user);
+        if(user == null)
         {
             startActivity(new Intent(getActivity(), loginActivity.class));
             getActivity().finish();
@@ -119,21 +123,8 @@ public class AccountInformationFragment extends Fragment {
         //Co user
         txtfullname = view.findViewById(R.id.txtFullName);
         txtdescription = view.findViewById(R.id.txtDescription);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.child(userphone).getValue(User.class);
-                txtfullname.setText(user.getFullname());
-                txtdescription.setText((user.getDescription()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("TAG", "onCancelled: " + error.getMessage());
-            }
-        });
+        txtdescription.setText(user.getDescription());
+        txtfullname.setText(user.getFullname());
 
         return view;
     }

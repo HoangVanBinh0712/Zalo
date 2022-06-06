@@ -110,17 +110,19 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(name,phone,pass,birth,"",sex,"","");
                 Log.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
-
+                ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                progressDialog.setTitle("Registering...");
+                progressDialog.setMessage("Please wait");
+                progressDialog.show();
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("users");
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
-                        progressDialog.setTitle("Uploading...");
-                        progressDialog.show();
+
                         if(snapshot.hasChild(user.getPhone()))
                         {
+                            progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Phone number is already Taken !", Toast.LENGTH_SHORT).show();
                             isAvailable = false;
                         }
@@ -130,8 +132,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Register Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                         }
-                        progressDialog.dismiss();
-
                     }
 
                     @Override
