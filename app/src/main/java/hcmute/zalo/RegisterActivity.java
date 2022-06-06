@@ -3,6 +3,7 @@ package hcmute.zalo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -115,6 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                        progressDialog.setTitle("Uploading...");
+                        progressDialog.show();
                         if(snapshot.hasChild(user.getPhone()))
                         {
                             Toast.makeText(RegisterActivity.this, "Phone number is already Taken !", Toast.LENGTH_SHORT).show();
@@ -122,9 +126,12 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                         if(isAvailable == true) {
                             myRef.child(user.getPhone()).setValue(user);
+                            progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Register Successfully", Toast.LENGTH_SHORT).show();
                             finish();
                         }
+                        progressDialog.dismiss();
+
                     }
 
                     @Override

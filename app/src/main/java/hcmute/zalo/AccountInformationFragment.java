@@ -1,17 +1,30 @@
 package hcmute.zalo;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hcmute.zalo.model.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +76,7 @@ public class AccountInformationFragment extends Fragment {
     View view;
     ImageView anhbia,btnBack;
     CircleImageView anhdaidien;
+    TextView txtfullname, txtdescription;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,6 +108,33 @@ public class AccountInformationFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
+        String userphone = sharedPreferences.getString("userphone","");
+        if(userphone == "")
+        {
+            startActivity(new Intent(getActivity(), loginActivity.class));
+            getActivity().finish();
+        }
+        //Co user
+        txtfullname = view.findViewById(R.id.txtFullName);
+        txtdescription = view.findViewById(R.id.txtDescription);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.child(userphone).getValue(User.class);
+                txtfullname.setText(user.getFullname());
+                txtdescription.setText((user.getDescription()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("TAG", "onCancelled: " + error.getMessage());
+            }
+        });
+
         return view;
     }
 }
