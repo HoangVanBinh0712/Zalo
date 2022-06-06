@@ -1,13 +1,31 @@
 package hcmute.zalo;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
+import hcmute.zalo.Pattern.User_SingeTon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,13 +76,22 @@ public class MoreFragment extends Fragment {
 
     View view;
     LinearLayout linearAccount,lineartop,linearPrivacy;
+    private CircleImageView profile_image;
+    private TextView txtUserPhone,txtUserName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = (View) inflater.inflate(R.layout.fragment_more, container, false);
-
+        profile_image = view.findViewById(R.id.profile_image);
+        txtUserPhone = view.findViewById(R.id.txtUserPhone);
+        txtUserName = view.findViewById(R.id.txtUserName);
         linearAccount = (LinearLayout) view.findViewById(R.id.linearAccount);
+        lineartop = (LinearLayout) view.findViewById(R.id.lineartop);
+        linearPrivacy = (LinearLayout) view.findViewById(R.id.linearPrivacy);
+        UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+        User_SingeTon user_singeTon = User_SingeTon.getInstance();
+
         linearAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +99,7 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountFragment).commit();
             }
         });
-        lineartop = (LinearLayout) view.findViewById(R.id.lineartop);
+
         lineartop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +107,7 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountInformationFragment).commit();
             }
         });
-        linearPrivacy = (LinearLayout) view.findViewById(R.id.linearPrivacy);
+
         linearPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +115,33 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, privacyFragment).commit();
             }
         });
+        Bitmap anhdaidien = userImageBitmap_singleTon.getAnhdaidien();
+        if(anhdaidien == null)
+        {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference(user_singeTon.getUser().getAvatar());
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                    Picasso.get().load(uri).fit().centerCrop().into(profile_image);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //Thất bại thì sẽ in ra lỗi
+                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else
+        {
+            profile_image.setImageBitmap(anhdaidien);
+        }
+
+        txtUserName.setText(user_singeTon.getUser().getFullname());
+        txtUserPhone.setText(user_singeTon.getUser().getPhone());
+
+
         return view;
     }
 }

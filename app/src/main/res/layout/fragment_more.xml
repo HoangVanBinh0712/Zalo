@@ -46,8 +46,10 @@
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
+                    android:id="@+id/txtUserName"
                     />
                 <TextView
+                    android:id="@+id/txtUserPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Your phone"
