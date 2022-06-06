@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.model.User;
 
@@ -101,15 +102,12 @@ public class AccountInformationFragment extends Fragment {
     StorageReference storageReference;
     User user;
     User_SingeTon user_singeTon;
+    private int type;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_account_information, container, false);
-        ProgressDialog progressDialog
-                = new ProgressDialog(getActivity());
-        progressDialog.setTitle("Đang tải...");
-        progressDialog.show();
         //Ánh xạ các view
         anhbia = (ImageView) view.findViewById(R.id.anhbia);
         anhdaidien = (CircleImageView) view.findViewById(R.id.anhdaidien);
@@ -120,6 +118,15 @@ public class AccountInformationFragment extends Fragment {
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.dialog_anhbia);
                 dialog.show();
+                LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
+                linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Type = 0 la anh bia
+                        SelectImage(0);
+                    }
+                });
+
             }
         });
         anhdaidien.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +141,8 @@ public class AccountInformationFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         //Hàm dùng để hiện lên hình ảnh
-                        SelectImage();
+                        //Type = 1 la anh anh dai dien
+                        SelectImage(1);
                     }
                 });
             }
@@ -164,30 +172,60 @@ public class AccountInformationFragment extends Fragment {
         txtdescription = view.findViewById(R.id.txtDescription);
         txtdescription.setText(user.getDescription());
         txtfullname.setText(user.getFullname());
-        //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference(user.getAvatar());
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
-                Picasso.get().load(uri).fit().centerCrop().into(anhdaidien);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                //Thất bại thì sẽ in ra lỗi
-                Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
-        progressDialog.dismiss();
+        // Lấy ảnh bìa , ảnh đại diện
+        //Gọi lớp singleTon
+        UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+        //Nếu chưa có ảnh thì dùng local storage tải lên - Tốn thời gian xử lý
+        if(userImageBitmap_singleTon.getAnhbia() == null || userImageBitmap_singleTon.getAnhdaidien() == null)
+        {
+            Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
+            //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
+            storage = FirebaseStorage.getInstance();
+            storageReference = storage.getReference(user.getAvatar());
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                    Picasso.get().load(uri).fit().centerCrop().into(anhdaidien);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //Thất bại thì sẽ in ra lỗi
+                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
+            //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
+            storageReference = storage.getReference(user.getBackground());
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                    Picasso.get().load(uri).fit().centerCrop().into(anhbia);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //Thất bại thì sẽ in ra lỗi
+                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else
+        {
+            //Nếu đã có ảnh thì set vào luôn
+            anhdaidien.setImageBitmap(userImageBitmap_singleTon.getAnhdaidien());
+            anhbia.setImageBitmap(userImageBitmap_singleTon.getAnhbia());
+        }
+
 
         return view;
     }
     // Hàm để chọn hình ảnh
-    private void SelectImage()
+    private void SelectImage(int type)
     {
-
+        this.type = type;
         // Xác định mở thư mục ảnh
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -210,7 +248,16 @@ public class AccountInformationFragment extends Fragment {
                 uploadImage();
                 // Chuyển thành bitmap và đưa vào ảnh đại diện
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),filePath);
-                anhdaidien.setImageBitmap(bitmap);
+                UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+
+                if(this.type == 1) {
+                    userImageBitmap_singleTon.setAnhdaidien(bitmap);
+                    anhdaidien.setImageBitmap(bitmap);
+                }
+                else {
+                    userImageBitmap_singleTon.setAnhbia(bitmap);
+                    anhbia.setImageBitmap(bitmap);
+                }
             }
             catch (IOException e) {
                 // In ra lỗi
@@ -228,13 +275,18 @@ public class AccountInformationFragment extends Fragment {
             ProgressDialog progressDialog
                     = new ProgressDialog(getActivity());
             progressDialog.setTitle("Đang tải lên...");
+
             progressDialog.show();
             //Khai báo FirebaseStorage
             storage = FirebaseStorage.getInstance();
             storageReference = storage.getReference();
             // Đi vào nhánh con
-            StorageReference ref = storageReference.child("images/" + user.getPhone());
-            // Taoh sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
+            StorageReference ref;
+            if(type == 1){
+                ref = storageReference.child("images/" + user.getPhone() + "_avatar");
+            }else
+                ref = storageReference.child("images/" + user.getPhone() + "_background");
+            // Tạo sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
             ref.putFile(filePath)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -248,8 +300,13 @@ public class AccountInformationFragment extends Fragment {
                                     //Cập nhật lại cho cả user_singleTon
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("users");
-                                    user.setAvatar("images/" + user.getPhone());
-                                    myRef.child(user.getPhone()).setValue(user);
+                                    if(type == 1) {
+                                        user.setAvatar("images/" + user.getPhone() + "_avatar");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }else {
+                                        user.setBackground("images/" + user.getPhone() + "_background");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }
                                     user_singeTon.setUser(user);
                                     Toast.makeText(getActivity(), "Cập nhật thành công!!", Toast.LENGTH_SHORT).show();
                                 }

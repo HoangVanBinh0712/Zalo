@@ -6,7 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -16,14 +20,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.net.URL;
+
+import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.model.User;
 
@@ -92,15 +105,77 @@ public class loginActivity extends AppCompatActivity {
                             if(validPass.equals(pass))
                             {
                                 //Mật khẩu đúng, đưa user vào mẫu SingeTon cho việc sử dụng lúc sau và mở Activity main
-                                progressDialog.dismiss();
                                 User_SingeTon user_singeTon = User_SingeTon.getInstance();
                                 user_singeTon.setUser(user);
+
+                                //Lấy ảnh bìa / ảnh đại diện đưa vào bitmap để load lên tốn ít thời gian hơn.
+                                //Gọi lớp singleTon
+                                UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+                                //Truy xuất storage
+
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageReference = storage.getReference(user.getAvatar());
+                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        //Lấy được Uri thành công. Lấy bitmap của ảnh đại diện thông qua thread
+                                        Thread thread = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try  {
+                                                    URL url = new URL(uri.toString());
+                                                    Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                                    userImageBitmap_singleTon.setAnhdaidien(image);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                        thread.start();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        //Thất bại thì sẽ in ra lỗi
+                                        Toast.makeText(loginActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                // lấy ảnh bìa
+                                storageReference = storage.getReference(user.getBackground());
+                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        //Lấy được Uri thành công. Lấy bitmap của ảnh bìa thông qua thread
+                                            Thread thread = new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try  {
+                                                        URL url = new URL(uri.toString());
+                                                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                                        userImageBitmap_singleTon.setAnhbia(image);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                            thread.start();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        //Thất bại thì sẽ in ra lỗi
+                                        Toast.makeText(loginActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                //Tất cả hoàn tất.
+                                progressDialog.dismiss();
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
 
                             }else{
                                 //Sai mật khẩu. Thông báo
                                 progressDialog.dismiss();
                                 Toast.makeText(loginActivity.this, "Sai tài khoản hoặc mật khẩu !", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
 

@@ -32,7 +32,6 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private EditText phonenumber,fullname,password, birthday;
     private RadioButton rmale,rfemale;
-    private boolean isAvailable = true ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Ánh xạ các View
-                isAvailable = true;
                 String phone,name,pass,sbirth;
                 boolean sex = true;
                 phone = phonenumber.getText().toString();
@@ -115,9 +113,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if(sex == true)
                 {
                     //Đàn ông
-                    user = new User(name,phone,pass,birth,"",sex,"man.png","");
+                    user = new User(name,phone,pass,birth,"",sex,"man.png","thanhpho.jpg");
                 }else{
-                    user = new User(name,phone,pass,birth,"",sex,"woman.jpg","");
+                    user = new User(name,phone,pass,birth,"",sex,"woman.jpg","thanhpho.jpg");
                 }
                 Log.d("TAGG", user.toString());
                 //Tất cả đã được kiểm tra trừ số điện thoại. Kiểm tra xem số điện thoại đã được đăng ký ?
@@ -134,19 +132,18 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //Id của user cũng chính là số điện thoại. Nếu đã có nhánh mang số điện thoại tức số điện thoại đã được đăng ký
-                        if(snapshot.hasChild(user.getPhone()))
+                        if(snapshot.hasChild(user.getPhone()) == false)
                         {
-                            progressDialog.dismiss();
-                            Toast.makeText(RegisterActivity.this, "Số điện thoại đã được đăng ký !", Toast.LENGTH_SHORT).show();
-                            isAvailable = false;
-                        }
-                        // SĐT chưa được đăng ký thì tiế hành setvalue (thêm giá trị cho nhánh đó)
-                        // Hệ thống sẽ lấy những getter của object làm đầu vào thay vì phải truyền từng thuộc tính.
-                        if(isAvailable == true) {
+                            // SĐT chưa được đăng ký thì tiến hành setvalue (thêm giá trị cho nhánh đó)
+                            // Hệ thống sẽ lấy những getter của object làm đầu vào thay vì phải truyền từng thuộc tính.
                             myRef.child(user.getPhone()).setValue(user);
                             progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                             finish();
+
+                        }else{
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Số điện thoại đã được đăng ký !", Toast.LENGTH_SHORT).show();
                         }
                     }
 
