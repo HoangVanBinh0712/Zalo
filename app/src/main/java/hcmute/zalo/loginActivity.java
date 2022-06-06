@@ -7,9 +7,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ public class loginActivity extends AppCompatActivity {
     private TextView textView3;
     private EditText edtPhonenum, edtPassword1;
     private Button btnLogin;
+    private CheckBox checkbox_showPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class loginActivity extends AppCompatActivity {
         edtPassword1 = findViewById(R.id.edtPassword1);
         edtPhonenum = findViewById(R.id.edtPhonenum);
         btnLogin = findViewById(R.id.btnLogin);
+        checkbox_showPassword = findViewById(R.id.checkbox_showPassword);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,5 +103,17 @@ public class loginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+        checkbox_showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkbox_showPassword.isChecked()){
+                    edtPassword1.setInputType(1);
+                }
+                else {
+                    edtPassword1.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
+                }
+            }
+        });
+
     }
 }

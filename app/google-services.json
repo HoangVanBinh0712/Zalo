@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "279565620065",
+    "firebase_url": "https://zalo-b0715-default-rtdb.firebaseio.com",
     "project_id": "zalo-b0715",
     "storage_bucket": "zalo-b0715.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "279565620065-hp4gb3vosmme3lp1p7ahrdc8ntuat008.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hcmute.zalo",
+            "certificate_hash": "7d07bac5264fbf283f570064e8d66cf5de18ec7e"
+          }
+        },
         {
           "client_id": "279565620065-dajd549g98p4l5261a88v77fkguv8239.apps.googleusercontent.com",
           "client_type": 3

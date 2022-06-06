@@ -41,7 +41,7 @@
         android:drawableLeft="@drawable/phone_white"
         android:drawablePadding="15dp"
         android:hint="Phone number"
-        android:inputType="textPersonName"
+        android:inputType="phone"
         android:padding="15dp"
         android:textColorHint="@color/black"
         android:textStyle="bold"
@@ -99,10 +99,11 @@
         app:layout_constraintHorizontal_bias="0.524"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.radiobutton.MaterialRadioButton
+    <CheckBox
+        android:id="@+id/checkbox_showPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remember me"
+        android:text="Show Password"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"

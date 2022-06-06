@@ -42,7 +42,7 @@
         android:drawableLeft="@drawable/phone_white"
         android:drawablePadding="15dp"
         android:hint="Phone number"
-        android:inputType="textPersonName"
+        android:inputType="phone"
         android:padding="15dp"
         android:textColorHint="@color/black"
         android:textStyle="bold" />
