@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -22,6 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.User;
 
 public class loginActivity extends AppCompatActivity {
@@ -30,6 +36,8 @@ public class loginActivity extends AppCompatActivity {
     private EditText edtPhonenum, edtPassword1;
     private Button btnLogin;
     private CheckBox checkbox_showPassword;
+    private String deviceName = Build.MODEL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +79,15 @@ public class loginActivity extends AppCompatActivity {
                         if(validPass.equals(pass))
                         {
                             //Dang nhap thanh cong
-                            //Toast.makeText(loginActivity.this, "Login Successfully !", Toast.LENGTH_SHORT).show();
+                            //Lay thoi gian hien tai
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            Date currentTime = Calendar.getInstance().getTime();
+                            String loginTime = format.format(currentTime);
+                            //Luu vao database
+                            LoginHistory loginHistory = new LoginHistory(phone,loginTime,deviceName);
+                            DatabaseReference myLoginHistoryRef = database.getReference("historyLogin");
+                            myLoginHistoryRef.child(phone).child(loginTime).setValue(loginHistory);
+
                             startActivity(new Intent(loginActivity.this, MainActivity.class));
 
                         }else{
