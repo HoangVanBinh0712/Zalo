@@ -25,7 +25,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20sp"
         android:text="How we can contact you?"
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -44,7 +44,7 @@
         android:hint="Phone number"
         android:inputType="phone"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold" />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_below="@+id/edtPhonenum"
         android:layout_marginLeft="10dp"
         android:text="What is your name?"
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -73,25 +73,14 @@
         android:hint="Fullname"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:textColorHint="@color/black"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/txtBirthday1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/edtName"
-        android:layout_marginLeft="10dp"
-        android:text="When did you come to this world?"
-        android:textColor="#AA4B5151"
-        android:textSize="18sp"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/edtBirthday1"
-        android:layout_width="match_parent"
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtBirthday1"
+        android:layout_below="@+id/edtName"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -101,18 +90,20 @@
         android:drawablePadding="15sp"
         android:hint="Birthday"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtSex1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edtBirthday1"
+        android:layout_below="@id/edtName"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="50sp"
+        android:layout_marginStart="20sp"
+        android:layout_toRightOf="@id/edtBirthday1"
         android:text="Gender: "
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -122,6 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSex1"
         android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/edtBirthday1"
         android:buttonTint="#0dd1fc"
         android:text="Male"
         android:textColor="#AA4B5151"
@@ -145,7 +137,7 @@
         android:layout_below="@+id/checkMale"
         android:layout_marginLeft="10sp"
         android:text="Your secret word"
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -164,14 +156,43 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#AA4B5151"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtPassword2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtPassword1"
+        android:layout_marginLeft="10sp"
+        android:text="Confirm password"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtPassword2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPassword2"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edt_background"
+        android:drawableLeft="@drawable/lock_white"
+        android:drawablePadding="15sp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="350sp"
         android:layout_height="75sp"
-        android:layout_below="@+id/edtPassword1"
+        android:layout_below="@+id/edtPassword2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20sp"
         android:backgroundTint="#0343E5"
