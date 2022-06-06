@@ -63,7 +63,7 @@ public class AccountFragment extends Fragment {
 
     View view;
     ImageView btnBack;
-    TextView txtChangePassword;
+    TextView txtChangePassword, txtLoginHistory;
     LinearLayout linearChangeNumber;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +94,16 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneNumberFragment).commit();
             }
         });
+
+        txtLoginHistory = (TextView) view.findViewById(R.id.txtLoginHistory);
+        txtLoginHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginHistoryFragment loginHistoryFragment = new LoginHistoryFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,loginHistoryFragment).commit();
+            }
+        });
+
         return view;
     }
 }
