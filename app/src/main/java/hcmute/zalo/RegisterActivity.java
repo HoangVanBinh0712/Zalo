@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     //Button đăng ký
     private Button btnRegister;
     //Edittext điền thông tin cần thiết
-    private EditText phonenumber,fullname,password, birthday;
+    private EditText phonenumber,fullname,password, birthday,password2;
     //RadioButton chọn giới tính
     private RadioButton rmale,rfemale;
     //Biến kiểm tra đăng nhập có thành công hay không?
@@ -75,13 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
                 //
                 isAvailable = true;
                 //Gọi các biến để lấy thông tin từ các view object
-                String phone,name,pass,sbirth;
+                String phone,name,pass,pass2,sbirth;
                 boolean sex = true;
                 //Lấy thông tin từ các view object
                 phone = phonenumber.getText().toString();
                 name = fullname.getText().toString();
                 sbirth = birthday.getText().toString();
                 pass = password.getText().toString();
+                pass2 = password2.getText().toString();
                 //Nếu trạng thái của RadioButton (giới tính nữ) bằng true thì biến sex bằng false
                 if(rfemale.isChecked())
                     sex = false;
@@ -104,6 +105,11 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password too weak !", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //Kiểm tra 2 mật khẩu nhập vào có giống nhau không
+                if(!pass.equals(pass2)){        //Không giống nhau
+                    Toast.makeText(RegisterActivity.this, "The two passwords are not the same !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //Ngày sinh nhập hợp lệ
                 try {
                     //Chuyển ngày sinh sang dạng date
@@ -116,8 +122,10 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                User user = new User(name,phone,pass,birth,"",sex,"","");
-                Log.d("TAGG", user.toString());
+                //Chuyền birthday sang string
+                String birthday = format.format(birth);
+                User user = new User(name,phone,pass,birthday,"",sex,"","");
+                //CheLog.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
 
                 //Kết nối cơ sở dữ liệu
@@ -164,6 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
         phonenumber = findViewById(R.id.edtPhonenum);
         fullname = findViewById(R.id.edtName);
         password = findViewById(R.id.edtPassword1);
+        password2 = findViewById(R.id.edtPassword2);
         birthday = findViewById(R.id.edtBirthday1);
         rmale = (RadioButton) findViewById(R.id.checkMale);
         rfemale = (RadioButton) findViewById(R.id.checkFemale);

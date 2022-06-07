@@ -9,4 +9,8 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">35sp</item> 
     </style>
+
+    <style name="MyRadioButton" parent="">
+        <item name="colorControlActivated">#0068ff</item>
+    </style>
 </resources>

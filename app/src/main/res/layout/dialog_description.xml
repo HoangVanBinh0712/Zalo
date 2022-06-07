@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="25dp">
+    <TextView
+        android:id="@+id/txtTitleDesc"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="#e2e2e2"
+        android:text="Giới thiệu bản thân"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textSize="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <EditText
+        android:background="@null"
+        android:padding="10dp"
+        android:id="@+id/txtDescription"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:textColor="@color/black"
+        android:gravity="top"
+        android:textSize="18dp"
+        android:hint="Add a description"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitleDesc"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xác nhận"
+        android:id="@+id/btnConfirmEditDescription"
+        app:layout_constraintTop_toBottomOf="@+id/txtDescription"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hủy"
+        android:id="@+id/btnCancelEditDescription"
+        app:layout_constraintTop_toBottomOf="@+id/txtDescription"
+        app:layout_constraintRight_toRightOf="@+id/txtDescription"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

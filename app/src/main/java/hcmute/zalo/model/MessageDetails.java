@@ -58,4 +58,16 @@ public class MessageDetails {
     private String content;
     private ArrayList<String> viewer;
 
+    public MessageDetails() {
+    }
+
+    @Override
+    public String toString() {
+        return "MessageDetails{" +
+                "messageId='" + messageId + '\'' +
+                ", senderPhone='" + senderPhone + '\'' +
+                ", timeSended=" + timeSended +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

@@ -22,74 +22,58 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_arrow_back_white_24"/>
             <TextView
+                android:id="@+id/txtUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Account setting"
+                android:text="User Name"
                 android:layout_marginLeft="30dp"
                 android:textColor="@color/white"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:layout_marginBottom="2dp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearChangeNumber"
-            android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/border_line"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change Phone Number"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(+84) 0337445596"
-                android:textColor="@color/black"
-                android:textSize="16dp"/>
-        </LinearLayout>
         <TextView
-            android:id="@+id/txtLoginHistory"
+            android:id="@+id/txtInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login History"
+            android:text="Thông tin"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/border_line" />
-        <TextView
-            android:id="@+id/txtChangePassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Password"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginBottom="20dp"
             android:background="@drawable/border_line"
+            android:layout_marginBottom="2dp"
             />
         <TextView
-            android:id="@+id/txtLogOut"
+
+            android:id="@+id/txtChangeAvatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Log out"
+            android:text="Đổi ảnh đại diện"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:background="@drawable/border_line"
+            android:layout_marginBottom="2dp"/>
+        <TextView
+            android:id="@+id/txtChangeBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đổi ảnh bìa"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:background="@drawable/border_line"
+            android:layout_marginBottom="2dp"
+            />
+        <TextView
+            android:id="@+id/txtChangeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cập nhật giới thiệu bản thân"
             android:textColor="@color/black"
             android:background="@drawable/border_line"
             android:textSize="20dp"
             android:layout_marginBottom="20dp"
+
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_line"
-            android:text="Delete Your Account"
-            android:textColor="#FD0000"
-            android:textSize="20dp"
-            android:layout_marginBottom="20dp"/>
+
     </LinearLayout>
 
 </FrameLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_information"
+        android:title="Information"/>
+    <item
+        android:id="@+id/item_ChangeAvatar"
+        android:title="Change your avatar"/>
+    <item
+        android:id="@+id/item_ChangeBackground"
+        android:title="Change your Background"/>
+
+</menu>

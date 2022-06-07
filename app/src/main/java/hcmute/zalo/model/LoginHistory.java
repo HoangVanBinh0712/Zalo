@@ -5,8 +5,11 @@ import java.util.Date;
 public class LoginHistory {
     private String userPhone;
     private String dateLogin;
-    private String locationName;
     private String deviceName;
+
+    public  LoginHistory(){
+
+    }
 
     public LoginHistory(String userPhone, String dateLogin, String deviceName) {
         this.userPhone = userPhone;

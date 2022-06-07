@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hcmute.zalo">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/zalo_icon"
@@ -11,42 +13,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zalo">
         <activity
+            android:name=".ChangeInformationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdjustInforActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ListMessageActivity"
             android:exported="false" />
         <activity
             android:name=".SendOtpActivity"
-            android:exported="true" >
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".ConfirmOtpActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".loginActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".BeginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-        android:name=".chat_activity"
-        android:exported="false">
-    </activity>
-
+            android:name=".chat_activity"
+            android:exported="false" />
     </application>
 
 </manifest>

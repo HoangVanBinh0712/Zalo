@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,18 +38,29 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
+import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.User;
 
 public class loginActivity extends AppCompatActivity {
-
+    //Text View để sang trang Register
     private TextView textView3;
+    //Các Ô input nhập số điện thoại và mật khẩu
     private EditText edtPhonenum, edtPassword1;
+    //Nút logion
     private Button btnLogin;
+    //Check box hiện mật khẩu
     private CheckBox checkbox_showPassword;
+    // Thanh tiến trình cho biết chương trình đang xử lý
     ProgressDialog progressDialog;
+    //Khai báo biến lấy tên thiết bị
+    private String deviceName = Build.MODEL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +74,7 @@ public class loginActivity extends AppCompatActivity {
                 startActivity(new Intent(loginActivity.this,RegisterActivity.class));
             }
         });
+        // Ánh xạ cái view
         edtPassword1 = findViewById(R.id.edtPassword1);
         edtPhonenum = findViewById(R.id.edtPhonenum);
         btnLogin = findViewById(R.id.btnLogin);
@@ -70,8 +85,8 @@ public class loginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Tạo dialog process đang đăng nhập
                 progressDialog = new ProgressDialog(loginActivity.this);
-                progressDialog.setTitle("Đang đăng nhập...");
-                progressDialog.setMessage("Vui lòng chờ");
+                progressDialog.setTitle("Logging...");
+                progressDialog.setMessage("Please wait");
                 progressDialog.show();
                 //Lấy số điện thoại và mật khẩu trong edittext
                 String phone = edtPhonenum.getText().toString();
@@ -80,7 +95,7 @@ public class loginActivity extends AppCompatActivity {
                 if(phone.equals("") || pass.equals("") || phone.length() != 10 || pass.length() < 6)
                 {
                     progressDialog.dismiss();
-                    Toast.makeText(loginActivity.this, "Sai tài khoản hoặc mật khẩu !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(loginActivity.this, "Wrong account or password!", Toast.LENGTH_SHORT).show();
                 }else
                 {
                     //Tiến hành tìm kiếm trên FirebaseDatabase
@@ -90,12 +105,15 @@ public class loginActivity extends AppCompatActivity {
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User_SingeTon isUser = User_SingeTon.getInstance();
+                            if(isUser.getUser() != null)
+                                return;
                             DataSnapshot dataSnapshot = snapshot.child(phone);
                             //Nếu không có số điện thoại này (Số điện thoại chưa được đăng ký).
                             if(dataSnapshot.exists() == false)
                             {
                                 progressDialog.dismiss();
-                                Toast.makeText(loginActivity.this, "Sai tài khoản hoặc mật khẩu !", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(loginActivity.this, "Wrong account or password!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             //Số điện thoại đã được đăng ký
@@ -112,44 +130,50 @@ public class loginActivity extends AppCompatActivity {
                                 //Gọi lớp singleTon
                                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
                                 //Truy xuất storage
-
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference storageReference = storage.getReference(user.getAvatar());
-                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        //Lấy được Uri thành công. Lấy bitmap của ảnh đại diện thông qua thread
-                                        Thread thread = new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                try  {
-                                                    URL url = new URL(uri.toString());
-                                                    Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                                    userImageBitmap_singleTon.setAnhdaidien(image);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                                        thread.start();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        //Thất bại thì sẽ in ra lỗi
-                                        Toast.makeText(loginActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                // lấy ảnh bìa
-                                storageReference = storage.getReference(user.getBackground());
-                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        //Lấy được Uri thành công. Lấy bitmap của ảnh bìa thông qua thread
+                                //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
+                                if(!user.getAvatar().equals("")){
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageReference = storage.getReference(user.getAvatar());
+                                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //Lấy được Uri thành công. Lấy bitmap của ảnh đại diện thông qua thread
                                             Thread thread = new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     try  {
+                                                        URL url = new URL(uri.toString());
+                                                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                                        userImageBitmap_singleTon.setAnhdaidien(image);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                            thread.start();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            //Thất bại thì sẽ in ra lỗi
+                                            Toast.makeText(loginActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                                // lấy ảnh bìa
+                                //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
+                                if(!user.getBackground().equals("")) {
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageReference = storage.getReference(user.getBackground());
+                                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            //Lấy được Uri thành công. Lấy bitmap của ảnh bìa thông qua thread
+                                            Thread thread = new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
                                                         URL url = new URL(uri.toString());
                                                         Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                                                         userImageBitmap_singleTon.setAnhbia(image);
@@ -159,23 +183,41 @@ public class loginActivity extends AppCompatActivity {
                                                 }
                                             });
                                             thread.start();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        //Thất bại thì sẽ in ra lỗi
-                                        Toast.makeText(loginActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            //Thất bại thì sẽ in ra lỗi
+                                            Toast.makeText(loginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                                 //Tất cả hoàn tất.
                                 progressDialog.dismiss();
+
+                                //Lưu lịch sử đăng nhập
+                                //Lấy thời gian đăng nhập
+                                Date currentTime = Calendar.getInstance().getTime();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                String loginDate = dateFormat.format(currentTime);
+
+                                //Lưu các thông tin đăng nhập vào model
+                                LoginHistory loginHistory = new LoginHistory(phone,loginDate,deviceName);
+
+                                //Lưu lịch sử đăng nhập vào database
+                                DatabaseReference myLoginHistoryRef = database.getReference("loginHistory");
+                                myLoginHistoryRef.child(phone).child(loginDate).setValue(loginHistory);
+
+                                //Chuyển sang MainActivity
+                                Log.d("TAG", "onDataChange: Login");
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                //Tắt login Activity
+                                finish();
 
                             }else{
                                 //Sai mật khẩu. Thông báo
                                 progressDialog.dismiss();
-                                Toast.makeText(loginActivity.this, "Sai tài khoản hoặc mật khẩu !", Toast.LENGTH_SHORT).show();
-                                finish();
+                                Toast.makeText(loginActivity.this, "Wrong account or password!", Toast.LENGTH_SHORT).show();
                             }
                         }
 

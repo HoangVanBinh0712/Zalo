@@ -93,8 +93,8 @@ public class AccountInformationFragment extends Fragment {
     }
 
     private View view;
-    private ImageView anhbia,btnBack;
-    private CircleImageView anhdaidien;
+    private ImageView background,btnBack,btnEditInfor;
+    private CircleImageView avatar;
     private TextView txtfullname, txtdescription;
     private final int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
@@ -109,10 +109,20 @@ public class AccountInformationFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_account_information, container, false);
         //Ánh xạ các view
-        anhbia = (ImageView) view.findViewById(R.id.anhbia);
-        anhdaidien = (CircleImageView) view.findViewById(R.id.anhdaidien);
+        background = (ImageView) view.findViewById(R.id.background);
+        avatar = (CircleImageView) view.findViewById(R.id.avatar);
+        btnEditInfor = (ImageView) view.findViewById(R.id.btnEditInfor);
+        txtfullname = view.findViewById(R.id.txtFullName);
+        txtdescription = view.findViewById(R.id.txtDescription);
+        //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm).
+        btnEditInfor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),AdjustInforActivity.class));
+            }
+        });
         //Tạo sự kiên click cho ảnh bìa, ảnh đại diện. show lên dialog để thay đổi ảnh bìa, ảnh đại diện
-        anhbia.setOnClickListener(new View.OnClickListener() {
+        background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(getActivity());
@@ -129,7 +139,7 @@ public class AccountInformationFragment extends Fragment {
 
             }
         });
-        anhdaidien.setOnClickListener(new View.OnClickListener() {
+        avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = new Dialog(getActivity());
@@ -156,6 +166,14 @@ public class AccountInformationFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
+
+        //Đưa dữ liệu vào các view
+        putDataToView();
+
+        return view;
+    }
+
+    void putDataToView(){
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
 
@@ -168,8 +186,6 @@ public class AccountInformationFragment extends Fragment {
             getActivity().finish();
         }
         //Có user và bắt đầu đưa dữ liệu cho các view
-        txtfullname = view.findViewById(R.id.txtFullName);
-        txtdescription = view.findViewById(R.id.txtDescription);
         txtdescription.setText(user.getDescription());
         txtfullname.setText(user.getFullname());
         // Lấy ảnh bìa , ảnh đại diện
@@ -178,50 +194,61 @@ public class AccountInformationFragment extends Fragment {
         //Nếu chưa có ảnh thì dùng local storage tải lên - Tốn thời gian xử lý
         if(userImageBitmap_singleTon.getAnhbia() == null || userImageBitmap_singleTon.getAnhdaidien() == null)
         {
-            Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
-            //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
-            storage = FirebaseStorage.getInstance();
-            storageReference = storage.getReference(user.getAvatar());
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
-                    Picasso.get().load(uri).fit().centerCrop().into(anhdaidien);
+            //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
+            if(!user.getAvatar().equals("")) {
+                Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
+                //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
+                storage = FirebaseStorage.getInstance();
+                storageReference = storage.getReference(user.getAvatar());
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                        Picasso.get().load(uri).fit().centerCrop().into(avatar);
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Thất bại thì sẽ in ra lỗi
-                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
-            //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
-            storageReference = storage.getReference(user.getBackground());
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
-                    Picasso.get().load(uri).fit().centerCrop().into(anhbia);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Thất bại thì sẽ in ra lỗi
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
+            if(!user.getBackground().equals("")) {
+                //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
+                storage = FirebaseStorage.getInstance();
+                storageReference = storage.getReference(user.getBackground());
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                        Picasso.get().load(uri).fit().centerCrop().into(background);
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Thất bại thì sẽ in ra lỗi
-                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Thất bại thì sẽ in ra lỗi
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }else
         {
             //Nếu đã có ảnh thì set vào luôn
-            anhdaidien.setImageBitmap(userImageBitmap_singleTon.getAnhdaidien());
-            anhbia.setImageBitmap(userImageBitmap_singleTon.getAnhbia());
+            avatar.setImageBitmap(userImageBitmap_singleTon.getAnhdaidien());
+            background.setImageBitmap(userImageBitmap_singleTon.getAnhbia());
         }
-
-
-        return view;
     }
+    //Khi trở lại Activity cập nhật lại cho các view
+    @Override
+    public void onResume() {
+        super.onResume();
+        putDataToView();
+    }
+
     // Hàm để chọn hình ảnh
     private void SelectImage(int type)
     {
@@ -230,7 +257,7 @@ public class AccountInformationFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Chọn hình ảnh..."), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
     //Sau khi chọn ảnh xong chạy vào hàm này
     @Override
@@ -252,11 +279,11 @@ public class AccountInformationFragment extends Fragment {
 
                 if(this.type == 1) {
                     userImageBitmap_singleTon.setAnhdaidien(bitmap);
-                    anhdaidien.setImageBitmap(bitmap);
+                    avatar.setImageBitmap(bitmap);
                 }
                 else {
                     userImageBitmap_singleTon.setAnhbia(bitmap);
-                    anhbia.setImageBitmap(bitmap);
+                    background.setImageBitmap(bitmap);
                 }
             }
             catch (IOException e) {
@@ -274,7 +301,7 @@ public class AccountInformationFragment extends Fragment {
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(getActivity());
-            progressDialog.setTitle("Đang tải lên...");
+            progressDialog.setTitle("Uploading...");
 
             progressDialog.show();
             //Khai báo FirebaseStorage
@@ -308,7 +335,7 @@ public class AccountInformationFragment extends Fragment {
                                         myRef.child(user.getPhone()).setValue(user);
                                     }
                                     user_singeTon.setUser(user);
-                                    Toast.makeText(getActivity(), "Cập nhật thành công!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Update successful!!", Toast.LENGTH_SHORT).show();
                                 }
                             })
                     .addOnFailureListener(new OnFailureListener() {
@@ -318,7 +345,7 @@ public class AccountInformationFragment extends Fragment {
                             // Lỗi, không tải lên thành công
                             // Tắt progress đi và in ra lỗi
                             progressDialog.dismiss();
-                            Toast.makeText(getActivity(),"Cập nhật thất bại. Lỗi: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"Update failed. Error: " + e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -329,7 +356,7 @@ public class AccountInformationFragment extends Fragment {
                                 UploadTask.TaskSnapshot taskSnapshot)
                         {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                            progressDialog.setMessage("Đã tải được " + (int)progress + "%");
+                            progressDialog.setMessage("Downloaded " + (int)progress + "%");
                         }
                     });
         }
