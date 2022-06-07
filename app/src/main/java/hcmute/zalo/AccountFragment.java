@@ -1,6 +1,7 @@
 package hcmute.zalo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
+import hcmute.zalo.Pattern.User_SingeTon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +67,7 @@ public class AccountFragment extends Fragment {
 
     View view;
     ImageView btnBack;
-    TextView txtChangePassword, txtLoginHistory;
+    TextView txtChangePassword, txtLoginHistory,txtLogOut;
     LinearLayout linearChangeNumber;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,7 +107,25 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,loginHistoryFragment).commit();
             }
         });
+        txtLogOut = view.findViewById(R.id.txtLogOut);
+        txtLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Gán User là null và trả về trang login
+                User_SingeTon user_singeTon = User_SingeTon.getInstance();
+                user_singeTon.setUser(null);
+                user_singeTon = null;
+                UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+                userImageBitmap_singleTon.setAnhbia(null);
+                userImageBitmap_singleTon.setAnhdaidien(null);
+                userImageBitmap_singleTon = null;
 
+                //Trả về trang login
+                startActivity(new Intent(getActivity(),loginActivity.class));
+                getActivity().finish();
+
+            }
+        });
         return view;
     }
 }

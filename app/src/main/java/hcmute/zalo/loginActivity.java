@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,7 +54,7 @@ public class loginActivity extends AppCompatActivity {
     //Nút logion
     private Button btnLogin;
     //Check box hiện mật khẩu
-    private CheckBox checkbox_showPassword;
+    private MaterialRadioButton checkbox_showPassword;
     // Thanh tiến trình cho biết chương trình đang xử lý
     ProgressDialog progressDialog;
     //Khai báo biến lấy tên thiết bị
@@ -103,6 +104,9 @@ public class loginActivity extends AppCompatActivity {
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User_SingeTon isUser = User_SingeTon.getInstance();
+                            if(isUser.getUser() != null)
+                                return;
                             DataSnapshot dataSnapshot = snapshot.child(phone);
                             //Nếu không có số điện thoại này (Số điện thoại chưa được đăng ký).
                             if(dataSnapshot.exists() == false)
@@ -197,13 +201,15 @@ public class loginActivity extends AppCompatActivity {
                                 myLoginHistoryRef.child(phone).child(loginDate).setValue(loginHistory);
 
                                 //Chuyển sang MainActivity
+                                Log.d("TAG", "onDataChange: Login");
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
+                                //Tắt login Activity
+                                finish();
 
                             }else{
                                 //Sai mật khẩu. Thông báo
                                 progressDialog.dismiss();
                                 Toast.makeText(loginActivity.this, "Sai tài khoản hoặc mật khẩu !", Toast.LENGTH_SHORT).show();
-                                finish();
                             }
                         }
 

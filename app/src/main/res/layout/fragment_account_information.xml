@@ -3,29 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".AccountInformationFragment">
     <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="500dp"
         >
         <ImageView
             android:id="@+id/anhbia"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="360dp"
             android:src="@drawable/thanhpho"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             />
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/baseline_arrow_back_white_24"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/baseline_arrow_back_white_24"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:id="@+id/btnSuaThongTin"
+                android:src="@drawable/baseline_more_horiz_white_24"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="110dp"
             android:src="@drawable/man_placeholder"
             android:layout_gravity="center"
             android:id="@+id/anhdaidien"/>
@@ -33,7 +54,7 @@
             android:id="@+id/txtFullName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="200dp"
             android:text="Full Name"
             android:gravity="center"
             android:textColor="@color/black"
@@ -43,7 +64,7 @@
             android:id="@+id/txtDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="130dp"
+            android:layout_marginTop="230dp"
             android:text="Desciption"
             android:gravity="center"
             android:layout_gravity="center"

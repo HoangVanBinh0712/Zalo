@@ -93,7 +93,7 @@ public class AccountInformationFragment extends Fragment {
     }
 
     private View view;
-    private ImageView anhbia,btnBack;
+    private ImageView anhbia,btnBack,btnSuaThongTin;
     private CircleImageView anhdaidien;
     private TextView txtfullname, txtdescription;
     private final int PICK_IMAGE_REQUEST = 22;
@@ -111,6 +111,16 @@ public class AccountInformationFragment extends Fragment {
         //Ánh xạ các view
         anhbia = (ImageView) view.findViewById(R.id.anhbia);
         anhdaidien = (CircleImageView) view.findViewById(R.id.anhdaidien);
+        btnSuaThongTin = (ImageView) view.findViewById(R.id.btnSuaThongTin);
+        txtfullname = view.findViewById(R.id.txtFullName);
+        txtdescription = view.findViewById(R.id.txtDescription);
+        //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm).
+        btnSuaThongTin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),AdjustInforActivity.class));
+            }
+        });
         //Tạo sự kiên click cho ảnh bìa, ảnh đại diện. show lên dialog để thay đổi ảnh bìa, ảnh đại diện
         anhbia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +166,14 @@ public class AccountInformationFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
+
+        //Đưa dữ liệu vào các view
+        putDataToView();
+
+        return view;
+    }
+
+    void putDataToView(){
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
 
@@ -168,8 +186,6 @@ public class AccountInformationFragment extends Fragment {
             getActivity().finish();
         }
         //Có user và bắt đầu đưa dữ liệu cho các view
-        txtfullname = view.findViewById(R.id.txtFullName);
-        txtdescription = view.findViewById(R.id.txtDescription);
         txtdescription.setText(user.getDescription());
         txtfullname.setText(user.getFullname());
         // Lấy ảnh bìa , ảnh đại diện
@@ -218,10 +234,14 @@ public class AccountInformationFragment extends Fragment {
             anhdaidien.setImageBitmap(userImageBitmap_singleTon.getAnhdaidien());
             anhbia.setImageBitmap(userImageBitmap_singleTon.getAnhbia());
         }
-
-
-        return view;
     }
+    //Khi trở lại Activity cập nhật lại cho các view
+    @Override
+    public void onResume() {
+        super.onResume();
+        putDataToView();
+    }
+
     // Hàm để chọn hình ảnh
     private void SelectImage(int type)
     {
