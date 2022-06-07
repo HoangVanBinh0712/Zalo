@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeInformationActivity">
+
+    <ImageView
+        android:id="@+id/imgBackgroundProfile"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/thanhpho" />
+
+    <ImageView
+        android:id="@+id/btnBackProfile"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:src="@drawable/baseline_arrow_back_white_24" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgAvatarProfile"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="210dp"
+        android:src="@drawable/man_placeholder"/>
+
+    <TextView
+        android:id="@+id/textviewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:layout_toRightOf="@+id/imgAvatarProfile"
+        android:text="name"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="230dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/labeled1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgBackgroundProfile"
+        android:background="#f6f6f6">
+
+        <TextView
+            android:id="@+id/textviewFullName"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="Fullname"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/edttextFullName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_weight="1"/>
+
+        <EditText
+            android:id="@+id/edttextFullName"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:hint="Type your name here"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            android:background="@null"
+            android:maxLines="1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/textviewFullName"
+            app:layout_constraintHorizontal_weight="3"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginStart="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/edttextFullName"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/labeled2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labeled1"
+        android:background="#f6f6f6">
+
+        <TextView
+            android:id="@+id/textviewMobile"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="Mobile"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/textviewMobile2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_weight="1"/>
+
+        <TextView
+            android:id="@+id/textviewMobile2"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="+8403283872"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            android:background="#abb4bc"
+            android:enabled="false"
+            android:clickable="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/textviewMobile"
+            app:layout_constraintHorizontal_weight="3"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginStart="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/textviewMobile2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/labeled3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labeled2"
+        android:background="#f6f6f6">
+
+        <TextView
+            android:id="@+id/textviewBirthday"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="Birthday"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/edttextBirthday"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_weight="1"/>
+
+        <EditText
+            android:id="@+id/edttextBirthday"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:hint="Type your birthday here"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            android:background="@null"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/textviewBirthday"
+            app:layout_constraintHorizontal_weight="3"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginStart="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/edttextBirthday"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/labeled4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labeled3"
+        android:background="#f6f6f6">
+
+        <TextView
+            android:id="@+id/textviewGender"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="10sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/radioMale"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_weight="1"/>
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="0sp"
+            android:layout_height="45sp"
+            android:text="Male"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:theme="@style/MyRadioButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/textviewGender"
+            app:layout_constraintRight_toLeftOf="@+id/radioFemale"
+            app:layout_constraintHorizontal_weight="1.5"/>
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="0sp"
+            android:layout_height="45sp"
+            android:text="Female"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:theme="@style/MyRadioButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/radioMale"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_weight="1.5"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginStart="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/radioFemale"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnUpdateProfile"
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:layout_below="@+id/labeled4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="100sp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#0068ff"
+        android:text="Update"
+        android:textSize="20sp"
+        app:cornerRadius="30sp" />
+
+</RelativeLayout>

@@ -13,26 +13,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Zalo">
         <activity
+            android:name=".ChangeInformationActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdjustInforActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ListMessageActivity"
             android:exported="false" />
         <activity
             android:name=".SendOtpActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".ConfirmOtpActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".loginActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".BeginActivity"
             android:exported="true">
@@ -44,7 +47,7 @@
         </activity>
         <activity
             android:name=".chat_activity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

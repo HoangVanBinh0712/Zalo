@@ -122,7 +122,9 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                User user = new User(name,phone,pass,birth,"",sex,"","");
+                //Chuyền birthday sang string
+                String birthday = format.format(birth);
+                User user = new User(name,phone,pass,birthday,"",sex,"","");
                 //CheLog.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
 

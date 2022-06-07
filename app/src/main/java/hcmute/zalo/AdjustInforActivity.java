@@ -60,7 +60,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         txtInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(AdjustInforActivity.this,ChangeInformationActivity.class));
             }
         });
         //Cho textview đổi ảnh đại diện
@@ -118,19 +118,19 @@ public class AdjustInforActivity extends AppCompatActivity {
     //Các view cho DialogChangeDescription
     private EditText txtDescription;
     //Các button
-    private Button btnXacNhanSuaGioiThieu,btnHuySuaGioiThieu;
+    private Button btnConfirmEditDescription,btnCancelEditDescription;
     public void DialogChangeDescription() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_description);
         //Ánh xạ các View và button
-        btnHuySuaGioiThieu = dialog.findViewById(R.id.btnHuySuaGioiThieu);
-        btnXacNhanSuaGioiThieu = dialog.findViewById(R.id.btnXacNhanSuaGioiThieu);
+        btnCancelEditDescription = dialog.findViewById(R.id.btnCancelEditDescription);
+        btnConfirmEditDescription = dialog.findViewById(R.id.btnConfirmEditDescription);
         txtDescription = dialog.findViewById(R.id.txtDescription);
 
         //Đưa giới thiệu của người dùng vào edittext
         txtDescription.setText(user.getDescription());
         //Tạo sự kiện click cho nút hủy
-        btnHuySuaGioiThieu.setOnClickListener(new View.OnClickListener() {
+        btnCancelEditDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Bấm hủy thì tắt dialog
@@ -138,10 +138,9 @@ public class AdjustInforActivity extends AppCompatActivity {
             }
         });
         //Tạo sự kiện cho nút xác nhận
-        btnXacNhanSuaGioiThieu.setOnClickListener(new View.OnClickListener() {
+        btnConfirmEditDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //Cập nhật thay đổi lên FirebaseDatabase và user
                 //Cập nhật cho user
                 user.setDescription(txtDescription.getText().toString());
@@ -152,7 +151,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 myRef.child(user.getPhone()).setValue(user);
                 //Cập nhật xong thì tắt dialog
                 dialog.dismiss();
-                Toast.makeText(AdjustInforActivity.this, "Cập nhật giới thiệu thành công.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdjustInforActivity.this, "Update description successful.", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -169,7 +168,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Chọn hình ảnh..."), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
     //Sau khi chọn ảnh xong chạy vào hàm này
     @Override
@@ -211,7 +210,7 @@ public class AdjustInforActivity extends AppCompatActivity {
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
-            progressDialog.setTitle("Đang tải lên...");
+            progressDialog.setTitle("Uploading...");
 
             progressDialog.show();
             //Khai báo FirebaseStorage
@@ -248,7 +247,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                                         myRef.child(user.getPhone()).setValue(user);
                                     }
                                     user_singeTon.setUser(user);
-                                    Toast.makeText(AdjustInforActivity.this, "Cập nhật thành công!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AdjustInforActivity.this, "Update successful!!", Toast.LENGTH_SHORT).show();
                                 }
                             })
                     .addOnFailureListener(new OnFailureListener() {
@@ -258,7 +257,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                             // Lỗi, không tải lên thành công
                             // Tắt progress đi và in ra lỗi
                             progressDialog.dismiss();
-                            Toast.makeText(AdjustInforActivity.this,"Cập nhật thất bại. Lỗi: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdjustInforActivity.this,"Update failed. Error: " + e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -269,7 +268,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                                 UploadTask.TaskSnapshot taskSnapshot)
                         {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
-                            progressDialog.setMessage("Đã tải được " + (int)progress + "%");
+                            progressDialog.setMessage("Downloaded " + (int)progress + "%");
                         }
                     });
         }

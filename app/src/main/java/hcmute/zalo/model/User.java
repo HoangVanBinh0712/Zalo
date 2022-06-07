@@ -28,11 +28,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -74,12 +74,12 @@ public class User {
     public String fullname;
     public String phone;
     private String password;
-    public Date birthday;
+    public String birthday;
     public String description;
     public Boolean sex;
     public String avatar;
     public String background;
-    public User(String fullname, String phone, String password, Date birthday, String description, Boolean sex, String avatar, String background) {
+    public User(String fullname, String phone, String password, String birthday, String description, Boolean sex, String avatar, String background) {
         this.fullname = fullname;
         this.phone = phone;
         this.password = password;

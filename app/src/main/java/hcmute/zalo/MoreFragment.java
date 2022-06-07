@@ -116,27 +116,28 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, privacyFragment).commit();
             }
         });
-        Bitmap anhdaidien = userImageBitmap_singleTon.getAnhdaidien();
-        if(anhdaidien == null)
-        {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference(user_singeTon.getUser().getAvatar());
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
-                    Picasso.get().load(uri).fit().centerCrop().into(profile_image);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Thất bại thì sẽ in ra lỗi
-                    Toast.makeText(getActivity(),e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
-        }else
-        {
-            profile_image.setImageBitmap(anhdaidien);
+        //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
+        if(!user_singeTon.getUser().getAvatar().equals("")) {
+            Bitmap avatar = userImageBitmap_singleTon.getAnhdaidien();
+            if (avatar == null) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReference(user_singeTon.getUser().getAvatar());
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                        Picasso.get().load(uri).fit().centerCrop().into(profile_image);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Thất bại thì sẽ in ra lỗi
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                profile_image.setImageBitmap(avatar);
+            }
         }
 
         txtUserName.setText(user_singeTon.getUser().getFullname());

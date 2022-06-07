@@ -8,6 +8,7 @@
         android:id="@+id/txtTitleDesc"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:background="#e2e2e2"
         android:text="Giới thiệu bản thân"
         android:textColor="@color/black"
         android:gravity="center"
@@ -23,21 +24,21 @@
         android:textColor="@color/black"
         android:gravity="top"
         android:textSize="18dp"
-        android:text="......."
+        android:hint="Add a description"
         app:layout_constraintTop_toBottomOf="@+id/txtTitleDesc"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Xác nhận"
-        android:id="@+id/btnXacNhanSuaGioiThieu"
+        android:id="@+id/btnConfirmEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hủy"
-        android:id="@+id/btnHuySuaGioiThieu"
+        android:id="@+id/btnCancelEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
         app:layout_constraintRight_toRightOf="@+id/txtDescription"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,7 @@
         android:layout_height="500dp"
         >
         <ImageView
-            android:id="@+id/anhbia"
+            android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:src="@drawable/thanhpho"
@@ -34,7 +34,7 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="50dp"
-                android:id="@+id/btnSuaThongTin"
+                android:id="@+id/btnEditInfor"
                 android:src="@drawable/baseline_more_horiz_white_24"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -49,7 +49,7 @@
             android:layout_marginTop="110dp"
             android:src="@drawable/man_placeholder"
             android:layout_gravity="center"
-            android:id="@+id/anhdaidien"/>
+            android:id="@+id/avatar"/>
         <TextView
             android:id="@+id/txtFullName"
             android:layout_width="match_parent"
