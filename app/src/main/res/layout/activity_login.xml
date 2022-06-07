@@ -43,7 +43,7 @@
         android:hint="Phone number"
         android:inputType="phone"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txtPassword1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +75,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="4dp"
         android:text="PHONE NUMBER"
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/edtPhonenum"
@@ -92,14 +92,14 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+        android:textColorHint="#AA4B5151"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.524"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <CheckBox
+    <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/checkbox_showPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:text="PASSWORD"
-        android:textColor="#AA4B5151"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/edtPassword1"

@@ -10,14 +10,12 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F8F8F8"
-        >
+        android:background="#F8F8F8">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#2196F3"
-            android:padding="6dp"
-            >
+            android:padding="6dp">
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="40dp"
@@ -56,15 +54,14 @@
                 android:textSize="16dp"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/txtLoginHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login History"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/border_line"
-
-            />
+            android:background="@drawable/border_line" />
         <TextView
             android:id="@+id/txtChangePassword"
             android:layout_width="match_parent"

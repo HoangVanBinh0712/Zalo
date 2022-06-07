@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="10sp"
+    android:paddingStart="10sp">
+
+    <ImageView
+        android:id="@+id/imgDevice"
+        android:layout_width="48sp"
+        android:layout_height="48sp"
+        android:src="@drawable/ic_phone"
+        android:layout_marginTop="15sp"/>
+
+    <TextView
+        android:id="@+id/textviewDeviceName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imgDevice"
+        android:text="Phone"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:paddingStart="10sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textviewLoginDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textviewDeviceName"
+        android:layout_marginTop="10sp"
+        android:layout_toRightOf="@+id/imgDevice"
+        android:paddingStart="10sp"
+        android:text="2022-09-29"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+</RelativeLayout>

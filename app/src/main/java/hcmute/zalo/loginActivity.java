@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -35,9 +36,13 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
+import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.User;
 
 public class loginActivity extends AppCompatActivity {
@@ -51,6 +56,9 @@ public class loginActivity extends AppCompatActivity {
     private CheckBox checkbox_showPassword;
     // Thanh tiến trình cho biết chương trình đang xử lý
     ProgressDialog progressDialog;
+    //Khai báo biến lấy tên thiết bị
+    private String deviceName = Build.MODEL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +182,21 @@ public class loginActivity extends AppCompatActivity {
                                 });
                                 //Tất cả hoàn tất.
                                 progressDialog.dismiss();
+
+                                //Lưu lịch sử đăng nhập
+                                //Lấy thời gian đăng nhập
+                                Date currentTime = Calendar.getInstance().getTime();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                String loginDate = dateFormat.format(currentTime);
+
+                                //Lưu các thông tin đăng nhập vào model
+                                LoginHistory loginHistory = new LoginHistory(phone,loginDate,deviceName);
+
+                                //Lưu lịch sử đăng nhập vào database
+                                DatabaseReference myLoginHistoryRef = database.getReference("loginHistory");
+                                myLoginHistoryRef.child(phone).child(loginDate).setValue(loginHistory);
+
+                                //Chuyển sang MainActivity
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
 
                             }else{

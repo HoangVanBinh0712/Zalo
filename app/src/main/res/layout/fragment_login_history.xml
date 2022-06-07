@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginHistoryFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F8F8F8">
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#2196F3"
+            android:padding="6dp">
+            <ImageView
+                android:id="@+id/btnBackPageHistory"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/baseline_arrow_back_white_24"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login history"
+                android:layout_marginLeft="30dp"
+                android:textColor="@color/white"
+                android:textSize="25dp"
+                android:layout_marginBottom="2dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDeviceList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout1"
+            android:text="Device List"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:paddingTop="10sp"
+            android:layout_marginStart="15sp"/>
+
+        <ListView
+            android:id="@+id/listviewHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDeviceList" />
+
+    </RelativeLayout>
+
+</FrameLayout>
