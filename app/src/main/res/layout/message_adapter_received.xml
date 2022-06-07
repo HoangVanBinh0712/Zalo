@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="4sp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgUser"
+        android:layout_width="25sp"
+        android:layout_height="25sp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/receiveMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/baseline_person_outline_24"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FF000000"
+        />
+    <TextView
+        android:id="@+id/receiveMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4sp"
+        android:layout_marginLeft="4sp"
+        android:background="@drawable/background_received_message"
+        android:padding="12sp"
+        android:textColor="@color/black"
+        android:text="hello"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/imgUser"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.75"
+        />
+    <TextView
+        android:id="@+id/receiveTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4sp"
+        android:textColor="#7C7979"
+        android:textSize="15sp"
+        android:text="07/06/2022"
+        app:layout_constraintStart_toStartOf="@id/receiveMessage"
+        app:layout_constraintTop_toBottomOf="@id/receiveMessage"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ảnh bìa"
+            android:text="Avatar"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -40,7 +40,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Xem ảnh đại diện"
+                android:text="See the profile picture"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="16dp"/>
@@ -58,7 +58,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chụp ảnh mới"
+                android:text="Capture new image"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="16dp"/>
@@ -77,7 +77,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chọn ảnh từ thiết bị"
+                android:text="Select photo from device"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="16dp"/>
@@ -95,7 +95,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chọn ảnh đại diện có sẵn"
+                android:text="Choose an existing avatar"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="16dp"/>

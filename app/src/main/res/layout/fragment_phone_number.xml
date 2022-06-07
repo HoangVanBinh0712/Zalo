@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".PhoneNumberFragment">
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +27,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đổi số điện thoại"
+                android:text="Change Phone Number"
                 android:layout_marginLeft="30dp"
                 android:textColor="@color/white"
                 android:textSize="25dp"
@@ -48,7 +49,7 @@
                 android:background="#F4F4F4"
                 android:textStyle="bold"
                 android:textSize="20dp"
-                android:text="Đổi số điện thoại cho tài khoản Hoàng Văn Bình"
+                android:text="Change phone number for Hoang Van Binh account"
                 android:textAlignment="center"
                 />
             <LinearLayout
@@ -67,7 +68,7 @@
                     android:textSize="16dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="Số điện thoại mới sẽ gắn với thông tin, dữ liệu và nhật ký của tài khoản Hoàng Văn Bình."/>
+                    android:text="The new phone number will be associated with information, data and logs of Hoang Van Binh's account."/>
             </LinearLayout>
             <LinearLayout
                 android:layout_marginTop="20dp"
@@ -85,7 +86,7 @@
                     android:textSize="16dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="Bạn bè sẽ tìm thấy bạn bằng số điện thoại mới."/>
+                    android:text="Your friends will find you with your new phone number."/>
             </LinearLayout>
             <LinearLayout
                 android:layout_marginTop="20dp"
@@ -104,16 +105,17 @@
                     android:textSize="16dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="Lưu ý: Một số điện thoại chỉ được phép gắn với một tài khoản Zalo."/>
+                    android:text="Note: Some phones are only allowed to be associated with one Zalo account."/>
             </LinearLayout>
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Đổi số điện thoại"
-                android:background="#2196F3"
+                android:layout_width="200sp"
+                android:layout_height="60sp"
+                android:textColor="@color/white"
+                android:text="Change phone number"
+                android:backgroundTint="#0343E5"
                 android:layout_gravity="center"
+                app:cornerRadius="35sp"
                 />
         </LinearLayout>
 

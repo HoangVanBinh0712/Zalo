@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tự động thêm bạn bè từ danh bạ"
+                android:text="Automatically add friends from contacts"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 />
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nhận tin nhắn từ người lạ"
+                android:text="Receive messages from strangers"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 />
@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hiển thị ngày sinh"
+            android:text="Show date of birth"
             android:textColor="@color/black"
             android:textSize="18dp"
             />
