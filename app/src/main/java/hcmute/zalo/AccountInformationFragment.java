@@ -17,10 +17,12 @@ import androidx.fragment.app.Fragment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,7 +95,7 @@ public class AccountInformationFragment extends Fragment {
     }
 
     private View view;
-    private ImageView anhbia,btnBack;
+    private ImageView anhbia,btnBack,btnMore;
     private CircleImageView anhdaidien;
     private TextView txtfullname, txtdescription;
     private final int PICK_IMAGE_REQUEST = 22;
@@ -115,36 +117,14 @@ public class AccountInformationFragment extends Fragment {
         anhbia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.setContentView(R.layout.dialog_anhbia);
-                dialog.show();
-                LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
-                linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Type = 0 la anh bia
-                        SelectImage(0);
-                    }
-                });
+                ChangeBackground();
 
             }
         });
         anhdaidien.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.setContentView(R.layout.dialog_anhdaidien);
-                dialog.show();
-                //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
-                LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
-                linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Hàm dùng để hiện lên hình ảnh
-                        //Type = 1 la anh anh dai dien
-                        SelectImage(1);
-                    }
-                });
+                ChangeAvatar();
             }
         });
         //Bấm nút back để quay lại
@@ -156,6 +136,17 @@ public class AccountInformationFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
+
+        //Bấm nút More để có thể điều chình thông tin người dùng
+        btnMore = (ImageView) view.findViewById(R.id.btnMore);
+        btnMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMenu(v);
+            }
+
+        });
+
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
 
@@ -221,6 +212,57 @@ public class AccountInformationFragment extends Fragment {
 
 
         return view;
+    }
+    //Hàm hiển thị menu thông tin cá nhân
+    private void showMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(getActivity(),v);
+        popupMenu.getMenuInflater().inflate(R.menu.information_menu,popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.item_information){
+
+                }
+                if(item.getItemId() == R.id.item_ChangeAvatar){
+                    ChangeAvatar();
+                }
+                if(item.getItemId() == R.id.item_ChangeBackground){
+                    ChangeBackground();
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
+    }
+    //Hàm hiện dialog và thực hiện thay đổi ảnh đại diện
+    private void ChangeAvatar(){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_anhdaidien);
+        dialog.show();
+        //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
+        LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
+        linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Hàm dùng để hiện lên hình ảnh
+                //Type = 1 la anh anh dai dien
+                SelectImage(1);
+            }
+        });
+    }
+    //Hàm hiện dialog và thực hiện thay đổi ảnh bìa
+    private void ChangeBackground(){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_anhbia);
+        dialog.show();
+        LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
+        linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Type = 0 la anh bia
+                SelectImage(0);
+            }
+        });
     }
     // Hàm để chọn hình ảnh
     private void SelectImage(int type)
