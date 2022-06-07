@@ -41,11 +41,15 @@ import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.model.User;
 
 public class loginActivity extends AppCompatActivity {
-
+    //Text View để sang trang Register
     private TextView textView3;
+    //Các Ô input nhập số điện thoại và mật khẩu
     private EditText edtPhonenum, edtPassword1;
+    //Nút logion
     private Button btnLogin;
+    //Check box hiện mật khẩu
     private CheckBox checkbox_showPassword;
+    // Thanh tiến trình cho biết chương trình đang xử lý
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class loginActivity extends AppCompatActivity {
                 startActivity(new Intent(loginActivity.this,RegisterActivity.class));
             }
         });
+        // Ánh xạ cái view
         edtPassword1 = findViewById(R.id.edtPassword1);
         edtPhonenum = findViewById(R.id.edtPhonenum);
         btnLogin = findViewById(R.id.btnLogin);
