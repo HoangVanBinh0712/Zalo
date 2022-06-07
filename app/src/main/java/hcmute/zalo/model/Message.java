@@ -10,6 +10,9 @@ public class Message {
         this.messageName = messageName;
     }
 
+    public Message() {
+    }
+
     public String getMessageId() {
         return messageId;
     }

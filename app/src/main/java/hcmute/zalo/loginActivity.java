@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,7 +55,7 @@ public class loginActivity extends AppCompatActivity {
     //Nút logion
     private Button btnLogin;
     //Check box hiện mật khẩu
-    private MaterialRadioButton checkbox_showPassword;
+    private CheckBox checkbox_showPassword;
     // Thanh tiến trình cho biết chương trình đang xử lý
     ProgressDialog progressDialog;
     //Khai báo biến lấy tên thiết bị

@@ -1,5 +1,6 @@
 package hcmute.zalo;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
             case R.id.navMore:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
+                return true;
+            case R.id.navchats:
+                startActivity(new Intent(MainActivity.this, chat_activity.class));
                 return true;
         }
         return false;

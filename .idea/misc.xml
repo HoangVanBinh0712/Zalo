@@ -22,12 +22,15 @@
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_more_horiz_24_white.xml" value="0.327" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_notifications_none_24.xml" value="0.327" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/activity_adjust_infor.xml" value="0.33" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/activity_chat.xml" value="0.371875" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/activity_confirm_otp.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/activity_login.xml" value="0.19166666666666668" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/dialog_anhdaidien.xml" value="0.19791666666666666" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/dialog_description.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_account.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_account_information.xml" value="0.2753623188405797" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_more.xml" value="0.19791666666666666" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_phone_number.xml" value="0.371875" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_chat_bubble_outline_24.xml" value="0.352" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_contacts_24.xml" value="0.352" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/Zalo/app/src/main/res/drawable-v24/baseline_help_outline_24.xml" value="0.352" />
