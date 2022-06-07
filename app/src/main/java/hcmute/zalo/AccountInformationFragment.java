@@ -218,6 +218,7 @@ public class AccountInformationFragment extends Fragment {
             //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
             if(!user.getBackground().equals("")) {
                 //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
+                storage = FirebaseStorage.getInstance();
                 storageReference = storage.getReference(user.getBackground());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override

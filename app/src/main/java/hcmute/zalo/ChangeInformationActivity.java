@@ -364,6 +364,7 @@ public class ChangeInformationActivity extends AppCompatActivity {
             //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
             //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
             if(!user.getBackground().equals("")) {
+                storage = FirebaseStorage.getInstance();
                 storageReference = storage.getReference(user.getBackground());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
