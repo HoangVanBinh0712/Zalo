@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.setSelectedItemId(R.id.navMore);
     }
     MoreFragment moreFragment = new MoreFragment();
-
+    ListMessageFragment listMessageFragment = new ListMessageFragment();
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
                 return true;
             case R.id.navchats:
-                startActivity(new Intent(MainActivity.this, chat_activity.class));
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
                 return true;
+
         }
         return false;
     }

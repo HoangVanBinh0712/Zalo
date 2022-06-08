@@ -22,9 +22,6 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".ListMessageActivity"
-            android:exported="false" />
-        <activity
             android:name=".SendOtpActivity"
             android:exported="true" />
         <activity

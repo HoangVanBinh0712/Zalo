@@ -1,6 +1,7 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class LoginHistoryAdapter extends BaseAdapter {
         else{
             holder = (ViewHolder) view.getTag();
         }
-
+        Log.d("TAG", "getView: ");
         final LoginHistory loginHistory = lstHistory.get(position);
         holder.textviewDeviceName.setText(loginHistory.getDeviceName());
         holder.textviewLoginDate.setText(loginHistory.getDateLogin());
