@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,6 +51,7 @@ import java.util.UUID;
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.adapter.MessageDetailsAdapter;
+import hcmute.zalo.model.Message;
 import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.User;
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -58,6 +60,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class ChatActivity extends AppCompatActivity {
 
     AppCompatImageView sendMessageButton;
+    TextView txtUserChatName;
     EditText inputMessage;
     User main_user = User_SingeTon.getInstance().getUser();
     ArrayList<MessageDetails> messageDetails;
@@ -75,12 +78,14 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_chat);
+        //Ánh xạ các view
         iconMicro = findViewById(R.id.iconMicro);
         iconMedia = findViewById(R.id.iconMedia);
         idNestedSV = findViewById(R.id.idNestedSV);
         progressBar = findViewById(R.id.progressBar);
         inputMessage = findViewById(R.id.inputMessage);
         sendMessageButton = findViewById(R.id.sendMessageButton);
+        txtUserChatName = findViewById(R.id.txtUserChatName);
         rcvChat = findViewById(R.id.rcvChat);
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
         messageDetails = new ArrayList<>();
@@ -90,6 +95,20 @@ public class ChatActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         message_id = sharedPreferences.getString("message_id","");
         if(message_id.equals("") == false ){
+            //Lấy tên chat box
+            DatabaseReference myMessageRef = FirebaseDatabase.getInstance().getReference("messages");
+            myMessageRef.child(message_id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Message message = snapshot.getValue(Message.class);
+                    txtUserChatName.setText(message.getMessageName());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             //Lấy hết tin nhắn của 2 đứa lên đồng thời kèm phân trang
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
             myRef.child(message_id).limitToFirst(1).addValueEventListener(new ValueEventListener() {

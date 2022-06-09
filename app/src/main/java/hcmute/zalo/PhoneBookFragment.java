@@ -1,11 +1,15 @@
 package hcmute.zalo;
 
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.ContactsContract;
@@ -118,68 +122,83 @@ public class PhoneBookFragment extends Fragment {
                 Date currentTime = Calendar.getInstance().getTime();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
                 timeUpdate = dateFormat.format(currentTime);
-                //Lấy đường dẫn truy cập danh bạ
-                Uri uri = ContactsContract.Contacts.CONTENT_URI;
-                //Sắp xếp danh bạ theo thứ tự tăng dần
-                String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"ASC";
-                //Lấy tất cả số điện thoại
-                Cursor cursor = null;
-                try {
-                    cursor = getActivity().getContentResolver().query(uri,null,null,null,sort);
-                }catch (Exception e){
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                //Nếu số lượng lấy ra lớn hơn 0
-                if(cursor.getCount()>0){
-                    while (cursor.moveToNext()){
-                        //Lấy tên của số điện thoại
-                        id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
-                        //Lấy tên của số điện thoại
-                        name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
 
-                        //Lấy số điện thoại
-                        Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-                        String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?";
-                        Cursor phoneCursor = getActivity().getContentResolver().query(
-                                uriPhone,null,selection,new String[]{id},null
-                        );
-                        //Kiểm tra có số điện thoại
-                        if(phoneCursor.moveToNext()){
-                            phone = phoneCursor.getString(
-                                    phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        }
-                        //Tiến hành tìm kiếm trên FirebaseDatabase
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference("users");
-                        //Đọc và lắng nghe các thay đổi của dữ liệu
-                        myRef.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                //Nếu số điện thoại trong danh bạ đã đăng ký tài khoản
-                                if(snapshot.hasChild(phone)) {
-                                    //Thêm vào database
-                                    PhoneBook phoneBook = new PhoneBook(user.getPhone(),name,phone);
-                                    DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
-                                    myPhoneBookRef.child(user.getPhone()).child(phone).setValue(phoneBook);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        
-                    }
-                }
+                //Xin quyền truy cập
+                checkPermission();
+                //Hiển thị người dùng được lưu trong danh bạ trên database
                 getListPhoneBook();
             }
 
         });
 
-
         return view;
     }
+    private void checkPermission(){
+        //Xin quyền truy cập
+        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+        != PackageManager.PERMISSION_GRANTED){
+            //khi không được quyển truy cập
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_CONTACTS},1);
+        }
+        else {
+            getContactListFromPhone();
+        }
+    }
+    private void getContactListFromPhone(){
+        //Lấy đường dẫn truy cập danh bạ
+        Uri uri = ContactsContract.Contacts.CONTENT_URI;
+        //Sắp xếp danh bạ theo thứ tự tăng dần
+        String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"ASC";
+        //Lấy tất cả số điện thoại
+        Cursor cursor = getActivity().getContentResolver().query(uri,null,null,null,sort);
+        //Nếu số lượng lấy ra lớn hơn 0
+        if(cursor.moveToFirst()){
+            while (cursor.moveToNext()){
+                //Lấy tên của số điện thoại
+                id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+                //Lấy tên của số điện thoại
+                name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+
+                //Lấy số điện thoại
+                Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+                String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?";
+                Cursor phoneCursor = getActivity().getContentResolver().query(
+                        uriPhone,null,selection,new String[]{id},null
+                );
+                //Kiểm tra có số điện thoại
+                if(phoneCursor.moveToNext()){
+                    phone = phoneCursor.getString(
+                            phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                }
+                //Chuyển từ dạng +84xxx-xxx-xxx về xxxx-xxx-xxx
+                phone = "0"+phone.substring(3);
+                //Tiến hành tìm kiếm trên FirebaseDatabase
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("users");
+                //Đọc và lắng nghe các thay đổi của dữ liệu
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Nếu số điện thoại trong danh bạ đã đăng ký tài khoản
+                        if(snapshot.child(phone).exists()) {
+                            //Thêm vào database
+                            PhoneBook phoneBook = new PhoneBook(user.getPhone(),name,phone);
+                            DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
+                            myPhoneBookRef.child(user.getPhone()).child(phone).setValue(phoneBook);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        }
+        cursor.close();
+    }
+    //hiển thị những sdt trong database
     private void getListPhoneBook(){
         //Kết nối cơ sở dữ liệu và truy xuất vào bảng lịch sử đăng nhập
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -206,5 +225,20 @@ public class PhoneBookFragment extends Fragment {
                 Toast.makeText(getActivity(), "Get phonebook failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //Khi được quyền truy cập
+        if(requestCode == 1 && grantResults.length > 0 && grantResults[0]
+        == PackageManager.PERMISSION_GRANTED){
+            getContactListFromPhone();
+            
+        }
+        else{
+            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+            checkPermission();
+        }
     }
 }
