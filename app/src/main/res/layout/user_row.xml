@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:padding="10sp">
+    android:padding="10sp"
+    android:descendantFocusability="blocksDescendants">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageBoxChat"
@@ -39,6 +40,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:src="@drawable/baseline_person_add_24"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

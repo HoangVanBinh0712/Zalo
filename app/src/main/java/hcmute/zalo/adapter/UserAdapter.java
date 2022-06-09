@@ -29,6 +29,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import hcmute.zalo.ChatFragment;
+import hcmute.zalo.MainActivity;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
 import hcmute.zalo.model.LoginHistory;
@@ -47,7 +49,6 @@ public class UserAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private ArrayList<User> arrUser;
-
     @Override
     public int getCount() {
         return arrUser.size();
@@ -93,45 +94,7 @@ public class UserAdapter extends BaseAdapter {
                 Log.d("TAG", "onClick: Gui loi moi ket ban den "+ user.getPhone());
             }
         });
-        holder.constraintRowUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Kiểm tra có cuộc trò chuyện ? chưa có thì tạo mới và chuyển qua giao diện nhắn tin.
-                String phone = user.getPhone();
-                User main_user = User_SingeTon.getInstance().getUser();
-                if(phone.equals(main_user.getPhone()))
-                    return;
-                //Kiểm tra xem có cuộc hội thoại này chưa.
-                //Tạo kết nối điến bảng messages
-                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("messages");
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //Đọc dữ liệu từ cơ sở dữ liệu
-                        //Lấy id tin nhắn ta có 2 trướng hợp là phone1_phone2 hoặc phone2_phone1.
-                        String message_id_1 = main_user.getPhone() + "_" + phone;
-                        String message_id_2 = phone + "_" + main_user.getPhone();
-                        if(snapshot.child(message_id_1).exists() ||snapshot.child(message_id_2).exists())
-                        {
-                            //Đã có cuộc hội thoại giữa 2 người.
-                            Log.d("TAG", "onDataChange: " + "Đã có");
-                        }else{
-                            //Chưa có hội thoại giữa 2 người
-                            Log.d("TAG", "onDataChange: " + "Chưa có");
-                            //Tiến hành thêm hội thoại.
-                            //Tạo một message
-                            Message message = new Message(message_id_1, "");
-                            myRef.child(message_id_1).setValue(message);
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
         //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
         if(!user.getAvatar().equals("")) {
             //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
