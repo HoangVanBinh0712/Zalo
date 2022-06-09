@@ -7,13 +7,12 @@
     tools:context=".ConfirmOtpActivity"
     android:background="@color/white">
 
-    <Button
+    <ImageView
         android:id="@+id/btn_back_verify_otp"
         android:layout_width="50sp"
         android:layout_height="48dp"
         android:layout_marginTop="20sp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawableStart="@drawable/icon_btn_back"
+        android:src="@drawable/icon_btn_back"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -93,7 +92,7 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:textAlignment="center"
-            android:text="1"
+            android:text=""
             android:maxLength="1"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -108,7 +107,7 @@
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:textAlignment="center"
-            android:text="1"
+            android:text=""
             android:inputType="number"
             android:maxLength="1"
             android:textColor="@color/black"
@@ -125,7 +124,7 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:textAlignment="center"
-            android:text="1"
+            android:text=""
             android:maxLength="1"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -137,11 +136,43 @@
             android:layout_width="50sp"
             android:layout_height="55sp"
             android:layout_marginStart="10sp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:text=""
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:background="@drawable/otp_background"/>
+
+        <EditText
+            android:id="@+id/editTextInput5"
+            android:layout_width="50sp"
+            android:layout_height="55sp"
+            android:layout_marginStart="10sp"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:text=""
+            android:maxLength="1"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:background="@drawable/otp_background"/>
+
+        <EditText
+            android:id="@+id/editTextInput6"
+            android:layout_width="50sp"
+            android:layout_height="55sp"
+            android:layout_marginStart="10sp"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="number"
             android:textAlignment="center"
-            android:text="1"
+            android:text=""
             android:maxLength="1"
             android:textColor="@color/black"
             android:textSize="24sp"

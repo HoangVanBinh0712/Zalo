@@ -1,5 +1,6 @@
 package hcmute.zalo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 /**
@@ -58,17 +60,28 @@ public class PhoneNumberFragment extends Fragment {
 
     View view;
     ImageView btnBack;
+    Button btnChangePhone;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_phone_number, container, false);
+        //Ánh xạ các view
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
+        btnChangePhone = (Button) view.findViewById(R.id.btnChangePhone);
+        //Bấm nút back để qua lại account setting
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AccountFragment accountFragment = new AccountFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountFragment).commit();
+            }
+        });
+        //Bấm nút changephone để chuyển sang trang đổi mk
+        btnChangePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         return view;

@@ -11,14 +11,6 @@ public class PhoneBook {
         this.phonebookNumber = phonebookNumber;
     }
 
-    public String getUserId() {
-        return userPhone;
-    }
-
-    public void setUserId(String userPhone) {
-        this.userPhone = userPhone;
-    }
-
     public String getPhonebookName() {
         return phonebookName;
     }
@@ -34,4 +26,13 @@ public class PhoneBook {
     public void setPhonebookNumber(String phonebookNumber) {
         this.phonebookNumber = phonebookNumber;
     }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
 }

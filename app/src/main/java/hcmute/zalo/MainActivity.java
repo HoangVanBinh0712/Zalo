@@ -1,8 +1,5 @@
 package hcmute.zalo;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
+
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
     MoreFragment moreFragment = new MoreFragment();
     ListMessageFragment listMessageFragment = new ListMessageFragment();
+    PhoneBookFragment phoneBookFragment = new PhoneBookFragment();
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
@@ -36,7 +34,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navchats:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
                 return true;
-
+            case R.id.navcontacts:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneBookFragment).commit();
+                return true;
         }
         return false;
     }
