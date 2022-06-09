@@ -73,19 +73,27 @@
         android:layout_marginTop="12sp"
         app:layout_constraintTop_toBottomOf="@id/imageBack"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcvChat"
+    <androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/idNestedSV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:overScrollMode="never"
-        android:padding="20sp"
         app:layout_constraintBottom_toBottomOf="@id/viewBackground"
-        app:layout_constraintTop_toBottomOf="@id/viewSupporter"
-        />
+        app:layout_constraintTop_toBottomOf="@id/viewSupporter">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:overScrollMode="ifContentScrolls"
+            android:padding="20sp"
+            />
+    </androidx.core.widget.NestedScrollView>
+
 
     <ProgressBar
+        android:visibility="invisible"
         android:id="@+id/progressBar"
         android:layout_width="25sp"
         android:layout_height="25sp"
@@ -138,10 +146,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
         app:layout_constraintStart_toStartOf="parent"
-
         />
-
-
-
-
+    <ImageView
+        android:id="@+id/iconMedia"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/inputMessage"
+        app:layout_constraintTop_toTopOf="@id/inputMessage"
+        app:layout_constraintRight_toRightOf="@id/inputMessage"
+        android:src="@drawable/multimedia_photo1"/>
+    <ImageView
+        android:id="@+id/iconMicro"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/inputMessage"
+        app:layout_constraintTop_toTopOf="@id/inputMessage"
+        app:layout_constraintRight_toLeftOf="@id/iconMedia"
+        android:src="@drawable/baseline_mic_white_24"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

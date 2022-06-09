@@ -19,6 +19,7 @@
         <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/layout/hello_screen.xml" value="0.225" />
         <entry key="..\:/AndroidStudioProjects/Zalo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.225" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable-v24/baseline_more_horiz_24.xml" value="0.327" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_mic_24.xml" value="0.301" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_more_horiz_24_white.xml" value="0.327" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_notifications_none_24.xml" value="0.327" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/drawable/baseline_person_add_24.xml" value="0.2055" />
@@ -32,12 +33,12 @@
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/dialog_description.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_account.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_account_information.xml" value="0.2753623188405797" />
-        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_chat.xml" value="0.25" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_chat.xml" value="0.33" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_list_message.xml" value="0.22" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_more.xml" value="0.19791666666666666" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/fragment_phone_number.xml" value="0.371875" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/message_adapter_received.xml" value="0.19791666666666666" />
-        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/message_adapter_sent.xml" value="0.19791666666666666" />
+        <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/message_adapter_sent.xml" value="0.5" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/message_row.xml" value="0.19791666666666666" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/test_chat.xml" value="0.19791666666666666" />
         <entry key="..\:/DOWNLOADS/Zalo/app/src/main/res/layout/user_row.xml" value="0.33" />

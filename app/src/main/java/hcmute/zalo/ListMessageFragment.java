@@ -90,6 +90,7 @@ public class ListMessageFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_list_message, container, false);
         searchView = view.findViewById(R.id.searchView);
+
         listviewMessage = (ListView) view.findViewById(R.id.listviewMessage);
         adapter = new UserAdapter(getActivity(),R.layout.user_row,users);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -178,8 +179,8 @@ public class ListMessageFragment extends Fragment {
                             myRef.child(message_id_1).setValue(message);
                             //Thêm vào bảng participants cho cả 2 người
                             DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("participants");
-                            newRef.child(main_user.getPhone()).child(phone).setValue("True");
-                            newRef.child(phone).child(main_user.getPhone()).setValue("True");
+                            newRef.child(main_user.getPhone()).child("message").setValue(phone);
+                            newRef.child(phone).child("message").setValue(main_user.getPhone());
                             sharedPreferences.edit().putString("message_id", message_id_1).commit();
 
                         }

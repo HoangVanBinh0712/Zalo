@@ -17,7 +17,7 @@
         />
     <TextView
         android:id="@+id/receiveMessage"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4sp"
         android:layout_marginLeft="4sp"
@@ -42,6 +42,11 @@
         app:layout_constraintTop_toBottomOf="@id/receiveMessage"
         />
 
-
+    <ImageView
+        android:id="@+id/chatPicture"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

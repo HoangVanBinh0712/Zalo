@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.navMore);
+        bottomNavigationView.setSelectedItemId(R.id.navchats);
     }
     MoreFragment moreFragment = new MoreFragment();
     ListMessageFragment listMessageFragment = new ListMessageFragment();
