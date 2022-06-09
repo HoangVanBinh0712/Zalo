@@ -175,7 +175,7 @@ public class ListMessageFragment extends Fragment {
                             Log.d("TAG", "Chưa có và tiến hành tạo");
                             //Tiến hành thêm hội thoại.
                             //Tạo một message
-                            Message message = new Message(message_id_1, "");
+                            Message message = new Message(message_id_1, user.getFullname());
                             myRef.child(message_id_1).setValue(message);
                             //Thêm vào bảng participants cho cả 2 người
                             DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("participants");
