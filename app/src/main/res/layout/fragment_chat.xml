@@ -154,7 +154,7 @@
         app:layout_constraintBottom_toBottomOf="@id/inputMessage"
         app:layout_constraintTop_toTopOf="@id/inputMessage"
         app:layout_constraintRight_toRightOf="@id/inputMessage"
-        android:src="@drawable/multimedia_photo1"/>
+        android:src="@drawable/ic_baseline_image_24"/>
     <ImageView
         android:id="@+id/iconMicro"
         android:layout_width="25dp"

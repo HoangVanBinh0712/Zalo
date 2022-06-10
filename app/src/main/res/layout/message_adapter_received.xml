@@ -39,8 +39,7 @@
         android:textSize="15sp"
         android:text="07/06/2022"
         app:layout_constraintStart_toStartOf="@id/receiveMessage"
-        app:layout_constraintTop_toBottomOf="@id/receiveMessage"
-        />
+        app:layout_constraintTop_toBottomOf="@id/receiveMessage"/>
 
     <ImageView
         android:id="@+id/chatPicture"
