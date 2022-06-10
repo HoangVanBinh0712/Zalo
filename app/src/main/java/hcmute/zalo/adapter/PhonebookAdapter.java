@@ -93,7 +93,7 @@ public class PhonebookAdapter extends BaseAdapter {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //lấy user trong database
-                DataSnapshot dataSnapshot = snapshot.child(phoneBook.getUserPhone());
+                DataSnapshot dataSnapshot = snapshot.child(phoneBook.getPhonebookNumber());
                 User user = dataSnapshot.getValue(User.class);
                 //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
                 if(!user.getAvatar().equals("")) {

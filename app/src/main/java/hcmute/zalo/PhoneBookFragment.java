@@ -118,8 +118,8 @@ public class PhoneBookFragment extends Fragment {
         //Load thông tin vào listview
         adapter = new PhonebookAdapter(getActivity(),R.layout.phonebook_row,phoneBookList);
         listviewPhonebook.setAdapter(adapter);
-
         getListPhoneBook();
+        //Lấy thời gian update gần nhất để hiển thị
         sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
         timeUpdate = sharedPreferences.getString("timeUpdate","");
         textviewTimeUpdate.setText(timeUpdate);
@@ -272,9 +272,9 @@ public class PhoneBookFragment extends Fragment {
         if(requestCode == 1 && grantResults.length > 0 && grantResults[0]
         == PackageManager.PERMISSION_GRANTED){
             getContactListFromPhone();
-
         }
         else{
+            //Không được quyền truy cập -thông báo
             Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
             checkPermission();
         }

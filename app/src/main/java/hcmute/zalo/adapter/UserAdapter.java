@@ -86,7 +86,7 @@ public class UserAdapter extends BaseAdapter {
             holder = (UserAdapter.ViewHolder) view.getTag();
         }
         User user = arrUser.get(i);
-        holder.txtUserPhone.setText(user.getDescription());
+        holder.txtUserPhone.setText(user.getFullname());
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

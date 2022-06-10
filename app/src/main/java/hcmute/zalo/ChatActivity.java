@@ -69,7 +69,7 @@ public class ChatActivity extends AppCompatActivity {
     NestedScrollView idNestedSV;
     int count = 0;
     ProgressBar progressBar;
-    ImageView iconMedia, iconMicro;
+    ImageView iconMedia, iconMicro,imageBack;
     private int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
     String message_id;
@@ -87,10 +87,20 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton = findViewById(R.id.sendMessageButton);
         txtUserChatName = findViewById(R.id.txtUserChatName);
         rcvChat = findViewById(R.id.rcvChat);
+        imageBack = findViewById(R.id.imageBack);
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
         messageDetails = new ArrayList<>();
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
         rcvChat.setAdapter(messageDetailsAdapter);
+
+        imageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                ListMessageFragment listMessageFragment = new ListMessageFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
+            }
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         message_id = sharedPreferences.getString("message_id","");
