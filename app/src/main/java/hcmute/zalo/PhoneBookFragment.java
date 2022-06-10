@@ -1,7 +1,11 @@
 package hcmute.zalo;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +99,9 @@ public class PhoneBookFragment extends Fragment {
     //Gọi mẫu singleton lấy ra user
     User_SingeTon user_singeTon = User_SingeTon.getInstance();
     User user = user_singeTon.getUser();
+    //Dùng để lưu thời gian lần gần nhất cập nhập từ danh bạ
+    SharedPreferences sharedPreferences;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +120,8 @@ public class PhoneBookFragment extends Fragment {
         listviewPhonebook.setAdapter(adapter);
 
         getListPhoneBook();
+        sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
+        timeUpdate = sharedPreferences.getString("timeUpdate","");
         textviewTimeUpdate.setText(timeUpdate);
 
         //Bấm vào nút update để lấy tất cả số điện thoại từ danh bạ
@@ -122,17 +132,44 @@ public class PhoneBookFragment extends Fragment {
                 Date currentTime = Calendar.getInstance().getTime();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
                 timeUpdate = dateFormat.format(currentTime);
+                //Lưu thời gian cập nhập lên sharedPreferences
+                sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("timeUpdate",timeUpdate);
+                editor.commit();
+                textviewTimeUpdate.setText(timeUpdate);
+
+                //Tiến hành tìm kiếm trên FirebaseDatabase
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
+                myPhoneBookRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Nếu đã có danh bạ cũ thì xóa đi
+                        if(snapshot.child(user.getPhone()).exists()){
+                            //Xóa danh bạ cũ
+                            myPhoneBookRef.child(user.getPhone()).removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 //Xin quyền truy cập
                 checkPermission();
                 //Hiển thị người dùng được lưu trong danh bạ trên database
                 getListPhoneBook();
+                Toast.makeText(getActivity(), "Update success!!", Toast.LENGTH_SHORT).show();
             }
 
         });
 
         return view;
     }
+
     private void checkPermission(){
         //Xin quyền truy cập
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
@@ -147,18 +184,17 @@ public class PhoneBookFragment extends Fragment {
     private void getContactListFromPhone(){
         //Lấy đường dẫn truy cập danh bạ
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
-        //Sắp xếp danh bạ theo thứ tự tăng dần
-        String sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+"ASC";
         //Lấy tất cả số điện thoại
-        Cursor cursor = getActivity().getContentResolver().query(uri,null,null,null,sort);
+        Cursor cursor = getActivity().getContentResolver().query(uri,null,null,null,null);
         //Nếu số lượng lấy ra lớn hơn 0
-        if(cursor.moveToFirst()){
+
+//        if(cursor.moveToFirst()){
             while (cursor.moveToNext()){
+
                 //Lấy tên của số điện thoại
                 id = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
                 //Lấy tên của số điện thoại
                 name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-
                 //Lấy số điện thoại
                 Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
                 String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?";
@@ -170,8 +206,8 @@ public class PhoneBookFragment extends Fragment {
                     phone = phoneCursor.getString(
                             phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 }
-                //Chuyển từ dạng +84xxx-xxx-xxx về xxxx-xxx-xxx
-                phone = "0"+phone.substring(3);
+                //Bỏ hết khoảng trắng trong sdt lấy được
+                phone = phone.replace(" ","");
                 //Tiến hành tìm kiếm trên FirebaseDatabase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("users");
@@ -195,7 +231,7 @@ public class PhoneBookFragment extends Fragment {
                 });
 
             }
-        }
+//        }
         cursor.close();
     }
     //hiển thị những sdt trong database
@@ -234,7 +270,7 @@ public class PhoneBookFragment extends Fragment {
         if(requestCode == 1 && grantResults.length > 0 && grantResults[0]
         == PackageManager.PERMISSION_GRANTED){
             getContactListFromPhone();
-            
+
         }
         else{
             Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();

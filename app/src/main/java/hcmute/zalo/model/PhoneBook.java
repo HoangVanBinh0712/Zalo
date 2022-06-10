@@ -5,6 +5,9 @@ public class PhoneBook {
     private String phonebookName;
     private String phonebookNumber;
 
+    public PhoneBook() {
+    }
+
     public PhoneBook(String userPhone, String phonebookName, String phonebookNumber) {
         this.userPhone = userPhone;
         this.phonebookName = phonebookName;
