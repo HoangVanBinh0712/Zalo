@@ -142,7 +142,7 @@ public class PhoneBookFragment extends Fragment {
                 //Tiến hành tìm kiếm trên FirebaseDatabase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
-                myPhoneBookRef.addValueEventListener(new ValueEventListener() {
+                myPhoneBookRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //Nếu đã có danh bạ cũ thì xóa đi
@@ -202,34 +202,36 @@ public class PhoneBookFragment extends Fragment {
                         uriPhone,null,selection,new String[]{id},null
                 );
                 //Kiểm tra có số điện thoại
-                if(phoneCursor.moveToNext()){
+                if(phoneCursor.moveToNext()) {
                     phone = phoneCursor.getString(
                             phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                }
-                //Bỏ hết khoảng trắng trong sdt lấy được
-                phone = phone.replace(" ","");
-                //Tiến hành tìm kiếm trên FirebaseDatabase
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("users");
-                //Đọc và lắng nghe các thay đổi của dữ liệu
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //Nếu số điện thoại trong danh bạ đã đăng ký tài khoản
-                        if(snapshot.child(phone).exists()) {
-                            //Thêm vào database
-                            PhoneBook phoneBook = new PhoneBook(user.getPhone(),name,phone);
-                            DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
-                            myPhoneBookRef.child(user.getPhone()).child(phone).setValue(phoneBook);
+
+                    //Bỏ hết khoảng trắng trong sdt lấy được
+                    String phone_number = phone.replace(" ", "");
+                    String phone_name = name.toString();
+                    //Tiến hành tìm kiếm trên FirebaseDatabase
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("users");
+                    //Đọc dữ liệu
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //Nếu số điện thoại trong danh bạ đã đăng ký tài khoản
+                            if (snapshot.child(phone_number).exists()) {
+                                //Thêm vào database
+                                PhoneBook phoneBook = new PhoneBook(user.getPhone(), phone_name, phone_number);
+                                DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
+
+                                myPhoneBookRef.child(user.getPhone()).child(phone_number).setValue(phoneBook);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-
+                        }
+                    });
+                }
             }
 //        }
         cursor.close();
