@@ -113,6 +113,13 @@ public class PhoneBookFragment extends Fragment {
         textviewTimeUpdate = (TextView) view.findViewById(R.id.textviewTimeUpdate);
         listviewPhonebook = (ListView) view.findViewById(R.id.listviewPhonebook);
 
+        //Nếu không có user trả về trang login
+        if(user == null)
+        {
+            startActivity(new Intent(getActivity(), loginActivity.class));
+            getActivity().finish();
+        }
+
         //Khai báo mảng để lưu danh bạ
         phoneBookList = new ArrayList<>();
         //Load thông tin vào listview

@@ -115,7 +115,7 @@
         android:background="@drawable/background_chat_input"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/sendMessageButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -123,8 +123,7 @@
             android:layout_marginLeft="4sp"
             android:padding="8sp"
             android:src="@drawable/ic_send"
-            app:tint="@color/white"
-            />
+            app:tint="@color/white" />
     </FrameLayout>
     <EditText
         android:id="@+id/inputMessage"
@@ -146,24 +145,34 @@
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"/>
+    <Chronometer
+        android:visibility="gone"
+        android:id="@+id/recordTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/iconMicro"
+        app:layout_constraintTop_toTopOf="@+id/iconMicro"
+        app:layout_constraintRight_toLeftOf="@id/iconMicro"
+        android:layout_marginEnd="15dp"/>
     <ImageView
         android:id="@+id/iconMedia"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:layout_constraintBottom_toBottomOf="@id/inputMessage"
-        app:layout_constraintTop_toTopOf="@id/inputMessage"
-        app:layout_constraintRight_toRightOf="@id/inputMessage"
+        app:layout_constraintBottom_toBottomOf="@id/layoutSend"
+        app:layout_constraintTop_toTopOf="@id/layoutSend"
+        app:layout_constraintRight_toLeftOf="@id/layoutSend"
         android:src="@drawable/ic_baseline_image_24"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="15dp" />
     <ImageView
         android:id="@+id/iconMicro"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginRight="5dp"
-        app:layout_constraintBottom_toBottomOf="@id/inputMessage"
-        app:layout_constraintTop_toTopOf="@id/inputMessage"
+        app:layout_constraintBottom_toBottomOf="@id/layoutSend"
+        app:layout_constraintTop_toTopOf="@id/layoutSend"
         app:layout_constraintRight_toLeftOf="@id/iconMedia"
-        android:src="@drawable/baseline_mic_white_24"/>
+        android:src="@drawable/baseline_mic_white_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

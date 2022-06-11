@@ -82,6 +82,7 @@ public class ListMessageFragment extends Fragment {
     ListView listviewMessage;
     UserAdapter adapter;
     User found_user;
+    User main_user;
     ArrayList<User> users = new ArrayList<>();
 
     @Override
@@ -93,6 +94,14 @@ public class ListMessageFragment extends Fragment {
 
         listviewMessage = (ListView) view.findViewById(R.id.listviewMessage);
         adapter = new UserAdapter(getActivity(),R.layout.user_row,users);
+
+        //Nếu không có user trả về trang login
+        if(User_SingeTon.getInstance().getUser() == null)
+        {
+            startActivity(new Intent(getActivity(), loginActivity.class));
+            getActivity().finish();
+        }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -140,7 +149,8 @@ public class ListMessageFragment extends Fragment {
                 User user = users.get(i);
                 //Kiểm tra có cuộc trò chuyện ? chưa có thì tạo mới và chuyển qua giao diện nhắn tin.
                 String phone = user.getPhone();
-                User main_user = User_SingeTon.getInstance().getUser();
+                main_user = User_SingeTon.getInstance().getUser();
+                Log.d("TAG", "onItemClick: "+main_user.toString());
                 if(phone.equals(main_user.getPhone()))
                 {
                     Toast.makeText(getActivity(), "Cant Message to yourself !", Toast.LENGTH_SHORT).show();
@@ -200,4 +210,5 @@ public class ListMessageFragment extends Fragment {
         });
         return view;
     }
+
 }

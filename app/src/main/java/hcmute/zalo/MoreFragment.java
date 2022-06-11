@@ -1,5 +1,6 @@
 package hcmute.zalo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -92,6 +93,13 @@ public class MoreFragment extends Fragment {
         linearPrivacy = (LinearLayout) view.findViewById(R.id.linearPrivacy);
         UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
         User_SingeTon user_singeTon = User_SingeTon.getInstance();
+
+        //Nếu không có user trả về trang login
+        if(user_singeTon.getUser() == null)
+        {
+            startActivity(new Intent(getActivity(), loginActivity.class));
+            getActivity().finish();
+        }
 
         linearAccount.setOnClickListener(new View.OnClickListener() {
             @Override

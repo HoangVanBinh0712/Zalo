@@ -16,14 +16,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,7 +62,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ChatActivity extends AppCompatActivity {
 
-    AppCompatImageView sendMessageButton;
+    ImageView sendMessageButton;
     TextView txtUserChatName;
     EditText inputMessage;
     User main_user = User_SingeTon.getInstance().getUser();
@@ -67,6 +70,7 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView rcvChat;
     MessageDetailsAdapter messageDetailsAdapter;
     NestedScrollView idNestedSV;
+    Chronometer recordTimer;
     int count = 0;
     ProgressBar progressBar;
     ImageView iconMedia, iconMicro,imageBack;
@@ -88,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
         txtUserChatName = findViewById(R.id.txtUserChatName);
         rcvChat = findViewById(R.id.rcvChat);
         imageBack = findViewById(R.id.imageBack);
+        recordTimer = findViewById(R.id.recordTimer);
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
         messageDetails = new ArrayList<>();
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
@@ -191,7 +196,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
+        //Bấm nút gửi đẻ gửi tin nhắn (dạng text)
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,36 +211,77 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+        //Bấm vào imageview hình ảnh để tiến hành chọn ảnh và gửi
         iconMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Chọn hình ảnh trong máy
                 SelectImage();
             }
         });
-        iconMicro.setOnClickListener(new View.OnClickListener() {
+        iconMicro.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-
-                if(stateAudio == false){
-                    startRecording();
-
-                }else
-                {
-                    Log.d("TAG", "startRecording: False");
-
-                    mRecorder.stop();
-                    // below method will release
-                    // the media recorder class.
-                    mRecorder.release();
-                    mRecorder = null;
-
-                    stateAudio = false;
-                    UploadRecord();
-                }
+            public boolean onLongClick(View v) {
+                recordTimer.setBase(SystemClock.elapsedRealtime());
+                recordTimer.start();
+                iconMedia.setVisibility(View.INVISIBLE);
+                inputMessage.setVisibility(View.INVISIBLE);
+                recordTimer.setVisibility(View.VISIBLE);
+                startRecording();
+                Toast.makeText(ChatActivity.this, "Start Recording...", Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
+        iconMicro.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_UP:
+                    {
+                        mRecorder.stop();
+                        recordTimer.setVisibility(View.INVISIBLE);
+                        iconMedia.setVisibility(View.VISIBLE);
+                        inputMessage.setVisibility(View.VISIBLE);
+                        // below method will release
+                        // the media recorder class.
+                        mRecorder.release();
+                        mRecorder = null;
+
+                        Toast.makeText(ChatActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
+
+                        //stateAudio = false;
+                        UploadRecord();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+//        iconMicro.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                if(stateAudio == false){
+//                    startRecording();
+//
+//                }else
+//                {
+//                    Log.d("TAG", "startRecording: False");
+//
+//                    mRecorder.stop();
+//                    // below method will release
+//                    // the media recorder class.
+//                    mRecorder.release();
+//                    mRecorder = null;
+//
+//                    stateAudio = false;
+//                    UploadRecord();
+//                }
+//            }
+//        });
     }
     private boolean stateAudio = false;
+    //lưu file record lên database
     private void UploadRecord(){
         //mFileName
         Log.d("TAG", "UploadRecord: " + mFileName);
@@ -462,4 +508,5 @@ public class ChatActivity extends AppCompatActivity {
             RequestPermissions();
         }
     }
+
 }
