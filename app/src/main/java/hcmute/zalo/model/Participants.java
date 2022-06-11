@@ -8,6 +8,9 @@ public class Participants {
         this.userPhone = userPhone;
     }
 
+    public Participants() {
+    }
+
     public String getMessageid() {
         return messageid;
     }

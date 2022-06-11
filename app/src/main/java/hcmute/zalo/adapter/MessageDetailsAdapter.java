@@ -157,7 +157,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                     && today.getDate() == messageDetails.getTimeSended().getDate())
             {
                 //Chỉ hiện thời gian bỏ đi ngày
-                simpleDateFormat = new SimpleDateFormat("hh:mm");;
+                simpleDateFormat = new SimpleDateFormat("hh:mm");
             }else
             {
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
