@@ -147,14 +147,14 @@ public class chat_activity extends AppCompatActivity {
                         //Kiểm tra nếu có child message_id_1 thì chèn với child message_id_1
                         if(snapshot.child(message_id_1).exists()){
                             String message_detail_id = UUID.randomUUID().toString();
-                            ArrayList<String> viewer = new ArrayList<>();
+                            String viewer = "";
                             MessageDetails messageDetails = new MessageDetails(message_id_1,user.getPhone(),new Date(),"Xin chào kiểu 1", viewer);
                             DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
                             sendMessRef.child(message_id_1).child(message_detail_id).setValue(messageDetails);
                         }else{
                             //Tới đây thì message id là child message_id_2
                             String message_detail_id = UUID.randomUUID().toString();
-                            ArrayList<String> viewer = new ArrayList<>();
+                            String viewer = "";
                             MessageDetails messageDetails = new MessageDetails(message_id_2,user.getPhone(),new Date(),"Xin chào kiểu 2", viewer);
                             DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
                             sendMessRef.child(message_id_2).child(message_detail_id).setValue(messageDetails);

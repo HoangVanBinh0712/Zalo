@@ -121,7 +121,7 @@ public class ChatFragment extends Fragment {
                 String message = inputMessage.getText().toString();
                 if(message.equals("") == false){
                     String message_detail_id = UUID.randomUUID().toString();
-                    ArrayList<String> viewer = new ArrayList<>();
+                    String viewer="";
                     MessageDetails messageDetails = new MessageDetails(message_id,main_user.getPhone(),new Date(),message, viewer);
                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
                     sendMessRef.child(message_id).child(message_detail_id).setValue(messageDetails);

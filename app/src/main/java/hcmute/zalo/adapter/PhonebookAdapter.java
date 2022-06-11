@@ -81,10 +81,12 @@ public class PhonebookAdapter extends BaseAdapter {
         else{
             holder = (ViewHolder) view.getTag();
         }
+        //lấy dữ liệu từ các list đã được truyền vào
         final PhoneBook phoneBook = lstPhonebook.get(position);
         holder.phonebookName.setText(phoneBook.getPhonebookName());
         holder.phonebookNumber.setText(phoneBook.getPhonebookNumber());
 
+        //Lấy ảnh đại diện
         //Tiến hành tìm kiếm trên FirebaseDatabase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");

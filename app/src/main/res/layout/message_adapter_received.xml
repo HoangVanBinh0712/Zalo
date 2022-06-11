@@ -12,8 +12,6 @@
         app:layout_constraintBottom_toBottomOf="@id/receiveMessage"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/baseline_person_outline_24"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#FF000000"
         />
     <TextView
         android:id="@+id/receiveMessage"
@@ -45,7 +43,7 @@
         android:id="@+id/chatPicture"
         android:layout_width="120dp"
         android:layout_height="80dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/imgUser"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
@@ -55,8 +53,9 @@
         android:orientation="horizontal"
         android:padding="10dp"
         android:background="@drawable/background_received_message"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintLeft_toRightOf="@id/imgUser"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="4sp">
 
         <ImageView
             android:id="@+id/btn_actionAudioReceive"

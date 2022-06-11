@@ -76,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageView iconMedia, iconMicro,imageBack;
     private int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
-    String message_id;
+    String message_id, viewer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,22 +101,28 @@ public class ChatActivity extends AppCompatActivity {
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ChatActivity.this,MainActivity.class));
                 finish();
-                ListMessageFragment listMessageFragment = new ListMessageFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
             }
         });
-
+        //lấy id của phòng chat
         SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         message_id = sharedPreferences.getString("message_id","");
+        //lấy id của người nhận
+        if(main_user.getPhone().equals(message_id.substring(0,10))){
+            viewer = message_id.substring(11);
+        }
+        else {
+            viewer = message_id.substring(0,10);
+        }
         if(message_id.equals("") == false ){
             //Lấy tên chat box
-            DatabaseReference myMessageRef = FirebaseDatabase.getInstance().getReference("messages");
-            myMessageRef.child(message_id).addValueEventListener(new ValueEventListener() {
+            DatabaseReference myUserRef = FirebaseDatabase.getInstance().getReference("users");
+            myUserRef.child(viewer).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Message message = snapshot.getValue(Message.class);
-                    txtUserChatName.setText(message.getMessageName());
+                    User user = snapshot.getValue(User.class);
+                    txtUserChatName.setText(user.getFullname());
                 }
 
                 @Override
@@ -204,7 +210,6 @@ public class ChatActivity extends AppCompatActivity {
                 if(message.equals("") == false){
                     inputMessage.setText("");
                     String message_detail_id = Long.toString(Long.MAX_VALUE - new Date().getTime());
-                    ArrayList<String> viewer = new ArrayList<>();
                     MessageDetails messageDetails = new MessageDetails(message_id,main_user.getPhone(),new Date(),message, viewer);
                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
                     sendMessRef.child(message_id).child(message_detail_id).setValue(messageDetails);
@@ -249,7 +254,6 @@ public class ChatActivity extends AppCompatActivity {
 
                         Toast.makeText(ChatActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
 
-                        //stateAudio = false;
                         UploadRecord();
                         return true;
                     }
@@ -280,7 +284,6 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        });
     }
-    private boolean stateAudio = false;
     //lưu file record lên database
     private void UploadRecord(){
         //mFileName
@@ -290,8 +293,7 @@ public class ChatActivity extends AppCompatActivity {
         if (filePath != null) {
             Date today = new Date();
             String pic_id = Long.toString(today.getTime());
-            ArrayList<String> arrString = new ArrayList<>();
-            MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_records/" + message_id + "/" + pic_id,arrString);
+            MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_records/" + message_id + "/" + pic_id,viewer);
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
@@ -342,8 +344,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
     // Hàm để chọn hình ảnh
-    private void SelectImage()
-    {
+    private void SelectImage() {
         // Xác định mở thư mục ảnh
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -373,8 +374,7 @@ public class ChatActivity extends AppCompatActivity {
         if (filePath != null) {
             Date today = new Date();
             String pic_id = Long.toString(today.getTime());
-            ArrayList<String> arrString = new ArrayList<>();
-            MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_images/" + message_id + "/" + pic_id,arrString);
+            MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_images/" + message_id + "/" + pic_id,viewer);
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
@@ -464,7 +464,6 @@ public class ChatActivity extends AppCompatActivity {
         // that the user has granted permission
         // to record nd store the audio.
         if (CheckPermissions()) {
-            stateAudio = true;
 
             // we are here initializing our filename variable
             // with the path of the recorded audio file.

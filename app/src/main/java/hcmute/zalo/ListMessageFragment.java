@@ -188,9 +188,10 @@ public class ListMessageFragment extends Fragment {
                             Message message = new Message(message_id_1, user.getFullname());
                             myRef.child(message_id_1).setValue(message);
                             //Thêm vào bảng participants cho cả 2 người
+
                             DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("participants");
-                            newRef.child(main_user.getPhone()).child("message").setValue(phone);
-                            newRef.child(phone).child("message").setValue(main_user.getPhone());
+                            newRef.child(main_user.getPhone()).child(message_id_1).child("message").setValue(phone);
+                            newRef.child(phone).child(message_id_1).child("message").setValue(main_user.getPhone());
                             sharedPreferences.edit().putString("message_id", message_id_1).commit();
 
                         }

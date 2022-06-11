@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MessageDetails {
-    public MessageDetails(String messageId, String senderPhone, Date timeSended, String content, ArrayList<String> viewer) {
+    public MessageDetails(String messageId, String senderPhone, Date timeSended, String content, String viewer) {
         this.messageId = messageId;
         this.senderPhone = senderPhone;
         this.timeSended = timeSended;
@@ -12,11 +12,11 @@ public class MessageDetails {
         this.viewer = viewer;
     }
 
-    public void setViewer(ArrayList<String> viewer) {
+    public void setViewer(String viewer) {
         this.viewer = viewer;
     }
 
-    public ArrayList<String> getViewer() {
+    public String getViewer() {
         return viewer;
     }
 
@@ -56,7 +56,7 @@ public class MessageDetails {
     private String senderPhone;
     private Date timeSended;
     private String content;
-    private ArrayList<String> viewer;
+    private String viewer;
 
     public MessageDetails() {
     }

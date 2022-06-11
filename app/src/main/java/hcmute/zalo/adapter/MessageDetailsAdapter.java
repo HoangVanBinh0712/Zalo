@@ -18,7 +18,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -47,7 +53,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
     Context context;
     ArrayList<MessageDetails> arrMessDetails;
     int ITEM_SEND = 1;
-    int ITEM_RECIVE=2;
+    int ITEM_RECEIVE=2;
     ScheduledExecutorService timer;
     @NonNull
     @Override
@@ -207,6 +213,43 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 reciverViewHolder.linearAudioReceive.setVisibility(View.INVISIBLE);
 
             }
+            //lấy ảnh đại diện của người nhận
+            //Tiến hành tìm kiếm trên FirebaseDatabase
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("users");
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //lấy user trong database
+                    DataSnapshot dataSnapshot = snapshot.child(messageDetails.getSenderPhone());
+                    User user = dataSnapshot.getValue(User.class);
+                    //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
+                    if(!user.getAvatar().equals("")) {
+                        //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageReference = storage.getReference(user.getAvatar());
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                                Picasso.get().load(uri).fit().centerCrop().into(reciverViewHolder.imgUser);
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //Thất bại thì sẽ in ra lỗi
+                                Log.d("TAG", "onFailure: " + e.getMessage());
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             //reciverViewHolder.receiveMessage.setText(messageDetails.getContent());
            // Picasso.get().load(uri).fit().centerCrop().into(holder.imageBoxChat);
             reciverViewHolder.btn_actionAudioReceive.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +307,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             return ITEM_SEND;
         }else
         {
-            return ITEM_RECIVE;
+            return ITEM_RECEIVE;
         }
     }
 
