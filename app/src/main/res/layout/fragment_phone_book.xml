@@ -16,9 +16,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_phonebook"
             android:layout_width="match_parent"
-            android:layout_height="50sp"
+            android:layout_height="55sp"
             android:background="#2196f3">
-
             <TextView
                 android:id="@+id/tvLayoutPhoneBook"
                 android:layout_width="0sp"
@@ -31,17 +30,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/btn_addFriend"
                 app:layout_constraintHorizontal_weight="9"/>
-
-            <ImageView
-                android:id="@+id/btn_addFriend"
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_add_friend"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/tvLayoutPhoneBook"
-                app:layout_constraintHorizontal_weight="1"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,14 +76,12 @@
                 app:layout_constraintLeft_toRightOf="@+id/tvNofiUpdate"
                 app:layout_constraintHorizontal_weight="2"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="#F2F2F2"
+            <TextView
                 app:layout_constraintTop_toBottomOf="@+id/textviewTimeUpdate"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
-
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                style="?android:listSeparatorTextViewStyle"
+                />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ListView

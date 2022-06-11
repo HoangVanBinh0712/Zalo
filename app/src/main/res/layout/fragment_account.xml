@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F8F8F8">
+        android:background="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
 
         <LinearLayout
             android:id="@+id/linearChangeNumber"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -54,6 +54,11 @@
                 android:textSize="16dp"/>
         </LinearLayout>
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            style="?android:listSeparatorTextViewStyle"
+            />
+        <TextView
             android:drawableLeft="@drawable/baseline_history_24"
             android:drawablePadding="10dp"
             android:id="@+id/txtLoginHistory"
@@ -62,20 +67,29 @@
             android:text="Login History"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/border_line" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            style="?android:listSeparatorTextViewStyle"
+            />
         <TextView
             android:drawableLeft="@drawable/baseline_system_update_alt_24"
             android:drawablePadding="10dp"
-
             android:id="@+id/txtChangePassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Change Password"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/border_line"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            style="?android:listSeparatorTextViewStyle"
             />
         <TextView
             android:drawableLeft="@drawable/baseline_notifications_24"
@@ -86,8 +100,13 @@
             android:text="Friend requests"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/border_line"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            style="?android:listSeparatorTextViewStyle"
+            />
         <TextView
             android:drawableLeft="@drawable/baseline_logout_24"
             android:drawablePadding="10dp"
@@ -98,7 +117,12 @@
             android:textColor="@color/black"
             android:background="@drawable/border_line"
             android:textSize="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            style="?android:listSeparatorTextViewStyle"
             />
         <TextView
             android:drawableLeft="@drawable/baseline_delete_24"

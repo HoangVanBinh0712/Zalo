@@ -108,7 +108,6 @@ public class PhoneBookFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_phone_book, container, false);
         //ánh xạ các view
-        btn_addFriend = (ImageView) view.findViewById(R.id.btn_addFriend);
         btn_updatePhonebook = (ImageView) view.findViewById(R.id.btn_updatePhonebook);
         textviewTimeUpdate = (TextView) view.findViewById(R.id.textviewTimeUpdate);
         listviewPhonebook = (ListView) view.findViewById(R.id.listviewPhonebook);

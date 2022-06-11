@@ -10,21 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:id="@+id/more"
+        <LinearLayout
+            android:id="@+id/lineartop"
+            android:layout_marginTop="25dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:text="More"
-            />
-        <LinearLayout
-            android:id="@+id/lineartop"
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/more"
             android:orientation="horizontal">
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"

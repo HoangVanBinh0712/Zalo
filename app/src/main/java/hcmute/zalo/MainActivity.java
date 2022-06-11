@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navchats:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
                 return true;
-            case R.id.navcontacts:
+//            case R.id.navcontacts:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneBookFragment).commit();
+//                return true;
+            case R.id.navphones:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneBookFragment).commit();
                 return true;
         }

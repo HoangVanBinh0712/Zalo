@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Automatically add friends from contacts"
+                android:text="Add friends from contacts"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 />
