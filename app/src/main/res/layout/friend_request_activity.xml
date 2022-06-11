@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="5dp"
+        android:background="#2196F3"
+        android:id="@+id/relativeLayout"
+        >
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/baseline_arrow_back_white_24"/>
+
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/btnBack"
+            android:text="Friend requests"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:padding="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/relativeLayout"
+        android:stretchColumns="*"
+        android:background="@drawable/top_bottom_border"
+        >
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Received"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_column="0"
+                android:textAlignment="center"
+                android:background="@drawable/right_border"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sended"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_column="1"
+                android:textAlignment="center"/>
+        </TableRow>
+    </TableLayout>
+
+    <ListView
+        android:id="@+id/lstFriendRequest"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tableLayout"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
