@@ -198,7 +198,7 @@ public class loginActivity extends AppCompatActivity {
                                 //Lưu lịch sử đăng nhập
                                 //Lấy thời gian đăng nhập
                                 Date currentTime = Calendar.getInstance().getTime();
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String loginDate = dateFormat.format(currentTime);
 
                                 //Lưu các thông tin đăng nhập vào model
