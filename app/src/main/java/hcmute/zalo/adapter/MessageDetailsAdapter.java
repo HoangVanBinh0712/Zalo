@@ -1,6 +1,7 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
+import hcmute.zalo.ZoomImageActivity;
 import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.User;
 
@@ -81,12 +85,19 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        senderViewHolder.sendImageUri = uri;
                         Picasso.get().load(uri).fit().centerCrop().into(senderViewHolder.chatPicture);
                     }
                 });
                 senderViewHolder.sendMessage.setVisibility(View.INVISIBLE);
                 senderViewHolder.chatPicture.setVisibility(View.VISIBLE);
                 senderViewHolder.linearAudioSend.setVisibility(View.INVISIBLE);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(senderViewHolder.sendParent_layout);
+                constraintSet.connect(R.id.chatPicture,ConstraintSet.RIGHT,R.id.txtTimeSent,ConstraintSet.RIGHT,0);
+                constraintSet.connect(R.id.txtTimeSent,ConstraintSet.TOP,R.id.chatPicture,ConstraintSet.BOTTOM,0);
+                constraintSet.applyTo(senderViewHolder.sendParent_layout);
 
             }
             else if(messageDetails.getContent().startsWith("message_records/"+ messageDetails.getMessageId())){
@@ -107,6 +118,15 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
 
                             int millis = senderViewHolder.sendMediaPlayer.getDuration();
                             senderViewHolder.seekbarSend.setMax(millis);
+
+                            senderViewHolder.sendMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    timer.shutdown();
+                                    senderViewHolder.seekbarSend.setProgress(0);
+                                    senderViewHolder.btn_actionAudioSend.setImageResource(R.drawable.ic_play);
+                                }
+                            });
 
                         }catch (IOException e){
                             Toast.makeText(context, "Error "+e, Toast.LENGTH_SHORT).show();
@@ -163,6 +183,15 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             senderViewHolder.txtTimeSent.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
+            senderViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent zoomImageIntent = new Intent(context, ZoomImageActivity.class);
+                    zoomImageIntent.putExtra("uri",senderViewHolder.sendImageUri.toString());
+                    context.startActivity(zoomImageIntent);
+                }
+            });
+
         }else{
             ReciverViewHolder reciverViewHolder = (ReciverViewHolder) holder;
             if(messageDetails.getContent().startsWith("message_images/"+ messageDetails.getMessageId())){
@@ -171,12 +200,19 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        reciverViewHolder.receiveImageUri = uri;
                         Picasso.get().load(uri).fit().centerCrop().into(reciverViewHolder.chatPicture);
                     }
                 });
                 reciverViewHolder.receiveMessage.setVisibility(View.INVISIBLE);
                 reciverViewHolder.linearAudioReceive.setVisibility(View.INVISIBLE);
                 reciverViewHolder.chatPicture.setVisibility(View.VISIBLE);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(reciverViewHolder.receiveParent_layout);
+                constraintSet.connect(R.id.chatPicture,ConstraintSet.START,R.id.receiveTime,ConstraintSet.START,0);
+                constraintSet.connect(R.id.receiveTime,ConstraintSet.TOP,R.id.chatPicture,ConstraintSet.BOTTOM,0);
+                constraintSet.applyTo(reciverViewHolder.receiveParent_layout);
 
             }else if(messageDetails.getContent().startsWith("message_records/"+ messageDetails.getMessageId())){
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(messageDetails.getContent());
@@ -196,6 +232,15 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
 
                             int millis = reciverViewHolder.receiveMediaPlayer.getDuration();
                             reciverViewHolder.seekbarReceive.setMax(millis);
+
+                            reciverViewHolder.receiveMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    timer.shutdown();
+                                    reciverViewHolder.seekbarReceive.setProgress(0);
+                                    reciverViewHolder.btn_actionAudioReceive.setImageResource(R.drawable.ic_play);
+                                }
+                            });
 
                         }catch (IOException e){
                             Toast.makeText(context, "Error "+e, Toast.LENGTH_SHORT).show();
@@ -290,6 +335,14 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             reciverViewHolder.receiveTime.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
+            reciverViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent zoomImageIntent = new Intent(context, ZoomImageActivity.class);
+                    zoomImageIntent.putExtra("uri",reciverViewHolder.receiveImageUri.toString());
+                    context.startActivity(zoomImageIntent);
+                }
+            });
         }
     }
 
@@ -315,9 +368,11 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
         TextView sendMessage;
         TextView txtTimeSent;
         LinearLayout linearAudioSend;
+        ConstraintLayout sendParent_layout;
         ImageView chatPicture,btn_actionAudioSend;
         SeekBar seekbarSend;
         MediaPlayer sendMediaPlayer;
+        Uri sendImageUri;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             sendMessage = itemView.findViewById(R.id.sendMessage);
@@ -326,17 +381,20 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             btn_actionAudioSend = itemView.findViewById(R.id.btn_actionAudioSend);
             seekbarSend = itemView.findViewById(R.id.seekbarSend);
             linearAudioSend = itemView.findViewById(R.id.linearAudioSend);
+            sendParent_layout = itemView.findViewById(R.id.sendParent_layout);
         }
     }
 
     class ReciverViewHolder extends RecyclerView.ViewHolder {
         LinearLayout linearAudioReceive;
+        ConstraintLayout receiveParent_layout;
         TextView receiveMessage;
         CircleImageView imgUser;
         TextView receiveTime;
         SeekBar seekbarReceive;
         ImageView chatPicture,btn_actionAudioReceive;
         MediaPlayer receiveMediaPlayer;
+        Uri receiveImageUri;
         public ReciverViewHolder(@NonNull View itemView) {
             super(itemView);
             imgUser = itemView.findViewById(R.id.imgUser);
@@ -346,6 +404,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             btn_actionAudioReceive = itemView.findViewById(R.id.btn_actionAudioReceive);
             seekbarReceive = itemView.findViewById(R.id.seekbarReceive);
             linearAudioReceive = itemView.findViewById(R.id.linearAudioReceive);
+            receiveParent_layout = itemView.findViewById(R.id.receiveParent_layout);
         }
     }
 

@@ -46,6 +46,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.adapter.MessageDetailsAdapter;
@@ -73,6 +75,7 @@ public class ChatActivity extends AppCompatActivity {
     MessageDetailsAdapter messageDetailsAdapter;
     NestedScrollView idNestedSV;
     Chronometer recordTimer;
+    CircleImageView imageProfileChat;
     int count = 0;
     ProgressBar progressBar;
     ImageView iconMedia, iconMicro,imageBack;
@@ -95,6 +98,7 @@ public class ChatActivity extends AppCompatActivity {
         rcvChat = findViewById(R.id.rcvChat);
         imageBack = findViewById(R.id.imageBack);
         recordTimer = findViewById(R.id.recordTimer);
+        imageProfileChat = findViewById(R.id.imageProfileChat);
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
         messageDetails = new ArrayList<>();
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
@@ -125,6 +129,24 @@ public class ChatActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
                     txtUserChatName.setText(user.getFullname());
+                    if(!user.getAvatar().equals("")) {
+                        //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageReference = storage.getReference(user.getAvatar());
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
+                                Picasso.get().load(uri).fit().centerCrop().into(imageProfileChat);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //Thất bại thì sẽ in ra lỗi
+                                Log.d("TAG", "onFailure: " + e.getMessage());
+                            }
+                        });
+                    }
                 }
 
                 @Override
