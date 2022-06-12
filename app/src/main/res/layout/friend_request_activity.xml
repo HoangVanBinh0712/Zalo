@@ -37,31 +37,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/relativeLayout"
-        android:stretchColumns="*"
-        android:background="@drawable/top_bottom_border"
-        >
+        android:stretchColumns="*">
         <TableRow>
             <TextView
                 android:id="@+id/txtReceived"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
                 android:text="Received"
-                android:textSize="16dp"
+                android:textSize="18dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_column="0"
                 android:textAlignment="center"
-                android:background="@drawable/right_border"/>
+                android:background="@drawable/top_bottom_border"/>
             <TextView
                 android:id="@+id/txtSended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sended"
-                android:textSize="16dp"
-                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColor="#808080"
                 android:textStyle="bold"
                 android:layout_column="1"
-                android:textAlignment="center"/>
+                android:textAlignment="center" />
         </TableRow>
     </TableLayout>
 

@@ -3,6 +3,7 @@ package hcmute.zalo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +67,10 @@ public class FriendRequestActivity extends AppCompatActivity {
 
                     }
                 });
+                txtReceived.setBackgroundResource(R.drawable.top_bottom_border);
+                txtReceived.setTextColor(getResources().getColor(R.color.black));
+                txtSended.setBackground(null);
+                txtSended.setTextColor(Color.parseColor("#808080"));
             }
         });
         txtSended.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +96,10 @@ public class FriendRequestActivity extends AppCompatActivity {
 
                     }
                 });
+                txtSended.setBackgroundResource(R.drawable.top_bottom_border);
+                txtSended.setTextColor(getResources().getColor(R.color.black));
+                txtReceived.setBackground(null);
+                txtReceived.setTextColor(Color.parseColor("#808080"));
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
