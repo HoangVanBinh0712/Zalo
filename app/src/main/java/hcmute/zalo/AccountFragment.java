@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
+import hcmute.zalo.model.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,14 +68,23 @@ public class AccountFragment extends Fragment {
 
     View view;
     ImageView btnBack;
-    TextView txtChangePassword, txtLoginHistory,txtLogOut;
+    TextView txtChangePassword, txtLoginHistory,txtLogOut,txtAddFriendRequest,txtPhonenumber;
     LinearLayout linearChangeNumber;
+    User main_user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        main_user = User_SingeTon.getInstance().getUser();
         view = (View)inflater.inflate(R.layout.fragment_account, container, false);
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
+        txtChangePassword = (TextView) view.findViewById(R.id.txtChangePassword);
+        linearChangeNumber = (LinearLayout) view.findViewById(R.id.linearChangeNumber);
+        txtLoginHistory = (TextView) view.findViewById(R.id.txtLoginHistory);
+        txtLogOut = view.findViewById(R.id.txtLogOut);
+        txtAddFriendRequest = view.findViewById(R.id.txtAddFriendRequest);
+        txtPhonenumber = view.findViewById(R.id.txtPhonenumber);
+        txtPhonenumber.setText("(+84) " + main_user.getFullname());
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +92,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
-        txtChangePassword = (TextView) view.findViewById(R.id.txtChangePassword);
+
         txtChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +100,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, passwordFragment).commit();
             }
         });
-        linearChangeNumber = (LinearLayout) view.findViewById(R.id.linearChangeNumber);
+
         linearChangeNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +109,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        txtLoginHistory = (TextView) view.findViewById(R.id.txtLoginHistory);
         txtLoginHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +116,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,loginHistoryFragment).commit();
             }
         });
-        txtLogOut = view.findViewById(R.id.txtLogOut);
+
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +133,12 @@ public class AccountFragment extends Fragment {
                 startActivity(new Intent(getActivity(),loginActivity.class));
                 getActivity().finish();
 
+            }
+        });
+        txtAddFriendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), FriendRequestActivity.class));
             }
         });
         return view;

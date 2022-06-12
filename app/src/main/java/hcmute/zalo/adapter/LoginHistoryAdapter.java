@@ -63,7 +63,6 @@ public class LoginHistoryAdapter extends BaseAdapter {
         final LoginHistory loginHistory = lstHistory.get(position);
         holder.textviewDeviceName.setText(loginHistory.getDeviceName());
         holder.textviewLoginDate.setText(loginHistory.getDateLogin());
-
         return view;
     }
 }

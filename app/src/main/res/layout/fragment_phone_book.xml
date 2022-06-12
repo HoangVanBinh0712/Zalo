@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_phonebook"
+            android:id="@+id/constraint_contacts"
             android:layout_width="match_parent"
             android:layout_height="55sp"
             android:background="#2196f3">
@@ -38,7 +38,7 @@
             android:id="@+id/constraint_updatePhonebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/constraint_phonebook">
+            android:layout_below="@+id/constraint_contacts">
 
             <TextView
                 android:id="@+id/tvNofiUpdate"

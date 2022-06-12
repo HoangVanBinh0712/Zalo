@@ -1,37 +1,52 @@
 package hcmute.zalo.model;
 
+import java.util.Date;
+
 public class Friends {
-    private String friendPhone;
-    private String friendName;
-    private String friendPhoneNumber;
-
-    public Friends(String friendPhone, String friendName, String friendPhoneNumber) {
-        this.friendPhone = friendPhone;
-        this.friendName = friendName;
-        this.friendPhoneNumber = friendPhoneNumber;
-    }
-
     public String getFriendPhone() {
         return friendPhone;
-    }
-
-    public void setFriendPhone(String friendPhone) {
-        this.friendPhone = friendPhone;
     }
 
     public String getFriendName() {
         return friendName;
     }
 
+    public Date getDayBecome() {
+        return dayBecome;
+    }
+
+    public void setFriendPhone(String friendPhone) {
+        this.friendPhone = friendPhone;
+    }
+
     public void setFriendName(String friendName) {
         this.friendName = friendName;
     }
 
-    public String getFriendPhoneNumber() {
-        return friendPhoneNumber;
+    public void setDayBecome(Date dayBecome) {
+        this.dayBecome = dayBecome;
     }
 
-    public void setFriendPhoneNumber(String friendPhoneNumber) {
-        this.friendPhoneNumber = friendPhoneNumber;
+    public Friends(String friendPhone, String friendName, Date dayBecome) {
+        this.friendPhone = friendPhone;
+        this.friendName = friendName;
+        this.dayBecome = dayBecome;
     }
+
+    public Friends() {
+    }
+
+    @Override
+    public String toString() {
+        return "Friends{" +
+                "friendPhone='" + friendPhone + '\'' +
+                ", friendName='" + friendName + '\'' +
+                ", dayBecome=" + dayBecome +
+                '}';
+    }
+
+    private String friendPhone;
+    private String friendName;
+    private Date dayBecome;
+
 }

@@ -1,47 +1,75 @@
 package hcmute.zalo.model;
 
+import java.util.Date;
+
 public class FriendRequest {
-    private String senderphone;
-    private String receiverPhone;
-    private String invitation;
-    private boolean accept;
-
-    public FriendRequest(String senderphone, String receiverPhone, String invitation, boolean accept) {
-        this.senderphone = senderphone;
+    public FriendRequest(String senderPhone, String senderName, String receiverPhone, String receiverName, String invitation) {
+        this.senderPhone = senderPhone;
+        this.senderName = senderName;
         this.receiverPhone = receiverPhone;
+        this.receiverName = receiverName;
         this.invitation = invitation;
-        this.accept = accept;
+        this.dateRequest = new Date();
     }
 
-    public String getSenderphone() {
-        return senderphone;
+    public String getSenderPhone() {
+        return senderPhone;
     }
 
-    public void setSenderphone(String senderphone) {
-        this.senderphone = senderphone;
+    public String getSenderName() {
+        return senderName;
     }
 
     public String getReceiverPhone() {
         return receiverPhone;
     }
 
-    public void setReceiverPhone(String receiverPhone) {
-        this.receiverPhone = receiverPhone;
+    public String getReceiverName() {
+        return receiverName;
     }
 
     public String getInvitation() {
         return invitation;
     }
 
+    public Date getDateRequest() {
+        return dateRequest;
+    }
+
+    public void setSenderPhone(String senderPhone) {
+        this.senderPhone = senderPhone;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
     public void setInvitation(String invitation) {
         this.invitation = invitation;
     }
 
-    public boolean isAccept() {
-        return accept;
+    public void setDateRequest(Date dateRequest) {
+        this.dateRequest = dateRequest;
     }
 
-    public void setAccept(boolean accept) {
-        this.accept = accept;
+    public FriendRequest() {
     }
+
+    private String senderPhone;
+    private String senderName;
+    private String receiverPhone;
+    private String receiverName;
+    private String invitation;
+    private Date dateRequest;
+
+
+
 }

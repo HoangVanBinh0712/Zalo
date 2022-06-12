@@ -19,11 +19,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.navchats);
+        bottomNavigationView.setSelectedItemId(R.id.navMore);
     }
     MoreFragment moreFragment = new MoreFragment();
     ListMessageFragment listMessageFragment = new ListMessageFragment();
     PhoneBookFragment phoneBookFragment = new PhoneBookFragment();
+    ContactsFragment contactsFragment = new ContactsFragment();
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
@@ -34,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navchats:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, listMessageFragment).commit();
                 return true;
-//            case R.id.navcontacts:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneBookFragment).commit();
-//                return true;
+            case R.id.navcontacts:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, contactsFragment).commit();
+                return true;
             case R.id.navphones:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneBookFragment).commit();
                 return true;

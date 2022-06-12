@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContactsFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="55sp"
+            android:background="#2196f3">
+            <TextView
+                android:id="@+id/tvLayoutPhoneBook"
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:text="Friends"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:paddingStart="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_weight="9"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ListView
+            android:id="@+id/lstFriends"
+            android:layout_below="@+id/constraint_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -10,8 +10,10 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -135,7 +137,6 @@ public class ChatActivity extends AppCompatActivity {
             myRef.child(message_id).limitToFirst(1).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d("TAG", "-------------Load 0 -----------------");
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         messageDetails.add(dataSnapshot.getValue(MessageDetails.class));
                     }
@@ -153,7 +154,6 @@ public class ChatActivity extends AppCompatActivity {
                     if(snapshot.exists())
                     {
                         //Load 9 tin nhắn đầu tin khi bật lên
-                        Log.d("TAG", "-------------Load 1 - 9 -----------------");
                         int i = 0;
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             if(i == 0) {
@@ -240,6 +240,8 @@ public class ChatActivity extends AppCompatActivity {
         iconMicro.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                if(mRecorder == null)
+                    return false;
                 switch (event.getAction()){
                     case MotionEvent.ACTION_UP:
                     {
@@ -253,8 +255,21 @@ public class ChatActivity extends AppCompatActivity {
                         mRecorder = null;
 
                         Toast.makeText(ChatActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder dialogCheck = new AlertDialog.Builder(ChatActivity.this);
+                        dialogCheck.setMessage("Do you want to send this record ?");
+                        dialogCheck.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                UploadRecord();
+                            }
+                        });
+                        dialogCheck.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
-                        UploadRecord();
+                            }
+                        });
+                        dialogCheck.show();
                         return true;
                     }
                 }

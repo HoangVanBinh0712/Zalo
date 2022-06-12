@@ -2,6 +2,7 @@ package hcmute.zalo.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class MessageListAdapter extends BaseAdapter {
     }
 
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -85,9 +87,9 @@ public class MessageListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         final Participants participants = lstParticipant.get(position);
-
+        holder.imageBoxChat.setImageBitmap(null);
         DatabaseReference myUserRef = FirebaseDatabase.getInstance().getReference("users");
-        myUserRef.child(participants.getUserPhone()).addValueEventListener(new ValueEventListener() {
+        myUserRef.child(participants.getUserPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
@@ -111,6 +113,9 @@ public class MessageListAdapter extends BaseAdapter {
                             Log.d("TAG", "onFailure: " + e.getMessage());
                         }
                     });
+                }else
+                {
+                    holder.imageBoxChat.setImageResource(R.drawable.man_placeholder);
                 }
             }
 
@@ -119,7 +124,6 @@ public class MessageListAdapter extends BaseAdapter {
 
             }
         });
-
         User currentUser = User_SingeTon.getInstance().getUser();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
         myRef.child(participants.getMessageid()).limitToFirst(1).addValueEventListener(new ValueEventListener() {

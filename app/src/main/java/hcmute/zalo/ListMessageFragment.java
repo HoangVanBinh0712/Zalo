@@ -165,6 +165,8 @@ public class ListMessageFragment extends Fragment {
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
+                }else if(search_phone.length() == 0) {
+                    getListParticipant();
                 }else{
                     users.clear();
                     adapter.notifyDataSetChanged();
@@ -231,9 +233,6 @@ public class ListMessageFragment extends Fragment {
                                 sharedPreferences.edit().putString("message_id", message_id_1).commit();
 
                             }
-//                        //Đá qua chat fragment
-//                        ChatFragment chatFragment = new ChatFragment();
-//                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, chatFragment).commit();
                             startActivity(new Intent(getActivity(), ChatActivity.class));
                         }
 
@@ -268,8 +267,8 @@ public class ListMessageFragment extends Fragment {
                     //System.out.println(participants.getUserPhone());
                     participantsList.add(participants);
                 }
+                listviewMessage.setAdapter(messageListAdapter);
                 messageListAdapter.notifyDataSetChanged();
-
             }
 
             @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="5dp"
+        android:padding="7dp"
         android:background="#2196F3"
         android:id="@+id/relativeLayout"
         >
@@ -21,10 +21,10 @@
             android:src="@drawable/baseline_arrow_back_white_24"/>
 
         <TextView
-            android:layout_marginLeft="30dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="30dp"
             android:layout_toRightOf="@+id/btnBack"
             android:text="Friend requests"
             android:textColor="@color/white"
@@ -36,12 +36,13 @@
         android:padding="6dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/relativeLayout"
+        android:layout_below="@id/relativeLayout"
         android:stretchColumns="*"
         android:background="@drawable/top_bottom_border"
         >
         <TableRow>
             <TextView
+                android:id="@+id/txtReceived"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Received"
@@ -52,6 +53,7 @@
                 android:textAlignment="center"
                 android:background="@drawable/right_border"/>
             <TextView
+                android:id="@+id/txtSended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sended"
@@ -67,6 +69,6 @@
         android:id="@+id/lstFriendRequest"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tableLayout"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/tableLayout"/>
+</RelativeLayout>

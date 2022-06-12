@@ -3,12 +3,14 @@ package hcmute.zalo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioButton rmale,rfemale;
     //Biến kiểm tra đăng nhập có thành công hay không?
     private boolean isAvailable = true ;
-
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,13 +129,16 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(name,phone,pass,birthday,"",sex,"","");
                 //CheLog.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
-
+                progressDialog = new ProgressDialog(RegisterActivity.this);
+                progressDialog.setTitle("Checking...");
+                progressDialog.setMessage("Please wait");
+                progressDialog.show();
                 //Kết nối cơ sở dữ liệu
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 //Gọi root (bảng) User
                 DatabaseReference myRef = database.getReference("users");
                 //Đọc và lắng nghe các thay đổi của dữ liệu
-                myRef.addValueEventListener(new ValueEventListener() {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     //Mỗi khí dữ liệu thay đổi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,11 +149,13 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Phone number is already Taken !", Toast.LENGTH_SHORT).show();
                             //Đặt trạng thái là false để có thể kiểm tra lại dữ liệu
                             isAvailable = false;
+                            progressDialog.dismiss();
                         }
                         //Nếu dự liệu hợp lệ
                         if(isAvailable == true) {
                             //Thêm dữ liệu người dùng đã nhập vào database
                             myRef.child(user.getPhone()).setValue(user);
+                            progressDialog.dismiss();
                             //Thông báo đăng ký thành công
                             Toast.makeText(RegisterActivity.this, "Register Successfully", Toast.LENGTH_SHORT).show();
                             //Kết thúc RegisterActivity

@@ -88,7 +88,6 @@ public class ChatFragment extends Fragment {
         sendMessageButton = view.findViewById(R.id.sendMessageButton);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         String message_id = sharedPreferences.getString("message_id","");
-        Log.d("TAG", "onCreateView: "+ message_id);
         if(message_id.equals("") == false ){
             //Lấy hết tin nhắn của 2 đứa lên
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
@@ -99,10 +98,8 @@ public class ChatFragment extends Fragment {
                     {
                         messageDetails = new ArrayList<>();
                         //Có tin nhắn lấy hết lên
-                        Log.d("TAG", "-------------Load-----------------");
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             messageDetails.add(dataSnapshot.getValue(MessageDetails.class));
-                            Log.d("TAG", dataSnapshot.getValue(MessageDetails.class).toString());
                         }
 
                     }

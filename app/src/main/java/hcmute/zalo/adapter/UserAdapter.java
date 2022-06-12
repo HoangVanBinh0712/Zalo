@@ -28,11 +28,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import hcmute.zalo.ChatFragment;
 import hcmute.zalo.MainActivity;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
+import hcmute.zalo.model.FriendRequest;
 import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.Message;
 import hcmute.zalo.model.MessageDetails;
@@ -69,8 +71,11 @@ public class UserAdapter extends BaseAdapter {
         ShapeableImageView imageBoxChat;
         ConstraintLayout constraintRowUser;
     }
+    User main_user;
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        main_user = User_SingeTon.getInstance().getUser();
         UserAdapter.ViewHolder holder;
         if(view == null) {
             holder = new UserAdapter.ViewHolder();
@@ -87,11 +92,59 @@ public class UserAdapter extends BaseAdapter {
         }
         User user = arrUser.get(i);
         holder.txtUserPhone.setText(user.getFullname());
+        //Kiểm tra xem kết bạn chưa nếu chưa thì hiện nút kết bạn
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        myRef.child("friends").child(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(user.getPhone()).exists())
+                {
+                    holder.btnAddFriend.setVisibility(View.INVISIBLE);
+                }else
+                {
+                    //Kiểm tra có gửi lời mời kết bạn chưa
+                    DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference("friend_requests");
+                    myRef1.orderByChild("senderPhone").startAt(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                FriendRequest friendRequest = dataSnapshot.getValue(FriendRequest.class);
+                                if(!friendRequest.getSenderPhone().equals(main_user.getPhone()))
+                                    break;
+                                else {
+                                    if(friendRequest.getSenderPhone().equals(main_user.getPhone()) && friendRequest.getReceiverPhone().equals(user.getPhone()))
+                                    {
+                                        //Đã gửi rồi
+                                        holder.btnAddFriend.setVisibility(View.INVISIBLE);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Gui loi moi ket ban
-                Log.d("TAG", "onClick: Gui loi moi ket ban den "+ user.getPhone());
+                //Tạo lời mời kết bạn
+                String req_id = UUID.randomUUID().toString();
+                FriendRequest fq = new FriendRequest(main_user.getPhone(),main_user.getFullname(),user.getPhone(),user.getFullname(),"Become friend with me");
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+                myRef.child(req_id).setValue(fq);
+                holder.btnAddFriend.setVisibility(View.INVISIBLE);
+                Toast.makeText(context, "Send Request Successfully to " + user.getFullname(), Toast.LENGTH_SHORT).show();
             }
         });
 
