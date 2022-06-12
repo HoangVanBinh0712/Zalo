@@ -15,16 +15,14 @@
         android:layout_marginBottom="16sp"
         android:background="@drawable/background_content_top"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
     <View
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#0343E5"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
         android:layout_width="30sp"
@@ -37,6 +35,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageProfileChat"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toTopOf="@id/imageBack"
+        app:layout_constraintLeft_toRightOf="@+id/imageBack"
+        app:layout_constraintBottom_toBottomOf="@+id/imageBack"
+        android:src="@drawable/baseline_person_outline_24"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageInfo"
         android:layout_width="30sp"
@@ -57,14 +64,14 @@
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
         android:ellipsize="end"
-        android:gravity="center"
+        android:paddingStart="15dp"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/imageBack"
         app:layout_constraintEnd_toStartOf="@id/imageInfo"
-        app:layout_constraintStart_toEndOf="@id/imageBack"
+        app:layout_constraintStart_toEndOf="@id/imageProfileChat"
         app:layout_constraintTop_toTopOf="@id/imageBack"
         />
     <View

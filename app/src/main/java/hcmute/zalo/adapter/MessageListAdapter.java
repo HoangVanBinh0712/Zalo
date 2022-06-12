@@ -1,7 +1,6 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -30,7 +28,6 @@ import java.util.List;
 
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
-import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.Participants;
 import hcmute.zalo.model.User;
@@ -64,6 +61,7 @@ public class MessageListAdapter extends BaseAdapter {
     private class ViewHolder{
         TextView nameBoxChat, lastMessage;
         ImageView imageBoxChat;
+        String getName;
     }
 
 
@@ -127,26 +125,41 @@ public class MessageListAdapter extends BaseAdapter {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     MessageDetails messageDetails = dataSnapshot.getValue(MessageDetails.class);
+                    //Kiểm tra nếu nội dung gửi là voice chat
                     if(messageDetails.getContent().startsWith("message_records/")){
+                        //Kiểm tra nếu người dùng là người gửi tin nhắn cuối cùng
                         if(currentUser.getPhone().equals(messageDetails.getSenderPhone())) {
-                            holder.lastMessage.setText("You sent a audio");
+                            //Gắn nội dung tin nhắn là thông báo gửi voice chat
+                            holder.lastMessage.setText("You sent a voice chat");
                         }
-                        else{
-                            holder.lastMessage.setText("Your friend sent a audio");
+                        //người dùng không phải người gửi tin nhắn cuối cùng
+                        else {
+                            holder.lastMessage.setText("Your friend sent a voice chat");
                         }
-                    }else if(messageDetails.getContent().startsWith("message_images/")){
+
+                    }
+                    //Nếu nội dung gửi là hình ảnh
+                    else if(messageDetails.getContent().startsWith("message_images/")){
                         if(currentUser.getPhone().equals(messageDetails.getSenderPhone())) {
+                            //Gắn nội dung tin nhắn là thông báo gửi hình ảnh
                             holder.lastMessage.setText("You sent a photo");
                         }
                         else{
                             holder.lastMessage.setText("Your friend send a photo");
                         }
                     }
+                    //Nội dung gửi đi là 1 đoạn text
                     else {
-                        holder.lastMessage.setText(messageDetails.getContent());
+                        if(currentUser.getPhone().equals(messageDetails.getSenderPhone())) {
+                            holder.lastMessage.setText(messageDetails.getContent());
+                        }
+                        else {
+                            holder.lastMessage.setText(String.format("Your friend: %s", messageDetails.getContent()));
+                        }
+
                     }
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
-                    holder.lastMessage.append(" "+simpleDateFormat.format(messageDetails.getTimeSended()));
+                    holder.lastMessage.append("   "+simpleDateFormat.format(messageDetails.getTimeSended()));
                 }
             }
 
