@@ -43,9 +43,9 @@
         android:src="@drawable/baseline_person_add_24"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnViewPage"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="25dp"
-        android:text="View Page"
+        android:text="View Profile Page"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="16dp"

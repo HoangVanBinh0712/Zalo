@@ -18,6 +18,7 @@
         android:id="@+id/receiveMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="200dp"
         android:layout_marginStart="4sp"
         android:layout_marginLeft="4sp"
         android:background="@drawable/background_received_message"
@@ -27,8 +28,7 @@
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@id/imgUser"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.75"
-        />
+        app:layout_constraintWidth_percent="0.75"/>
     <TextView
         android:id="@+id/receiveTime"
         android:layout_width="0dp"

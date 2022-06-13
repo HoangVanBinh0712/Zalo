@@ -1,17 +1,23 @@
 package hcmute.zalo;
 
+import static android.Manifest.permission.CAMERA;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -37,7 +43,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -91,7 +99,7 @@ public class AccountInformationFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    //Khai báo các View và các biến cục bộ để dùng
+
     private View view;
     private ImageView background,btnBack,btnEditInfor;
     private CircleImageView avatar;
@@ -114,8 +122,6 @@ public class AccountInformationFragment extends Fragment {
         btnEditInfor = (ImageView) view.findViewById(R.id.btnEditInfor);
         txtfullname = view.findViewById(R.id.txtFullName);
         txtdescription = view.findViewById(R.id.txtDescription);
-        btnBack = (ImageView) view.findViewById(R.id.btnBack);
-
         //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm).
         btnEditInfor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,38 +133,41 @@ public class AccountInformationFragment extends Fragment {
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Tạo dialog
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.dialog_anhbia);
-                //Hiện dialog lên
                 dialog.show();
-                //Ánh xạ
                 LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
-                //Xử lý sự kiên onclick cho linearChooseBackgroundImage
                 linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Type = 0 la anh bia
-                        //Gọi hàm để chọn ảnh và update ảnh bìa
                         SelectImage(0);
                     }
                 });
-                //Ánh xạ
+                LinearLayout linearTakeNewImageBackground = dialog.findViewById(R.id.linearTakeNewImageBackground);
+                linearTakeNewImageBackground.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(CheckPermissions())
+                        {
+                            type = 0;
+                            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        }else
+                        {
+                            RequestPermissions();
+                        }
+                    }
+                });
                 LinearLayout linearViewBackground = dialog.findViewById(R.id.linearViewBackground);
-                //Xử lý sự kiên onclick cho linearViewBackground
                 linearViewBackground.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Đóng dialog hiện tại đi
                         dialog.dismiss();
-                        //Tạo một dialog khác
                         final Dialog viewPictureDialog = new Dialog(getActivity());
                         viewPictureDialog.setContentView(R.layout.dialog_zoom);
-                        //Hiện dialog lên
                         viewPictureDialog.show();
-                        //Ánh xạ
                         ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
-                        //Set hình cho ImageView mainpicture bằng bitmap
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
                     }
                 });
@@ -171,43 +180,50 @@ public class AccountInformationFragment extends Fragment {
                 dialog.setContentView(R.layout.dialog_anhdaidien);
                 dialog.show();
                 //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
-                //Ánh xạ
                 LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
-                //Bắt sự kiện onclick cho linearChooseImageAvatar
                 linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Hàm dùng để hiện lên hình ảnh
                         //Type = 1 la anh anh dai dien
-                        //Gọi hàm để chọn ảnh và update ảnh bìa
                         SelectImage(1);
                     }
                 });
-                //Ánh xạ
+                //Trong dialog ảnh đại diện nhấn vào dòng chụp ảnh sẽ cho phép người dùng chụp ảnh
+                LinearLayout linearTakeNewImageAvatar = dialog.findViewById(R.id.linearTakeNewImageAvatar);
+                linearTakeNewImageAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(CheckPermissions())
+                        {
+                            type = 1;
+                            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        }else
+                        {
+                            RequestPermissions();
+                        }
+                    }
+                });
                 LinearLayout linearViewAvatar = dialog.findViewById(R.id.linearViewAvatar);
-                //Bắt sự kiện onclick cho linearViewAvatar
                 linearViewAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Đóng dialog hiện tại
                         dialog.dismiss();
-                        //Tạo một dialog khác
                         final Dialog viewPictureDialog = new Dialog(getActivity());
                         viewPictureDialog.setContentView(R.layout.dialog_zoom);
-                        //Hiện dialog đó lên
                         viewPictureDialog.show();
-                        //Ánh xạ
                         ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
-                        //Đưa hình ảnh vào imageView bằng bitmap
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhdaidien());
                     }
                 });
             }
         });
         //Bấm nút back để quay lại
+        btnBack = (ImageView) view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Mở MoreFragment thay thế vào framelayout
                 MoreFragment moreFragment = new MoreFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
@@ -222,7 +238,9 @@ public class AccountInformationFragment extends Fragment {
     void putDataToView(){
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
+
         user = user_singeTon.getUser();
+
         //Nếu không có user trả về trang login
         if(user == null)
         {
@@ -238,14 +256,12 @@ public class AccountInformationFragment extends Fragment {
         //Nếu chưa có ảnh thì dùng local storage tải lên - Tốn thời gian xử lý
         if(userImageBitmap_singleTon.getAnhbia() == null || userImageBitmap_singleTon.getAnhdaidien() == null)
         {
-            //Kiểm tra nếu đã có ảnh thì thực hiện lấy ảnh đại diện
+            //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
             if(!user.getAvatar().equals("")) {
+                Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
                 //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
-                //Lấy kết nối FirebaseStorage
                 storage = FirebaseStorage.getInstance();
-                //Rẽ vào nhánh user.getAvatar()
                 storageReference = storage.getReference(user.getAvatar());
-                //Tạo sự kiến lấy ảnh từ trên Firebase Storage về thành công / Thất bại
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -264,11 +280,8 @@ public class AccountInformationFragment extends Fragment {
             //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
             if(!user.getBackground().equals("")) {
                 //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
-                //Lấy kết nối FirebaseStorage
                 storage = FirebaseStorage.getInstance();
-                //Rẽ vào nhánh user.getBackground()
                 storageReference = storage.getReference(user.getBackground());
-                //Tạo sự kiến lấy ảnh từ trên Firebase Storage về thành công / Thất bại
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -306,15 +319,17 @@ public class AccountInformationFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        //Bật activity chọn ảnh
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
-    //Sau khi chọn ảnh xong ta sẽ có onactivityresult để xử lý
+    //Sau khi chọn ảnh xong chạy vào hàm này
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Nếu kết quả trả về là thành công
-        if (requestCode == PICK_IMAGE_REQUEST  && resultCode == getActivity().RESULT_OK  && data != null  && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == getActivity().RESULT_OK
+                && data != null
+                && data.getData() != null) {
+
             // Lấy được uri của ảnh
             filePath = data.getData();
             try {
@@ -323,7 +338,7 @@ public class AccountInformationFragment extends Fragment {
                 // Chuyển thành bitmap và đưa vào ảnh đại diện
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),filePath);
                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
-                //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
+
                 if(this.type == 1) {
                     userImageBitmap_singleTon.setAnhdaidien(bitmap);
                     avatar.setImageBitmap(bitmap);
@@ -338,32 +353,37 @@ public class AccountInformationFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-    }
-    //Hàm này dùng để đưa ảnh lên trên firebase storage
-    private void uploadImage()
-    {
-        //Kiểm tra đường dẫn file
-        if (filePath != null) {
-
+        else if(requestCode == 0
+                && resultCode == getActivity().RESULT_OK
+                && data != null)
+        {
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            byte[] byteArray = stream.toByteArray();
+            //Từ camera
+            Date today = new Date();
+            String pic_id = Long.toString(today.getTime());
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(getActivity());
-            //Tạo tiêu đề cho ProgressDialog
             progressDialog.setTitle("Uploading...");
 
             progressDialog.show();
             //Khai báo FirebaseStorage
+            FirebaseStorage storage;
+            StorageReference storageReference;
+
             storage = FirebaseStorage.getInstance();
             storageReference = storage.getReference();
             // Đi vào nhánh con
             StorageReference ref;
-            //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
             if(type == 1){
                 ref = storageReference.child("images/" + user.getPhone() + "_avatar");
             }else
                 ref = storageReference.child("images/" + user.getPhone() + "_background");
             // Tạo sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
-            ref.putFile(filePath)
+            ref.putBytes(byteArray)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
@@ -373,10 +393,9 @@ public class AccountInformationFragment extends Fragment {
                                     // Tắt dialog progress đi
                                     progressDialog.dismiss();
                                     //Cập nhật lại cho bảng user về địa chỉ của avatar
+                                    //Cập nhật lại cho cả user_singleTon
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                    //Tạo kết nối đến bảng users
                                     DatabaseReference myRef = database.getReference("users");
-                                    //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
                                     if(type == 1) {
                                         user.setAvatar("images/" + user.getPhone() + "_avatar");
                                         myRef.child(user.getPhone()).setValue(user);
@@ -384,9 +403,7 @@ public class AccountInformationFragment extends Fragment {
                                         user.setBackground("images/" + user.getPhone() + "_background");
                                         myRef.child(user.getPhone()).setValue(user);
                                     }
-                                    //Cập nhật lại cho cả user_singleTon
                                     user_singeTon.setUser(user);
-                                    //Thông báo
                                     Toast.makeText(getActivity(), "Update successful!!", Toast.LENGTH_SHORT).show();
                                 }
                             })
@@ -411,6 +428,114 @@ public class AccountInformationFragment extends Fragment {
                             progressDialog.setMessage("Downloaded " + (int)progress + "%");
                         }
                     });
+            // Chuyển thành bitmap và đưa vào ảnh đại diện
+            //byte -> bitmap
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+            UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+
+            if(this.type == 1) {
+                userImageBitmap_singleTon.setAnhdaidien(bitmap);
+            }
+            else {
+                userImageBitmap_singleTon.setAnhbia(bitmap);
+            }
+        }
+    }
+    //Hàm này dùng để đưa ảnh lên trên firebase storage
+    private void uploadImage()
+    {
+        //Kiểm tra đường dẫn file
+        if (filePath != null) {
+
+            // Hiện ProgressDialog trong khi đang tải lên
+            ProgressDialog progressDialog
+                    = new ProgressDialog(getActivity());
+            progressDialog.setTitle("Uploading...");
+
+            progressDialog.show();
+            //Khai báo FirebaseStorage
+            storage = FirebaseStorage.getInstance();
+            storageReference = storage.getReference();
+            // Đi vào nhánh con
+            StorageReference ref;
+            if(type == 1){
+                ref = storageReference.child("images/" + user.getPhone() + "_avatar");
+            }else
+                ref = storageReference.child("images/" + user.getPhone() + "_background");
+            // Tạo sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    // Tải ảnh lên thành công
+                                    // Tắt dialog progress đi
+                                    progressDialog.dismiss();
+                                    //Cập nhật lại cho bảng user về địa chỉ của avatar
+                                    //Cập nhật lại cho cả user_singleTon
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference myRef = database.getReference("users");
+                                    if(type == 1) {
+                                        user.setAvatar("images/" + user.getPhone() + "_avatar");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }else {
+                                        user.setBackground("images/" + user.getPhone() + "_background");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }
+                                    user_singeTon.setUser(user);
+                                    Toast.makeText(getActivity(), "Update successful!!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            // Lỗi, không tải lên thành công
+                            // Tắt progress đi và in ra lỗi
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(),"Update failed. Error: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        // Sự kiện cho Progress
+                        // Hiển thị % hoàn thành
+                        @Override
+                        public void onProgress(
+                                UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Downloaded " + (int)progress + "%");
+                        }
+                    });
+        }
+    }
+    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
+    public boolean CheckPermissions() {
+        // this method is used to check permission
+        int result = ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void RequestPermissions() {
+        // this method is used to request the
+        // permission for audio recording and storage.
+        ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length > 0) {
+                    boolean permissionToCamera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToCamera) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
     }
 }

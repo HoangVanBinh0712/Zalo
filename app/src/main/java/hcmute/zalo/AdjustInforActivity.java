@@ -1,17 +1,26 @@
 package hcmute.zalo;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,7 +37,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
 import hcmute.zalo.Pattern.UserImageBitmap_SingleTon;
 import hcmute.zalo.Pattern.User_SingeTon;
@@ -104,6 +115,22 @@ public class AdjustInforActivity extends AppCompatActivity {
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhdaidien());
                     }
                 });
+                //Trong dialog ảnh đại diện nhấn vào dòng chụp ảnh sẽ cho phép người dùng chụp ảnh
+                LinearLayout linearTakeNewImageAvatar = dialog.findViewById(R.id.linearTakeNewImageAvatar);
+                linearTakeNewImageAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(CheckPermissions())
+                        {
+                            type = 1;
+                            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        }else
+                        {
+                            RequestPermissions();
+                        }
+                    }
+                });
             }
         });
         //Cho textview đổi ảnh bìa
@@ -142,6 +169,21 @@ public class AdjustInforActivity extends AppCompatActivity {
                         ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
                         //Đưa ảnh vào trong imageview
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
+                    }
+                });
+                LinearLayout linearTakeNewImageBackground = dialog.findViewById(R.id.linearTakeNewImageBackground);
+                linearTakeNewImageBackground.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(CheckPermissions())
+                        {
+                            type = 0;
+                            Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);
+                        }else
+                        {
+                            RequestPermissions();
+                        }
                     }
                 });
             }
@@ -248,6 +290,93 @@ public class AdjustInforActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        else if(requestCode == 0
+                && resultCode == RESULT_OK
+                && data != null)
+        {
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            byte[] byteArray = stream.toByteArray();
+            //Từ camera
+            Date today = new Date();
+            String pic_id = Long.toString(today.getTime());
+            // Hiện ProgressDialog trong khi đang tải lên
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+
+            progressDialog.show();
+            //Khai báo FirebaseStorage
+            FirebaseStorage storage;
+            StorageReference storageReference;
+
+            storage = FirebaseStorage.getInstance();
+            storageReference = storage.getReference();
+            // Đi vào nhánh con
+            StorageReference ref;
+            if(type == 1){
+                ref = storageReference.child("images/" + user.getPhone() + "_avatar");
+            }else
+                ref = storageReference.child("images/" + user.getPhone() + "_background");
+            // Tạo sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
+            ref.putBytes(byteArray)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    // Tải ảnh lên thành công
+                                    // Tắt dialog progress đi
+                                    progressDialog.dismiss();
+                                    //Cập nhật lại cho bảng user về địa chỉ của avatar
+                                    //Cập nhật lại cho cả user_singleTon
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference myRef = database.getReference("users");
+                                    if(type == 1) {
+                                        user.setAvatar("images/" + user.getPhone() + "_avatar");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }else {
+                                        user.setBackground("images/" + user.getPhone() + "_background");
+                                        myRef.child(user.getPhone()).setValue(user);
+                                    }
+                                    user_singeTon.setUser(user);
+                                    Toast.makeText(AdjustInforActivity.this, "Update successful!!", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            // Lỗi, không tải lên thành công
+                            // Tắt progress đi và in ra lỗi
+                            progressDialog.dismiss();
+                            Toast.makeText(AdjustInforActivity.this,"Update failed. Error: " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        // Sự kiện cho Progress
+                        // Hiển thị % hoàn thành
+                        @Override
+                        public void onProgress(
+                                UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()/ taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Downloaded " + (int)progress + "%");
+                        }
+                    });
+            // Chuyển thành bitmap và đưa vào ảnh đại diện
+            //byte -> bitmap
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+            UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
+
+            if(this.type == 1) {
+                userImageBitmap_singleTon.setAnhdaidien(bitmap);
+            }
+            else {
+                userImageBitmap_singleTon.setAnhbia(bitmap);
+            }
+        }
     }
     //Hàm này dùng để đưa ảnh lên trên firebase storage
     private void uploadImage()
@@ -321,5 +450,32 @@ public class AdjustInforActivity extends AppCompatActivity {
                     });
         }
     }
+    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
+    public boolean CheckPermissions() {
+        // this method is used to check permission
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void RequestPermissions() {
+        // this method is used to request the
+        // permission for audio recording and storage.
+        ActivityCompat.requestPermissions(AdjustInforActivity.this, new String[]{CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length > 0) {
+                    boolean permissionToCamera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToCamera) {
+                        Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
 }

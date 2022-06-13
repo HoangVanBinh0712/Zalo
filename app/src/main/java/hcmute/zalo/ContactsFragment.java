@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.adapter.UserAdapter;
 import hcmute.zalo.model.Friends;
+import hcmute.zalo.model.Message;
+import hcmute.zalo.model.Participants;
 import hcmute.zalo.model.User;
 
 /**
@@ -146,7 +149,64 @@ public class ContactsFragment extends Fragment {
             }
         });
 
+        lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User user = arrUser.get(position);
+                //Kiểm tra có cuộc trò chuyện ? chưa có thì tạo mới và chuyển qua giao diện nhắn tin.
+                String phone = user.getPhone();
+                if (phone.equals(main_user.getPhone())) {
+                    Toast.makeText(getActivity(), "Cant Message to yourself !", Toast.LENGTH_SHORT).show();
+                    return;
 
+                }
+                //Kiểm tra xem có cuộc hội thoại này chưa.
+                //Tạo kết nối điến bảng messages
+                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("messages");
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Đọc dữ liệu từ cơ sở dữ liệu
+                        //Lấy id tin nhắn ta có 2 trướng hợp là phone1_phone2 hoặc phone2_phone1.
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
+                        String message_id_1 = main_user.getPhone() + "_" + phone;
+                        String message_id_2 = phone + "_" + main_user.getPhone();
+                        if (snapshot.child(message_id_1).exists()) {
+
+                            //Đã có cuộc hội thoại giữa 2 người.
+                            Log.d("TAG", "Đã có" + message_id_1);
+                            sharedPreferences.edit().putString("message_id", message_id_1).commit();
+                        } else if (snapshot.child(message_id_2).exists()) {
+                            Log.d("TAG", "Đã có" + message_id_2);
+                            sharedPreferences.edit().putString("message_id", message_id_2).commit();
+
+                        } else {
+                            //Chưa có hội thoại giữa 2 người
+                            Log.d("TAG", "Chưa có và tiến hành tạo");
+                            //Tiến hành thêm hội thoại.
+                            //Tạo một message
+                            Message message = new Message(message_id_1, user.getFullname());
+                            myRef.child(message_id_1).setValue(message);
+                            //Thêm vào bảng participants cho cả 2 người
+
+                            DatabaseReference newRef = FirebaseDatabase.getInstance().getReference("participants");
+                            Participants participants1 = new Participants(message_id_1, phone);
+                            newRef.child(main_user.getPhone()).child(message_id_1).setValue(participants1);
+                            Participants participants2 = new Participants(message_id_1, main_user.getPhone());
+                            newRef.child(phone).child(message_id_1).setValue(participants2);
+                            sharedPreferences.edit().putString("message_id", message_id_1).commit();
+
+                        }
+                        startActivity(new Intent(getActivity(), ChatActivity.class));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         return view;
     }
 }

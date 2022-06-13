@@ -30,8 +30,8 @@
         <LinearLayout
             android:id="@+id/linearViewBackground"
             android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -46,6 +46,7 @@
                 android:textSize="16dp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/linearTakeNewImageBackground"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -64,9 +65,9 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/linearChooseBackgroundImage"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <ImageView
             android:layout_gravity="center"
             android:layout_width="30dp"

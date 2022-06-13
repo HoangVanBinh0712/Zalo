@@ -614,8 +614,7 @@ public class ChatActivity extends AppCompatActivity {
                         // Sự kiện cho Progress
                         // Hiển thị % hoàn thành
                         @Override
-                        public void onProgress(
-                                UploadTask.TaskSnapshot taskSnapshot) {
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                             progressDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
