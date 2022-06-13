@@ -56,18 +56,20 @@ public class PrivacyFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    //Khai báo các view
     View view;
     ImageView btnBack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Ánh xạ các view
         view = inflater.inflate(R.layout.fragment_privacy, container, false);
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
+        //Bắt sự kiện onclick
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Trả về MoreFragment
                 MoreFragment moreFragment = new MoreFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }

@@ -91,7 +91,7 @@ public class AccountInformationFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    //Khai báo các View và các biến cục bộ để dùng
     private View view;
     private ImageView background,btnBack,btnEditInfor;
     private CircleImageView avatar;
@@ -114,6 +114,8 @@ public class AccountInformationFragment extends Fragment {
         btnEditInfor = (ImageView) view.findViewById(R.id.btnEditInfor);
         txtfullname = view.findViewById(R.id.txtFullName);
         txtdescription = view.findViewById(R.id.txtDescription);
+        btnBack = (ImageView) view.findViewById(R.id.btnBack);
+
         //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm).
         btnEditInfor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,26 +127,38 @@ public class AccountInformationFragment extends Fragment {
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Tạo dialog
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.dialog_anhbia);
+                //Hiện dialog lên
                 dialog.show();
+                //Ánh xạ
                 LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
+                //Xử lý sự kiên onclick cho linearChooseBackgroundImage
                 linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Type = 0 la anh bia
+                        //Gọi hàm để chọn ảnh và update ảnh bìa
                         SelectImage(0);
                     }
                 });
+                //Ánh xạ
                 LinearLayout linearViewBackground = dialog.findViewById(R.id.linearViewBackground);
+                //Xử lý sự kiên onclick cho linearViewBackground
                 linearViewBackground.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Đóng dialog hiện tại đi
                         dialog.dismiss();
+                        //Tạo một dialog khác
                         final Dialog viewPictureDialog = new Dialog(getActivity());
                         viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        //Hiện dialog lên
                         viewPictureDialog.show();
+                        //Ánh xạ
                         ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        //Set hình cho ImageView mainpicture bằng bitmap
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
                     }
                 });
@@ -157,34 +171,43 @@ public class AccountInformationFragment extends Fragment {
                 dialog.setContentView(R.layout.dialog_anhdaidien);
                 dialog.show();
                 //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
+                //Ánh xạ
                 LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
+                //Bắt sự kiện onclick cho linearChooseImageAvatar
                 linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Hàm dùng để hiện lên hình ảnh
                         //Type = 1 la anh anh dai dien
+                        //Gọi hàm để chọn ảnh và update ảnh bìa
                         SelectImage(1);
                     }
                 });
+                //Ánh xạ
                 LinearLayout linearViewAvatar = dialog.findViewById(R.id.linearViewAvatar);
+                //Bắt sự kiện onclick cho linearViewAvatar
                 linearViewAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Đóng dialog hiện tại
                         dialog.dismiss();
+                        //Tạo một dialog khác
                         final Dialog viewPictureDialog = new Dialog(getActivity());
                         viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        //Hiện dialog đó lên
                         viewPictureDialog.show();
+                        //Ánh xạ
                         ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        //Đưa hình ảnh vào imageView bằng bitmap
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhdaidien());
                     }
                 });
             }
         });
         //Bấm nút back để quay lại
-        btnBack = (ImageView) view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở MoreFragment thay thế vào framelayout
                 MoreFragment moreFragment = new MoreFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
@@ -199,9 +222,7 @@ public class AccountInformationFragment extends Fragment {
     void putDataToView(){
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
-
         user = user_singeTon.getUser();
-
         //Nếu không có user trả về trang login
         if(user == null)
         {
@@ -217,12 +238,14 @@ public class AccountInformationFragment extends Fragment {
         //Nếu chưa có ảnh thì dùng local storage tải lên - Tốn thời gian xử lý
         if(userImageBitmap_singleTon.getAnhbia() == null || userImageBitmap_singleTon.getAnhdaidien() == null)
         {
-            //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
+            //Kiểm tra nếu đã có ảnh thì thực hiện lấy ảnh đại diện
             if(!user.getAvatar().equals("")) {
-                Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
                 //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
+                //Lấy kết nối FirebaseStorage
                 storage = FirebaseStorage.getInstance();
+                //Rẽ vào nhánh user.getAvatar()
                 storageReference = storage.getReference(user.getAvatar());
+                //Tạo sự kiến lấy ảnh từ trên Firebase Storage về thành công / Thất bại
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -241,8 +264,11 @@ public class AccountInformationFragment extends Fragment {
             //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh bìa
             if(!user.getBackground().equals("")) {
                 //Đưa dữ liệu cho ảnh bìa dùng Firebase Storage
+                //Lấy kết nối FirebaseStorage
                 storage = FirebaseStorage.getInstance();
+                //Rẽ vào nhánh user.getBackground()
                 storageReference = storage.getReference(user.getBackground());
+                //Tạo sự kiến lấy ảnh từ trên Firebase Storage về thành công / Thất bại
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -280,17 +306,15 @@ public class AccountInformationFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        //Bật activity chọn ảnh
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
-    //Sau khi chọn ảnh xong chạy vào hàm này
+    //Sau khi chọn ảnh xong ta sẽ có onactivityresult để xử lý
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST
-                && resultCode == getActivity().RESULT_OK
-                && data != null
-                && data.getData() != null) {
-
+        //Nếu kết quả trả về là thành công
+        if (requestCode == PICK_IMAGE_REQUEST  && resultCode == getActivity().RESULT_OK  && data != null  && data.getData() != null) {
             // Lấy được uri của ảnh
             filePath = data.getData();
             try {
@@ -299,7 +323,7 @@ public class AccountInformationFragment extends Fragment {
                 // Chuyển thành bitmap và đưa vào ảnh đại diện
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),filePath);
                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
-
+                //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
                 if(this.type == 1) {
                     userImageBitmap_singleTon.setAnhdaidien(bitmap);
                     avatar.setImageBitmap(bitmap);
@@ -324,6 +348,7 @@ public class AccountInformationFragment extends Fragment {
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(getActivity());
+            //Tạo tiêu đề cho ProgressDialog
             progressDialog.setTitle("Uploading...");
 
             progressDialog.show();
@@ -332,6 +357,7 @@ public class AccountInformationFragment extends Fragment {
             storageReference = storage.getReference();
             // Đi vào nhánh con
             StorageReference ref;
+            //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
             if(type == 1){
                 ref = storageReference.child("images/" + user.getPhone() + "_avatar");
             }else
@@ -347,9 +373,10 @@ public class AccountInformationFragment extends Fragment {
                                     // Tắt dialog progress đi
                                     progressDialog.dismiss();
                                     //Cập nhật lại cho bảng user về địa chỉ của avatar
-                                    //Cập nhật lại cho cả user_singleTon
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    //Tạo kết nối đến bảng users
                                     DatabaseReference myRef = database.getReference("users");
+                                    //Kiểm tra type: nếu là 1 thì là đổi ảnh đại diện, 0 thì là ảnh bìa
                                     if(type == 1) {
                                         user.setAvatar("images/" + user.getPhone() + "_avatar");
                                         myRef.child(user.getPhone()).setValue(user);
@@ -357,7 +384,9 @@ public class AccountInformationFragment extends Fragment {
                                         user.setBackground("images/" + user.getPhone() + "_background");
                                         myRef.child(user.getPhone()).setValue(user);
                                     }
+                                    //Cập nhật lại cho cả user_singleTon
                                     user_singeTon.setUser(user);
+                                    //Thông báo
                                     Toast.makeText(getActivity(), "Update successful!!", Toast.LENGTH_SHORT).show();
                                 }
                             })

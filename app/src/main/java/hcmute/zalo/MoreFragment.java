@@ -75,7 +75,7 @@ public class MoreFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+//Khai báo các View
     View view;
     LinearLayout linearAccount,lineartop,linearPrivacy;
     private CircleImageView profile_image;
@@ -83,7 +83,7 @@ public class MoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Ánh xạ các view
         view = (View) inflater.inflate(R.layout.fragment_more, container, false);
         profile_image = view.findViewById(R.id.profile_image);
         txtUserPhone = view.findViewById(R.id.txtUserPhone);
@@ -91,6 +91,7 @@ public class MoreFragment extends Fragment {
         linearAccount = (LinearLayout) view.findViewById(R.id.linearAccount);
         lineartop = (LinearLayout) view.findViewById(R.id.lineartop);
         linearPrivacy = (LinearLayout) view.findViewById(R.id.linearPrivacy);
+        //Dùng SingleTon để lấy dữ liệu
         UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
         User_SingeTon user_singeTon = User_SingeTon.getInstance();
 
@@ -100,36 +101,45 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(getActivity(), loginActivity.class));
             getActivity().finish();
         }
-
+        //Bắt sự kiện onclick
         linearAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở fragmentAccount
                 AccountFragment accountFragment = new AccountFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountFragment).commit();
             }
         });
-
+        //Bắt sự kiện onclick
         lineartop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở fragment AccountInformationFragment
                 AccountInformationFragment accountInformationFragment = new AccountInformationFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountInformationFragment).commit();
             }
         });
-
+        //Bắt sự kiện onclick
         linearPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở fragment PrivacyFragment
+
                 PrivacyFragment privacyFragment = new PrivacyFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, privacyFragment).commit();
             }
         });
         //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
         if(!user_singeTon.getUser().getAvatar().equals("")) {
+            //Lấy bitmao ảnh đại diện trong SingleTon
             Bitmap avatar = userImageBitmap_singleTon.getAnhdaidien();
+            //Nếu chưa có thì lấy từ trên firebase xuống
             if (avatar == null) {
+                //Tạo kết nối đến FirebaseStorage
                 FirebaseStorage storage = FirebaseStorage.getInstance();
+                //Lấy hình ảnh có địa chỉ user_singeTon.getUser().getAvatar()
                 StorageReference storageReference = storage.getReference(user_singeTon.getUser().getAvatar());
+                //Tạo sự kiện khi lấy hình ảnh thành công
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -147,7 +157,7 @@ public class MoreFragment extends Fragment {
                 profile_image.setImageBitmap(avatar);
             }
         }
-
+        //Đưa dữ liệu cho các textview
         txtUserName.setText(user_singeTon.getUser().getFullname());
         txtUserPhone.setText(user_singeTon.getUser().getPhone());
 

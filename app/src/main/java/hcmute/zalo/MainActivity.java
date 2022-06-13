@@ -17,10 +17,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
+        //Thiết lập bottomNavigationView
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.navMore);
+        //Mặc định là navchats
+        bottomNavigationView.setSelectedItemId(R.id.navchats);
     }
+    //Khở tạo các Fragment
     MoreFragment moreFragment = new MoreFragment();
     ListMessageFragment listMessageFragment = new ListMessageFragment();
     PhoneBookFragment phoneBookFragment = new PhoneBookFragment();
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
+        //Khi click vào các button, icon ở trên bottomNavigation thì sẽ thay thế các fragment tương ứng vào FrameLayout
         switch (item.getItemId()) {
             case R.id.navMore:
                 getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();

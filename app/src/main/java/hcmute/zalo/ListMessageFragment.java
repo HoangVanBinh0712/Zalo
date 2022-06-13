@@ -24,8 +24,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import hcmute.zalo.Pattern.User_SingeTon;
@@ -33,6 +36,7 @@ import hcmute.zalo.adapter.MessageListAdapter;
 import hcmute.zalo.adapter.UserAdapter;
 import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.Message;
+import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.Participants;
 import hcmute.zalo.model.PhoneBook;
 import hcmute.zalo.model.User;
@@ -103,6 +107,7 @@ public class ListMessageFragment extends Fragment {
         listviewMessage.setAdapter(messageListAdapter);
 
         getListParticipant();
+        messageListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -121,12 +126,6 @@ public class ListMessageFragment extends Fragment {
         searchView = view.findViewById(R.id.searchView);
         btn_more = (ImageView) view.findViewById(R.id.btn_more);
         listviewMessage = (ListView) view.findViewById(R.id.listviewMessage);
-
-//        users = new ArrayList<>();
-//        messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,users);
-//        listviewMessage.setAdapter(messageListAdapter);
-//
-//        getListParticipant();
         btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,7 +189,6 @@ public class ListMessageFragment extends Fragment {
                     //Kiểm tra có cuộc trò chuyện ? chưa có thì tạo mới và chuyển qua giao diện nhắn tin.
                     String phone = user.getPhone();
                     main_user = User_SingeTon.getInstance().getUser();
-                    Log.d("TAG", "onItemClick: " + main_user.toString());
                     if (phone.equals(main_user.getPhone())) {
                         Toast.makeText(getActivity(), "Cant Message to yourself !", Toast.LENGTH_SHORT).show();
                         return;
@@ -210,15 +208,12 @@ public class ListMessageFragment extends Fragment {
                             if (snapshot.child(message_id_1).exists()) {
 
                                 //Đã có cuộc hội thoại giữa 2 người.
-                                Log.d("TAG", "Đã có" + message_id_1);
                                 sharedPreferences.edit().putString("message_id", message_id_1).commit();
                             } else if (snapshot.child(message_id_2).exists()) {
-                                Log.d("TAG", "Đã có" + message_id_2);
                                 sharedPreferences.edit().putString("message_id", message_id_2).commit();
 
                             } else {
                                 //Chưa có hội thoại giữa 2 người
-                                Log.d("TAG", "Chưa có và tiến hành tạo");
                                 //Tiến hành thêm hội thoại.
                                 //Tạo một message
                                 Message message = new Message(message_id_1, user.getFullname());
@@ -267,8 +262,61 @@ public class ListMessageFragment extends Fragment {
                     //System.out.println(participants.getUserPhone());
                     participantsList.add(participants);
                 }
-                listviewMessage.setAdapter(messageListAdapter);
-                messageListAdapter.notifyDataSetChanged();
+                List<Date> arrDate = new ArrayList<>();
+                int len = participantsList.size();
+                for(int i = 0; i < len; i++)
+                {
+                    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
+                    int finalI = i;
+                    myRef.child(participantsList.get(i).getMessageid()).limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                MessageDetails messageDetails = dataSnapshot.getValue(MessageDetails.class);
+                                arrDate.add(messageDetails.getTimeSended());
+                            }
+                            if(snapshot.exists() == false)
+                            {
+                                arrDate.add(new Date(0,0,0));
+
+                            }
+                            if(finalI == len - 1 )
+                            {
+                                //Tai vong cuoi cung tien hanh sap xep
+                                //Sap xep lai participantsList theo arrDate
+                                //Ban đầu thứ tự là đúng
+                                int len = participantsList.size();
+                                for(int i = 0; i < len; i++)
+                                    for(int j = 0 ; j < len-1 ; j++)
+                                    {
+                                        long num1 = arrDate.get(j).getTime();
+                                        long num2 = arrDate.get(j+1).getTime();
+                                        if(num1 < num2)
+                                        {
+                                            //Swap j cho j+1
+                                            Participants part1 = participantsList.get(j);
+                                            Participants part2 = participantsList.get(j+1);
+                                            participantsList.set(j,part2);
+                                            participantsList.set(j+1,part1);
+
+                                            Date date1 = arrDate.get(j);
+                                            Date date2 = arrDate.get(j+1);
+                                            arrDate.set(j,date2);
+                                            arrDate.set(j+1,date1);
+                                        }
+                                    }
+                                listviewMessage.setAdapter(messageListAdapter);
+                                messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }});
+
+
+            }
             }
 
             @Override

@@ -38,4 +38,12 @@ public class PhoneBook {
         this.userPhone = userPhone;
     }
 
+    @Override
+    public String toString() {
+        return "PhoneBook{" +
+                "userPhone='" + userPhone + '\'' +
+                ", phonebookName='" + phonebookName + '\'' +
+                ", phonebookNumber='" + phonebookNumber + '\'' +
+                '}';
+    }
 }

@@ -60,6 +60,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         txtInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở AdjustInforActivity
                 startActivity(new Intent(AdjustInforActivity.this,ChangeInformationActivity.class));
             }
         });
@@ -67,11 +68,15 @@ public class AdjustInforActivity extends AppCompatActivity {
         txtChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Tạo 1 dialog
                 final Dialog dialog = new Dialog(AdjustInforActivity.this);
                 dialog.setContentView(R.layout.dialog_anhdaidien);
+                //Hiện dialog lên
                 dialog.show();
                 //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
+                //Ánh xạ
                 LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
+                //Bắt sự kiện click
                 linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -80,21 +85,63 @@ public class AdjustInforActivity extends AppCompatActivity {
                         SelectImage(1);
                     }
                 });
+                //Ánh xạ
+                LinearLayout linearViewAvatar = dialog.findViewById(R.id.linearViewAvatar);
+                //Bắt sự kiện click
+                linearViewAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Tắt dialog hiện tại
+                        dialog.dismiss();
+                        //Tạo 1 dialog mới
+                        final Dialog viewPictureDialog = new Dialog(AdjustInforActivity.this);
+                        viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        //Hiện dialog mới lên
+                        viewPictureDialog.show();
+                        //Ánh xạ
+                        ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        //Đưa hình bảnh vào trong imageview mainpicture bằng bitmap
+                        mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhdaidien());
+                    }
+                });
             }
         });
         //Cho textview đổi ảnh bìa
         txtChangeBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Tạo 1 dialog
                 final Dialog dialog = new Dialog(AdjustInforActivity.this);
                 dialog.setContentView(R.layout.dialog_anhbia);
+                //Hiện dialog lên
                 dialog.show();
+                //Ánh xạ
                 LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
+                //Bắt sự kiện click
                 linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Type = 0 la anh bia
                         SelectImage(0);
+                    }
+                });
+                //Ánh xạ
+                LinearLayout linearViewBackground = dialog.findViewById(R.id.linearViewBackground);
+                //Bắt sự kiện click
+                linearViewBackground.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Tắt dialog đi
+                        dialog.dismiss();
+                        //Tạo 1 dialog mới
+                        final Dialog viewPictureDialog = new Dialog(AdjustInforActivity.this);
+                        viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        //Hiện dialog mới lên
+                        viewPictureDialog.show();
+                        //Ánh xạ imageView
+                        ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        //Đưa ảnh vào trong imageview
+                        mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
                     }
                 });
             }
@@ -156,6 +203,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+    //Khai báo các biến cục bộ
     private final int PICK_IMAGE_REQUEST = 22;
     private int type;
     private Uri filePath;
@@ -168,16 +216,15 @@ public class AdjustInforActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        //Mở hoạt động chọn ảnh
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
     //Sau khi chọn ảnh xong chạy vào hàm này
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST
-                && resultCode == RESULT_OK
-                && data != null
-                && data.getData() != null) {
+        //Nếu kết quả chọn ảnh thành công
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             // Lấy được uri của ảnh
             filePath = data.getData();
@@ -186,8 +233,9 @@ public class AdjustInforActivity extends AppCompatActivity {
                 uploadImage();
                 // Chuyển thành bitmap và đưa vào ảnh đại diện
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
+                // Đưa bitmap vào UserImageBitmap_SingleTon để tiện cho việc load hình - Nhanh hơn
                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
-
+                //type là 1 là ảnh đại diện, 0 là ảnh bìa
                 if(this.type == 1) {
                     userImageBitmap_singleTon.setAnhdaidien(bitmap);
                 }
@@ -211,16 +259,15 @@ public class AdjustInforActivity extends AppCompatActivity {
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
-
             progressDialog.show();
             //Khai báo FirebaseStorage
             FirebaseStorage storage;
             StorageReference storageReference;
-
             storage = FirebaseStorage.getInstance();
             storageReference = storage.getReference();
             // Đi vào nhánh con
             StorageReference ref;
+            //type là 1 là ảnh đại diện, 0 là ảnh bìa
             if(type == 1){
                 ref = storageReference.child("images/" + user.getPhone() + "_avatar");
             }else
@@ -236,9 +283,9 @@ public class AdjustInforActivity extends AppCompatActivity {
                                     // Tắt dialog progress đi
                                     progressDialog.dismiss();
                                     //Cập nhật lại cho bảng user về địa chỉ của avatar
-                                    //Cập nhật lại cho cả user_singleTon
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("users");
+                                    //type là 1 là ảnh đại diện, 0 là ảnh bìa
                                     if(type == 1) {
                                         user.setAvatar("images/" + user.getPhone() + "_avatar");
                                         myRef.child(user.getPhone()).setValue(user);
@@ -246,6 +293,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                                         user.setBackground("images/" + user.getPhone() + "_background");
                                         myRef.child(user.getPhone()).setValue(user);
                                     }
+                                    //Cập nhật lại cho cả user_singleTon
                                     user_singeTon.setUser(user);
                                     Toast.makeText(AdjustInforActivity.this, "Update successful!!", Toast.LENGTH_SHORT).show();
                                 }

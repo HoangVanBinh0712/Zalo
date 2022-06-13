@@ -30,18 +30,12 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import hcmute.zalo.ChatFragment;
-import hcmute.zalo.MainActivity;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
 import hcmute.zalo.ViewUserPageActivity;
 import hcmute.zalo.model.FriendRequest;
-import hcmute.zalo.model.LoginHistory;
-import hcmute.zalo.model.Message;
-import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.User;
 
 public class UserAdapter extends BaseAdapter {

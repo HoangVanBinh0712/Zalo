@@ -73,6 +73,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ChatActivity extends AppCompatActivity {
 
+    //Khai báo các view và các biến được sử dụng
     ImageView sendMessageButton;
     TextView txtUserChatName;
     EditText inputMessage;
@@ -86,11 +87,11 @@ public class ChatActivity extends AppCompatActivity {
     int count = 0;
     ProgressBar progressBar;
     ImageView iconMedia, iconMicro,imageBack;
-    private int PICK_IMAGE_REQUEST = 22;
-    private Uri filePath;
     String message_id, viewer;
     ImageView iconCamera;
-
+    //Các biến dùng cho việc chọn hình ảnh từ gallery
+    private int PICK_IMAGE_REQUEST = 22;
+    private Uri filePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,18 +109,27 @@ public class ChatActivity extends AppCompatActivity {
         recordTimer = findViewById(R.id.recordTimer);
         imageProfileChat = findViewById(R.id.imageProfileChat);
         iconCamera = findViewById(R.id.iconCamera);
+        //Cài đặt cho RecyclerView
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
+        //Khởi tạo messageDetails
         messageDetails = new ArrayList<>();
+        //Khởi tạo messageDetailsAdapter
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
+        //Set adapter cho RecyclerView
         rcvChat.setAdapter(messageDetailsAdapter);
+        //Bắt sự kiện onClick
         imageProfileChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Khi click vào nút thì sẽ mở một activity hiện trang cá nhân của đối tượng đang nhắn tin
+                //Đưa dữ liệu vào trong sharedPreferences
                 SharedPreferences sharedPreferences = getSharedPreferences("dataCookie",Context.MODE_MULTI_PROCESS);
                 sharedPreferences.edit().putString("user_id", viewer).commit();
+                //Mở activity ViewUserPageActivity
                 startActivity(new Intent(ChatActivity.this, ViewUserPageActivity.class));
             }
         });
+        //Sự kiện khi nhập thông tin trong Edittext
         inputMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -128,6 +138,7 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //Nếu không nhập sẽ hiện các icon như micro để gửi record, picture để gửi ảnh, camera để chụp ảnh
                 String text = inputMessage.getText().toString();
                 if(text.length() == 0)
                 {
@@ -150,14 +161,17 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+        //Bắt sự kiện onclick
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Trả về mainActivity
                 startActivity(new Intent(ChatActivity.this,MainActivity.class));
+                //Kết thúc activity này đi
                 finish();
             }
         });
-        //lấy id của phòng chat
+        //lấy id của phòng chat trong SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         message_id = sharedPreferences.getString("message_id","");
         //lấy id của người nhận
@@ -169,16 +183,22 @@ public class ChatActivity extends AppCompatActivity {
         }
         if(message_id.equals("") == false ){
             //Lấy tên chat box
+            //Tạo liên kết đến bảng users
             DatabaseReference myUserRef = FirebaseDatabase.getInstance().getReference("users");
+            //Tạo sự kiện onDatachange cho nhánh con
             myUserRef.child(viewer).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //Lấy user ra
                     User user = snapshot.getValue(User.class);
+                    //Đưa tên của user lên thanh tiêu đề đoạn chat
                     txtUserChatName.setText(user.getFullname());
+                    //Nếu user có avatar
                     if(!user.getAvatar().equals("")) {
                         //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageReference = storage.getReference(user.getAvatar());
+                        //Tạo kết nối đến Firebase Storage và add sự kiện lấy hình ảnh thành công
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -200,14 +220,20 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-            //Lấy hết tin nhắn của 2 đứa lên đồng thời kèm phân trang
+            //Lấy hết tin nhắn của 2 người lên đồng thời kèm phân trang
+            //Tạo liên kết đến bảng message_details
             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
+            //Đi vào nhánh message_id và lấy 1 tin nhắn đầu tiên
+            //Sự kiên addValueEventListener sẽ được lặp lại. khi 1 trong 2 người gửi 1 tin nhắn thì sự kiện sẽ được chạy
             myRef.child(message_id).limitToFirst(1).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //Lấy một tin nhắn mới nhất
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        //Đưa tin nhắn vào Arraylist
                         messageDetails.add(dataSnapshot.getValue(MessageDetails.class));
                     }
+                    //Thông báo cho adapter
                     messageDetailsAdapter.notifyDataSetChanged();
                 }
 
@@ -216,6 +242,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
+            //Lấy tiếp 9 ti nhắn tiếp theo, sự kiện addListenerForSingleValueEvent chỉ chạy 1 lần kẻ cả khi có sự thay đổi trong Database
             myRef.child(message_id).limitToFirst(10).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -228,9 +255,10 @@ public class ChatActivity extends AppCompatActivity {
                                 i++;
                                 continue;
                             }
+                            //Đưa tin nhắn vào Arraylist
                             messageDetails.add(0,dataSnapshot.getValue(MessageDetails.class));
                         }
-
+                        //Thông báo cho adapter
                         messageDetailsAdapter.notifyDataSetChanged();
                     }
                 }
@@ -241,27 +269,34 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
-        //Sự kiện vuốt màn hình
+        //Sự kiện vuốt màn hình xuống
         idNestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
+                //Nếu kéo xuống hết cỡ thì scrolly == 0
                 if (scrollY == 0) {
-
+                    //Tăng count lên
                     count++;
+                    //Số lượng tin nhắn lấy lên
                     int start_index = count*10 + 10;
-                    //Load more 10 lines message
+                    //Lấy thêm 10 tin mỗi lần vuốt
+                    //Tạo kết nối đến bảng message_details
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
+                    //Tạo sự kiện lấy tin nhắn.  limitToFirst lấy đúng số lượng cần lấy và
+                    // addListenerForSingleValueEvent chỉ chạy một lần
                     myRef.child(message_id).limitToFirst(start_index).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //Hiện progressBar cho biết hệ thống đang tải
                             progressBar.setVisibility(View.VISIBLE);
                             messageDetails.clear();
                             for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                //Đưa tin nhắn vào arraylist
                                 messageDetails.add(0,dataSnapshot.getValue(MessageDetails.class));
                             }
-                            Log.d("TAG", "Pull Down Screen Load more " );
+                            //Thông báo adapter
                             messageDetailsAdapter.notifyDataSetChanged();
+                            //Bỏ hiện progressBar khi tải xong
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                         @Override
@@ -275,11 +310,17 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String message = inputMessage.getText().toString();
+                //Nếu tin nhắn không phải rỗng
                 if(message.equals("") == false){
+                    //Đặt lại cho input
                     inputMessage.setText("");
+                    //Tạo id cho tin nhắn
                     String message_detail_id = Long.toString(Long.MAX_VALUE - new Date().getTime());
+                    //Tạo object lưu lại tin nhắn
                     MessageDetails messageDetails = new MessageDetails(message_id,main_user.getPhone(),new Date(),message, viewer);
+                    //Tạo liên kết đén bảng message_details
                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
+                    //Viết vào cơ sở dữ liệu
                     sendMessRef.child(message_id).child(message_detail_id).setValue(messageDetails);
                 }
             }
@@ -292,51 +333,69 @@ public class ChatActivity extends AppCompatActivity {
                 SelectImage();
             }
         });
+        //Khi nhấn giữ vào trong icon Micro thì hệ thống sẽ record
         iconMicro.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                //Chuẩn bị cho record
+                //Đếm thời gian
                 recordTimer.setBase(SystemClock.elapsedRealtime());
                 recordTimer.start();
+                //Ẩn các view trong thanh nhập tin nhắn
+                iconCamera.setVisibility(View.INVISIBLE);
                 iconMedia.setVisibility(View.INVISIBLE);
                 inputMessage.setVisibility(View.INVISIBLE);
+                //Hiện timer đếm thời gian
                 recordTimer.setVisibility(View.VISIBLE);
+                //Bắt đầu record
                 startRecording();
                 Toast.makeText(ChatActivity.this, "Start Recording...", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
+        //Bắt sự kiện click vào icon Mcro
         iconMicro.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                //Khi Micro được giữ lâu và đang ghi âm thì sẽ bỏ qua lệnh này
                 if(mRecorder == null)
                     return false;
+                //Sự kiện chính
                 switch (event.getAction()){
                     case MotionEvent.ACTION_UP:
                     {
+                        //Dừng record
                         mRecorder.stop();
+                        //Hiện các view đã tắt
                         recordTimer.setVisibility(View.INVISIBLE);
                         iconMedia.setVisibility(View.VISIBLE);
                         inputMessage.setVisibility(View.VISIBLE);
-                        // below method will release
-                        // the media recorder class.
+                        iconCamera.setVisibility(View.VISIBLE);
+
+                        // giải hposng cho Recorder
                         mRecorder.release();
                         mRecorder = null;
-
+                        //Thông báo người dùng
                         Toast.makeText(ChatActivity.this, "Stop Recording...", Toast.LENGTH_SHORT).show();
+                        //Tạo yêu cầu xác nhận gửi bằng AlertDialog
                         AlertDialog.Builder dialogCheck = new AlertDialog.Builder(ChatActivity.this);
                         dialogCheck.setMessage("Do you want to send this record ?");
+                        //Sự kiện thi nhấn vào nút Yes
                         dialogCheck.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                //Đưa record lên Database
                                 UploadRecord();
                             }
                         });
+                        //Sự kiện khi nhấn vào nút No
                         dialogCheck.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
                             }
                         });
+                        //Hiện dialog lên
                         dialogCheck.show();
                         return true;
                     }
@@ -344,12 +403,16 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
+        //Sự kiện khi nhấn vào IconCamera
         iconCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Kiểm tra quyền sử dụng máy ảnh
                 if(CheckPermissions())
                 {
+                    //Nếu được quyền thì chạy Activity chụp ảnh
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    //Request code = 0 .
                     startActivityForResult(takePicture, 0);
                 }else
                 {
@@ -360,19 +423,20 @@ public class ChatActivity extends AppCompatActivity {
     }
     //lưu file record lên database
     private void UploadRecord(){
-        //mFileName
-        Log.d("TAG", "UploadRecord: " + mFileName);
+        //Lấy Uri của file
         filePath = Uri.fromFile(new File(mFileName));
         //Kiểm tra đường dẫn file
         if (filePath != null) {
+            //Lấy ngày hiện tại
             Date today = new Date();
+            //Lấy thời gian dạng Long
             String pic_id = Long.toString(today.getTime());
+            //Tạo object lưu dữ lueeyj của tin nhắn
             MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_records/" + message_id + "/" + pic_id,viewer);
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
-
             progressDialog.show();
             //Khai báo FirebaseStorage
             StorageReference storageReference= FirebaseStorage.getInstance().getReference();
@@ -389,9 +453,11 @@ public class ChatActivity extends AppCompatActivity {
                                     // Tắt dialog progress đi
                                     progressDialog.dismiss();
                                     //Cập nhật lại cho bảng user về địa chỉ của avatar
-                                    //Cập nhật lại cho cả user_singleTon
+                                    //Tạo id cho tin nhắn
                                     String message_detail_id = Long.toString(Long.MAX_VALUE - today.getTime());;
+                                    //Kết nối đến bảng message_details
                                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
+                                    //Đưa dữ liệu lên
                                     sendMessRef.child(message_id).child(message_detail_id).setValue(mes);
                                 }
                             })
@@ -423,41 +489,40 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        //Chạy Activity chọn ảnh
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
-    //Sau khi chọn ảnh xong chạy vào hàm này
+    //Sau khi chọn ảnh , chụp ảnh xong chạy vào hàm này
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST
-                && resultCode == RESULT_OK
-                && data != null
-                && data.getData() != null) {
-
+        //Chọn ảnh
+        if (requestCode == PICK_IMAGE_REQUEST    && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Lấy được uri của ảnh
             filePath = data.getData();
             //Sau đó gửi hình ảnh
             //Đưa ảnh lên Firebase Storage
             uploadImage();
 
-        }else if (requestCode == 0
-                && resultCode == RESULT_OK
-                && data != null)
+        }else if (requestCode == 0 && resultCode == RESULT_OK && data != null)
         {
+            //Chụp ảnh
+            //Lấy bitmap của ảnh
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            //Đổi bitmap thành byte array
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
             byte[] byteArray = stream.toByteArray();
-            //Từ camera
+            //Lấy ngày hiện tại để lấy dạng Long của ngày làm id cho tin nhắn
             Date today = new Date();
             String pic_id = Long.toString(today.getTime());
+            //Tạo object lưu dữ liệu tin nhắn
             MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_images/" + message_id + "/" + pic_id,viewer);
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
-
             progressDialog.show();
             //Khai báo FirebaseStorage
             StorageReference storageReference= FirebaseStorage.getInstance().getReference();
@@ -471,8 +536,11 @@ public class ChatActivity extends AppCompatActivity {
                     // Tải ảnh lên thành công
                     // Tắt dialog progress đi
                     progressDialog.dismiss();
-                    String message_detail_id = Long.toString(Long.MAX_VALUE - today.getTime());;
+                    //Tạo id cho tin nhắn
+                    String message_detail_id = Long.toString(Long.MAX_VALUE - today.getTime());
+                    //Tạo kết nối đến bảng message_details
                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
+                    //Đưa dữ liệu lên
                     sendMessRef.child(message_id).child(message_detail_id).setValue(mes);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -487,6 +555,7 @@ public class ChatActivity extends AppCompatActivity {
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    //Hiện % hoàn thành việc đưa ảnh lên
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                     progressDialog.setMessage("Uploaded " + (int) progress + "%");
                 }
@@ -498,14 +567,15 @@ public class ChatActivity extends AppCompatActivity {
     private void uploadImage() {
         //Kiểm tra đường dẫn file
         if (filePath != null) {
+            //Lấy ngày hiện tại -> lấy dạng số của ngày làm id cho tin nhắn
             Date today = new Date();
             String pic_id = Long.toString(today.getTime());
+            //Tạo object lưu thông tin tin nhắn
             MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_images/" + message_id + "/" + pic_id,viewer);
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
-
             progressDialog.show();
             //Khai báo FirebaseStorage
             StorageReference storageReference= FirebaseStorage.getInstance().getReference();
@@ -522,9 +592,11 @@ public class ChatActivity extends AppCompatActivity {
                                     // Tắt dialog progress đi
                                     progressDialog.dismiss();
                                     //Cập nhật lại cho bảng user về địa chỉ của avatar
-                                    //Cập nhật lại cho cả user_singleTon
+                                    //Tạo id cho tin nhắn
                                     String message_detail_id = Long.toString(Long.MAX_VALUE - today.getTime());;
+                                    //Tạo kết nối đến bảng message_details
                                     DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
+                                    //Đưa dữ liệu lên
                                     sendMessRef.child(message_id).child(message_detail_id).setValue(mes);
                                 }
                             })
@@ -553,21 +625,22 @@ public class ChatActivity extends AppCompatActivity {
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
 
     public boolean CheckPermissions() {
-        // this method is used to check permission
+        // Kiểm tra các quyền có được cấp chưa
+        //Quyền viết dữ liệu vào bộ nhớ
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        //Quền sử dụng micro ghi âm
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        //Quyền dùng máy nhả
         int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED;
     }
     private void RequestPermissions() {
-        // this method is used to request the
-        // permission for audio recording and storage.
+        //Xin cấp quyền từ hệ thống
         ActivityCompat.requestPermissions(ChatActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE, CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // this method is called when user will
-        // grant the permission for audio recording.
+        // Sau khi ta chọn chấp nhận hay từ chối sẽ trả kết quả vào hàm này
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_AUDIO_PERMISSION_CODE:
@@ -575,63 +648,46 @@ public class ChatActivity extends AppCompatActivity {
                     boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     boolean permissionToCamera = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    //Nếu được chấp nhận hết
                     if (permissionToRecord && permissionToStore && permissionToCamera) {
+                        //Thông báo
                         Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
+                        //Ngược lại thông báo denied
                         Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
                     }
                 }
                 break;
         }
     }
+    //Khai báo biến dùng cho việc ghi âm
     private static String mFileName = null;
     private MediaRecorder mRecorder;
 
     private void startRecording() {
-        // check permission method is used to check
-        // that the user has granted permission
-        // to record nd store the audio.
+        //Kiểm tra quyền
         if (CheckPermissions()) {
-
-            // we are here initializing our filename variable
-            // with the path of the recorded audio file.
+            //Tạo địa chỉ file lưu
             mFileName =  Environment.getExternalStorageDirectory() + File.separator
                     + Environment.DIRECTORY_DCIM + File.separator + "AudioRecording.3gp";
-
-            // below method is used to initialize
-            // the media recorder class
+            //Khởi tạo
             mRecorder = new MediaRecorder();
 
-            // below method is used to set the audio
-            // source which we are using a mic.
+            //Sử dụng micro
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-
-            // below method is used to set
-            // the output format of the audio.
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-
-            // below method is used to set the
-            // audio encoder for our recorded audio.
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-            // below method is used to set the
-            // output file location for our recorded audio
             mRecorder.setOutputFile(mFileName);
             try {
-                // below method will prepare
-                // our audio recorder class
+                // Chuẩn bị micro cho việc ghi âm
                 mRecorder.prepare();
             } catch (IOException e) {
                 Log.e("TAG", "prepare() failed");
             }
-            // start method will start
-            // the audio recording.
+            //Bắt đầu ghi âm
             mRecorder.start();
-            Log.d("TAG", "startRecording: True");
         } else {
-            // if audio recording permissions are
-            // not granted by user below method will
-            // ask for runtime permission for mic and storage.
+            // Tiến hành xin cấp quyền
             RequestPermissions();
         }
     }

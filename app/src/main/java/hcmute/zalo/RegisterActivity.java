@@ -126,7 +126,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //Chuyền birthday sang string
                 String birthday = format.format(birth);
+                //Tạo đối tượng người dùng mới
                 User user = new User(name,phone,pass,birthday,"",sex,"","thanhpho.jpg");
+                //Kiểm tra giới tính để đặt ảnh đại diện mặc định
                 if(sex)
                 {
                     //male

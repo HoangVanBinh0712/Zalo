@@ -1,5 +1,8 @@
 package hcmute.zalo;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -70,34 +74,60 @@ public class ContactsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    //Khai báo các view sử dụng
     View view;
     ListView lstFriends;
+    //Khai báo adapter
     UserAdapter userAdapter;
+    //Khai báo biến
     ArrayList<User> arrUser;
     User main_user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Ánh xạ
         view = inflater.inflate(R.layout.fragment_contacts, container, false);
         lstFriends = view.findViewById(R.id.lstFriends);
+        //Khởi tạo mảng
         arrUser = new ArrayList<>();
+        //Khởi tạo adapter
         userAdapter = new UserAdapter(getActivity(),R.layout.user_row,arrUser);
+        //Set adapter cho listview
         lstFriends.setAdapter(userAdapter);
-        //Load Friend
+        //Bắt sự kiện click vào listview Item
+        lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Mở trang cá nhân của đối tượng lên
+                //Lưu user_id vào sharedPreferences
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
+                sharedPreferences.edit().putString("user_id", arrUser.get(i).getPhone()).commit();
+                //Chạy activity
+                startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
+            }
+        });
+        //Lấy danh sách bạn bè
+        //Sử dụng Mẫu SingleTon lấy user hiện tại ra
         main_user = User_SingeTon.getInstance().getUser();
+        //Kết nối đến Database
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        //Tạo sự kiện cho nhánh con trong bảng friends/ addListenerForSingleValueEvent chỉ chạy 1 lần
         myRef.child("friends").child(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Xóa hết phần tử trong mảng arrUser
                 arrUser.clear();
+                //Vòng lặp để lấy danh sách bạn bè
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    //Ánh xạ qua bảng users để lấy
+                    //Ánh xạ qua bảng users để lấy thông tin
                     String user_phone = dataSnapshot.getValue(Friends.class).getFriendPhone();
+                    //Tạo kết nối bảng users
                     DatabaseReference myRef1 = FirebaseDatabase.getInstance().getReference("users");
+                    //Add sự kiện để đọc dữ liệu.
                     myRef1.child(user_phone).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //Đưa user vào trong Arraylist
                             arrUser.add(snapshot.getValue(User.class));
                             userAdapter.notifyDataSetChanged();
                         }

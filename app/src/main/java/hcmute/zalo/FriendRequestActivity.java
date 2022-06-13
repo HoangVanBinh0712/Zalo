@@ -28,36 +28,48 @@ import hcmute.zalo.model.User;
 
 public class FriendRequestActivity extends AppCompatActivity {
 
+    //Khởi tạo các View
     ImageView btnBack;
     ListView lstFriendRequest;
+    TextView txtReceived,txtSended;
+    //Khở tạo các biến sử dụng
     ArrayList<FriendRequest> arrFriendRequest;
     User main_user;
-    TextView txtReceived,txtSended;
     FriendRequestAdapter friendRequestAdapter;
     SendedFriendRequestAdapter sendedFriendRequestAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_request_activity);
+
+        //Ánh xạ
         btnBack = findViewById(R.id.btnBack);
         lstFriendRequest = findViewById(R.id.lstFriendRequest);
         txtReceived = findViewById(R.id.txtReceived);
         txtSended = findViewById(R.id.txtSended);
-
+        //Bắt sự kiện onclick
         txtReceived.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Kết nối đến bảng friend_request
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+                //Đọc dữ liệu, xoay nhánh theo receiverPhone
+                //Thay vì duyệt một lần hết tất cả các lời mời kết bạn. Tiến hành xoay nhánh để nhóm những lời mời kết bạn cho người dùng liên tục và bắt đầu từ đó
+                //Tiết kiệm thời gian, dung lượng, khối lượng công việc
                 myRef.orderByChild("receiverPhone").startAt(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Làm mới arrayList
                         arrFriendRequest.clear();
+                        //Lặp vòng for để lấy
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                             FriendRequest friendRequest = dataSnapshot.getValue(FriendRequest.class);
+                            //Nếu là lời mời cho người dùng thì lấy. khi không phải cho người dùng thì hủy vòng lặp
                             if(friendRequest.getReceiverPhone().equals(main_user.getPhone()))
                                 arrFriendRequest.add(friendRequest);
                             else break;
                         }
+                        //Set adapter cho listview và thông báo dữ liệu thay đổi cho adapter
                         lstFriendRequest.setAdapter(friendRequestAdapter);
                         friendRequestAdapter.notifyDataSetChanged();
                     }
@@ -67,26 +79,36 @@ public class FriendRequestActivity extends AppCompatActivity {
 
                     }
                 });
+                //Làm cho các textview được gạch chân khi click vào
                 txtReceived.setBackgroundResource(R.drawable.top_bottom_border);
                 txtReceived.setTextColor(getResources().getColor(R.color.black));
                 txtSended.setBackground(null);
                 txtSended.setTextColor(Color.parseColor("#808080"));
             }
         });
+        //Bắt sự kiên onclick
         txtSended.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Kết nối đến bảng friend_request
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+                //Đọc dữ liệu, xoay nhánh theo senderPhone
+                //Thay vì duyệt một lần hết tất cả các lời mời kết bạn. Tiến hành xoay nhánh để nhóm những lời mời kết bạn người dùng đã gửi liên tục và bắt đầu từ đó
+                //Tiết kiệm thời gian, dung lượng, khối lượng công việc
                 myRef.orderByChild("senderPhone").startAt(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Làm mới arraylist
                         arrFriendRequest.clear();
+                        //Lặp vòng for để lấy
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                             FriendRequest friendRequest = dataSnapshot.getValue(FriendRequest.class);
+                            //Nếu là lời mời cho người dùng thì lấy. khi không phải cho người dùng thì hủy vòng lặp
                             if(friendRequest.getSenderPhone().equals(main_user.getPhone()))
                                 arrFriendRequest.add(friendRequest);
                             else break;
                         }
+                        //Set adapter cho listview và thông báo dữ liệu thay đổi cho adapter
                         lstFriendRequest.setAdapter(sendedFriendRequestAdapter);
                         sendedFriendRequestAdapter.notifyDataSetChanged();
                     }
@@ -96,25 +118,36 @@ public class FriendRequestActivity extends AppCompatActivity {
 
                     }
                 });
+                //Làm cho các textview được gạch chân khi click vào
                 txtSended.setBackgroundResource(R.drawable.top_bottom_border);
                 txtSended.setTextColor(getResources().getColor(R.color.black));
                 txtReceived.setBackground(null);
                 txtReceived.setTextColor(Color.parseColor("#808080"));
             }
         });
+        //Bắt sự kiện cho nút back
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Đóng activity
                 finish();
             }
         });
+        //Lấy Người sử dụng ứng dụng đã đăng nhập
         main_user = User_SingeTon.getInstance().getUser();
+        //Khởi tạo ArrayList
         arrFriendRequest = new ArrayList<>();
+        //Khởi tạo adapter
         friendRequestAdapter = new FriendRequestAdapter(arrFriendRequest,this,R.layout.row_friend_request);
         sendedFriendRequestAdapter = new SendedFriendRequestAdapter(arrFriendRequest,this,R.layout.row_sended_request);
-
+        //Set adapter cho listview mặc định là lời mời kết bạn gửi đến
         lstFriendRequest.setAdapter(friendRequestAdapter);
+        //Kết nối bảng friend_requests
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+        //Đọc dữ liệu, xoay nhánh theo receiverPhone
+        //Thay vì duyệt một lần hết tất cả các lời mời kết bạn. Tiến hành xoay nhánh để nhóm những lời mời kết bạn cho người dùng liên tục và bắt đầu từ đó
+        //Tiết kiệm thời gian, dung lượng, khối lượng công việc
+        //Tương tự như hàm onclick ở trên
         myRef.orderByChild("receiverPhone").startAt(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

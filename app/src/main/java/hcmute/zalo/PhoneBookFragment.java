@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -125,6 +127,16 @@ public class PhoneBookFragment extends Fragment {
         adapter = new PhonebookAdapter(getActivity(),R.layout.phonebook_row,phoneBookList);
         listviewPhonebook.setAdapter(adapter);
         getListPhoneBook();
+
+        listviewPhonebook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("TAG", "onItemClick: "+ phoneBookList.get(i).getPhonebookNumber());
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
+                sharedPreferences.edit().putString("user_id", phoneBookList.get(i).getUserPhone()).commit();
+                startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
+            }
+        });
         //Lấy thời gian update gần nhất để hiển thị
         sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
         timeUpdate = sharedPreferences.getString("timeUpdate","");
@@ -227,7 +239,6 @@ public class PhoneBookFragment extends Fragment {
                                 //Thêm vào database
                                 PhoneBook phoneBook = new PhoneBook(user.getPhone(), phone_name, phone_number);
                                 DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
-
                                 myPhoneBookRef.child(user.getPhone()).child(phone_number).setValue(phoneBook);
                             }
                         }
@@ -239,19 +250,17 @@ public class PhoneBookFragment extends Fragment {
                     });
                 }
             }
-//        }
         cursor.close();
     }
     //hiển thị những sdt trong database
     private void getListPhoneBook(){
         //Kết nối cơ sở dữ liệu và truy xuất vào bảng lịch sử đăng nhập
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("PhoneBook");
+        DatabaseReference myRef1 = database.getReference("PhoneBook");
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
         user = user_singeTon.getUser();
-        //Tìm lịch sử đăng nhập
-        myRef.child(user.getPhone()).addValueEventListener(new ValueEventListener() {
+        myRef1.child(user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Xóa mảng cũ

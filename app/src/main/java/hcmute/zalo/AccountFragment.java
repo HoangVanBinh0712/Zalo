@@ -75,6 +75,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //Anh xạ các view
         main_user = User_SingeTon.getInstance().getUser();
         view = (View)inflater.inflate(R.layout.fragment_account, container, false);
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
@@ -85,45 +86,52 @@ public class AccountFragment extends Fragment {
         txtAddFriendRequest = view.findViewById(R.id.txtAddFriendRequest);
         txtPhonenumber = view.findViewById(R.id.txtPhonenumber);
         txtPhonenumber.setText("(+84) " + main_user.getPhone());
+        //bắt sự kiện onclick cho nút back
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Trả về MoreFragment
                 MoreFragment moreFragment = new MoreFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
-
+        //bắt sự kiện onclick khi nhấn vào change password
         txtChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở PasswordFragment lên thay thế vào FrameLayout trong activity_main
                 PasswordFragment passwordFragment = new PasswordFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, passwordFragment).commit();
             }
         });
-
+        //Bắt sự kiện onClick của textview linearChangeNumber
         linearChangeNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở PhoneNumberFragment lên thay thế vào FrameLayout trong activity_main
                 PhoneNumberFragment phoneNumberFragment = new PhoneNumberFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneNumberFragment).commit();
             }
         });
-
+        //Bắt sự kiện onClick của textview txtLoginHistory
         txtLoginHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Mở LoginHistoryFragment lên thay thế vào FrameLayout trong activity_main
                 LoginHistoryFragment loginHistoryFragment = new LoginHistoryFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,loginHistoryFragment).commit();
             }
         });
-
+        //Bắt sự kiện onClick của textview txtLogout
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Gán User là null và trả về trang login
+                //Gán user trong singleTon là null
                 User_SingeTon user_singeTon = User_SingeTon.getInstance();
                 user_singeTon.setUser(null);
                 user_singeTon = null;
+                //Gán hình ảnh lưu thành null
                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
                 userImageBitmap_singleTon.setAnhbia(null);
                 userImageBitmap_singleTon.setAnhdaidien(null);
@@ -135,9 +143,11 @@ public class AccountFragment extends Fragment {
 
             }
         });
+        //Bắt sự kiện onClick của textview txtAddFriendRequest
         txtAddFriendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Mở activity FriendRequestActivity
                 startActivity(new Intent(getActivity(), FriendRequestActivity.class));
             }
         });
