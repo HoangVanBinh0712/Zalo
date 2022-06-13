@@ -126,7 +126,16 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //Chuyền birthday sang string
                 String birthday = format.format(birth);
-                User user = new User(name,phone,pass,birthday,"",sex,"","");
+                User user = new User(name,phone,pass,birthday,"",sex,"","thanhpho.jpg");
+                if(sex)
+                {
+                    //male
+                    user.setAvatar("man.png");
+                }else
+                {
+                    //female
+                    user.setAvatar("woman.jpg");
+                }
                 //CheLog.d("TAGG", user.toString());
                 //All good now check if the phonenumber is already taken.
                 progressDialog = new ProgressDialog(RegisterActivity.this);

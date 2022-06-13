@@ -165,6 +165,15 @@
         app:layout_constraintRight_toLeftOf="@id/iconMicro"
         android:layout_marginEnd="15dp"/>
     <ImageView
+        android:id="@+id/iconCamera"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/layoutSend"
+        app:layout_constraintTop_toTopOf="@id/layoutSend"
+        app:layout_constraintRight_toLeftOf="@id/iconMicro"
+        android:src="@drawable/baseline_photo_camera_white_24"
+        android:layout_marginEnd="15dp" />
+    <ImageView
         android:id="@+id/iconMedia"
         android:layout_width="30dp"
         android:layout_height="30dp"

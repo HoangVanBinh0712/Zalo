@@ -136,7 +136,18 @@ public class AccountInformationFragment extends Fragment {
                         SelectImage(0);
                     }
                 });
-
+                LinearLayout linearViewBackground = dialog.findViewById(R.id.linearViewBackground);
+                linearViewBackground.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        final Dialog viewPictureDialog = new Dialog(getActivity());
+                        viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        viewPictureDialog.show();
+                        ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
+                    }
+                });
             }
         });
         avatar.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +164,18 @@ public class AccountInformationFragment extends Fragment {
                         //Hàm dùng để hiện lên hình ảnh
                         //Type = 1 la anh anh dai dien
                         SelectImage(1);
+                    }
+                });
+                LinearLayout linearViewAvatar = dialog.findViewById(R.id.linearViewAvatar);
+                linearViewAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        final Dialog viewPictureDialog = new Dialog(getActivity());
+                        viewPictureDialog.setContentView(R.layout.dialog_zoom);
+                        viewPictureDialog.show();
+                        ImageView mainpicture = viewPictureDialog.findViewById(R.id.mainpicture);
+                        mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhdaidien());
                     }
                 });
             }

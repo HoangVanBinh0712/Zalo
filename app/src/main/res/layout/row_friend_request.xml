@@ -9,7 +9,7 @@
         android:id="@+id/senderRequestImageView"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:src="@drawable/man_placeholder"
+        android:src="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <TextView

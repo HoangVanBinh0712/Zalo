@@ -1,12 +1,15 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +37,7 @@ import hcmute.zalo.ChatFragment;
 import hcmute.zalo.MainActivity;
 import hcmute.zalo.Pattern.User_SingeTon;
 import hcmute.zalo.R;
+import hcmute.zalo.ViewUserPageActivity;
 import hcmute.zalo.model.FriendRequest;
 import hcmute.zalo.model.LoginHistory;
 import hcmute.zalo.model.Message;
@@ -70,6 +74,7 @@ public class UserAdapter extends BaseAdapter {
         ImageView btnAddFriend;
         ShapeableImageView imageBoxChat;
         ConstraintLayout constraintRowUser;
+        Button btnViewPage;
     }
     User main_user;
 
@@ -85,6 +90,7 @@ public class UserAdapter extends BaseAdapter {
             holder.txtUserPhone = (TextView) view.findViewById(R.id.txtUserPhone);
             holder.btnAddFriend = (ImageView) view.findViewById(R.id.btnAddFriend);
             holder.imageBoxChat = (ShapeableImageView) view.findViewById(R.id.imageBoxChat);
+            holder.btnViewPage = (Button) view.findViewById(R.id.btnViewPage);
             view.setTag(holder);
         }
         else{
@@ -147,7 +153,14 @@ public class UserAdapter extends BaseAdapter {
                 Toast.makeText(context, "Send Request Successfully to " + user.getFullname(), Toast.LENGTH_SHORT).show();
             }
         });
-
+        holder.btnViewPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = context.getSharedPreferences("dataCookie",Context.MODE_MULTI_PROCESS);
+                sharedPreferences.edit().putString("user_id", user.getPhone()).commit();
+                context.startActivity(new Intent(context, ViewUserPageActivity.class));
+            }
+        });
         //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
         if(!user.getAvatar().equals("")) {
             //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage

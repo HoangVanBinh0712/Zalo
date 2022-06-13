@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -27,6 +28,11 @@ public class ZoomImageActivity extends AppCompatActivity {
         btnDownload = findViewById(R.id.btnDownload);
 
         Uri uri = Uri.parse(getIntent().getStringExtra("uri"));
+        if (uri.equals(""))
+        {
+            zoomImage.setImageResource(R.drawable.thanhpho);
+            return;
+        }
         Picasso.get().load(uri).into(zoomImage);
 
         imgBack.setOnClickListener(new View.OnClickListener() {

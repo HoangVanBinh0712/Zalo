@@ -10,6 +10,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -25,6 +27,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,6 +52,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,6 +66,8 @@ import hcmute.zalo.adapter.MessageDetailsAdapter;
 import hcmute.zalo.model.Message;
 import hcmute.zalo.model.MessageDetails;
 import hcmute.zalo.model.User;
+
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -82,6 +89,7 @@ public class ChatActivity extends AppCompatActivity {
     private int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
     String message_id, viewer;
+    ImageView iconCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +107,49 @@ public class ChatActivity extends AppCompatActivity {
         imageBack = findViewById(R.id.imageBack);
         recordTimer = findViewById(R.id.recordTimer);
         imageProfileChat = findViewById(R.id.imageProfileChat);
+        iconCamera = findViewById(R.id.iconCamera);
         rcvChat.setLayoutManager(new LinearLayoutManager(this));
         messageDetails = new ArrayList<>();
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
         rcvChat.setAdapter(messageDetailsAdapter);
+        imageProfileChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences("dataCookie",Context.MODE_MULTI_PROCESS);
+                sharedPreferences.edit().putString("user_id", viewer).commit();
+                startActivity(new Intent(ChatActivity.this, ViewUserPageActivity.class));
+            }
+        });
+        inputMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String text = inputMessage.getText().toString();
+                if(text.length() == 0)
+                {
+                    //Hiện các nút camera, voice, picture
+                    iconCamera.setVisibility(View.VISIBLE);
+                    iconMedia.setVisibility(View.VISIBLE);
+                    iconMicro.setVisibility(View.VISIBLE);
+
+                }else
+                {
+                    //Ẩn các nút đấy đi
+                    iconCamera.setVisibility(View.INVISIBLE);
+                    iconMedia.setVisibility(View.INVISIBLE);
+                    iconMicro.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,28 +344,19 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        iconMicro.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if(stateAudio == false){
-//                    startRecording();
-//
-//                }else
-//                {
-//                    Log.d("TAG", "startRecording: False");
-//
-//                    mRecorder.stop();
-//                    // below method will release
-//                    // the media recorder class.
-//                    mRecorder.release();
-//                    mRecorder = null;
-//
-//                    stateAudio = false;
-//                    UploadRecord();
-//                }
-//            }
-//        });
+        iconCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(CheckPermissions())
+                {
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 0);
+                }else
+                {
+                    RequestPermissions();
+                }
+            }
+        });
     }
     //lưu file record lên database
     private void UploadRecord(){
@@ -392,6 +429,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == RESULT_OK
                 && data != null
@@ -403,7 +441,58 @@ public class ChatActivity extends AppCompatActivity {
             //Đưa ảnh lên Firebase Storage
             uploadImage();
 
+        }else if (requestCode == 0
+                && resultCode == RESULT_OK
+                && data != null)
+        {
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
+            byte[] byteArray = stream.toByteArray();
+            //Từ camera
+            Date today = new Date();
+            String pic_id = Long.toString(today.getTime());
+            MessageDetails mes = new MessageDetails(message_id, main_user.getPhone(),today,"message_images/" + message_id + "/" + pic_id,viewer);
+            // Hiện ProgressDialog trong khi đang tải lên
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+
+            progressDialog.show();
+            //Khai báo FirebaseStorage
+            StorageReference storageReference= FirebaseStorage.getInstance().getReference();
+            // Đi vào nhánh con
+            StorageReference ref;
+            ref = storageReference.child("message_images/" + message_id).child(pic_id);
+            // Tạo sự kiên cho việc upload file cả khi thành công hay thất bại và hiện thanh progress theo %
+            ref.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // Tải ảnh lên thành công
+                    // Tắt dialog progress đi
+                    progressDialog.dismiss();
+                    String message_detail_id = Long.toString(Long.MAX_VALUE - today.getTime());;
+                    DatabaseReference sendMessRef = FirebaseDatabase.getInstance().getReference("message_details");
+                    sendMessRef.child(message_id).child(message_detail_id).setValue(mes);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Lỗi, không tải lên thành công
+                    // Tắt progress đi và in ra lỗi
+                    progressDialog.dismiss();
+                    Log.d("TAG", "onFailure: " + e.getMessage());
+                    Toast.makeText(ChatActivity.this, "Update failed. Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                }
+            });
         }
+
     }
     //Hàm này dùng để đưa ảnh lên trên firebase storage
     private void uploadImage() {
@@ -467,12 +556,13 @@ public class ChatActivity extends AppCompatActivity {
         // this method is used to check permission
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+        int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED;
     }
     private void RequestPermissions() {
         // this method is used to request the
         // permission for audio recording and storage.
-        ActivityCompat.requestPermissions(ChatActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, REQUEST_AUDIO_PERMISSION_CODE);
+        ActivityCompat.requestPermissions(ChatActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE, CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -484,7 +574,8 @@ public class ChatActivity extends AppCompatActivity {
                 if (grantResults.length > 0) {
                     boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (permissionToRecord && permissionToStore) {
+                    boolean permissionToCamera = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToRecord && permissionToStore && permissionToCamera) {
                         Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();

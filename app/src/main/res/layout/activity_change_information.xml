@@ -26,7 +26,7 @@
         android:layout_height="80dp"
         android:layout_marginStart="20sp"
         android:layout_marginTop="210dp"
-        android:src="@drawable/man_placeholder"/>
+        android:src="@drawable/man_placeholder" />
 
     <TextView
         android:id="@+id/textviewName"
@@ -50,7 +50,7 @@
             android:id="@+id/textviewFullName"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
-            android:text="Fullname"
+            android:text="Name"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:padding="10sp"

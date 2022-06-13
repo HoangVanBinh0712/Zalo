@@ -84,7 +84,7 @@ public class AccountFragment extends Fragment {
         txtLogOut = view.findViewById(R.id.txtLogOut);
         txtAddFriendRequest = view.findViewById(R.id.txtAddFriendRequest);
         txtPhonenumber = view.findViewById(R.id.txtPhonenumber);
-        txtPhonenumber.setText("(+84) " + main_user.getFullname());
+        txtPhonenumber.setText("(+84) " + main_user.getPhone());
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

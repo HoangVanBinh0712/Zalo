@@ -209,7 +209,6 @@ public class loginActivity extends AppCompatActivity {
                                 myLoginHistoryRef.child(phone).child(loginDate).setValue(loginHistory);
 
                                 //Chuyển sang MainActivity
-                                Log.d("TAG", "onDataChange: Login");
                                 startActivity(new Intent(loginActivity.this, MainActivity.class));
                                 //Tắt login Activity
                                 finish();

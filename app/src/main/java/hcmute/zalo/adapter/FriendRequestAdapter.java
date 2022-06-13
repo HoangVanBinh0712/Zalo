@@ -1,6 +1,7 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -67,6 +71,8 @@ public class FriendRequestAdapter extends BaseAdapter {
         Button btnAccep,btnDeny;
     }
     User main_user;
+    User sender_user;
+
     DatabaseReference myRef;
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
@@ -90,6 +96,27 @@ public class FriendRequestAdapter extends BaseAdapter {
         FriendRequest friendRequest = arrFriendRequest.get(i);
         holder.txtSenderRequestName.setText(friendRequest.getSenderName());
         holder.txtRequestDay.setText(simpleDateFormat.format(friendRequest.getDateRequest()));
+        //Set anh
+        myRef = FirebaseDatabase.getInstance().getReference("users");
+        myRef.child(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                sender_user = snapshot.getValue(User.class);
+                StorageReference myStorage = FirebaseStorage.getInstance().getReference(sender_user.getAvatar());
+                myStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(holder.senderRequestImageView);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         holder.btnAccep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

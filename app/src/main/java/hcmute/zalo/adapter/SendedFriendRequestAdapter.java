@@ -1,6 +1,7 @@
 package hcmute.zalo.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +64,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
         TextView txtSenderRequestName,txtRequestDay;
         Button btnCancel;
     }
-    User main_user;
+    User main_user,receiver_user;
     DatabaseReference myRef;
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
@@ -84,6 +88,27 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
         FriendRequest friendRequest = arrFriendRequest.get(i);
         holder.txtSenderRequestName.setText(friendRequest.getReceiverName());
         holder.txtRequestDay.setText(simpleDateFormat.format(friendRequest.getDateRequest()));
+        //Set anh
+        myRef = FirebaseDatabase.getInstance().getReference("users");
+        myRef.child(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                receiver_user = snapshot.getValue(User.class);
+                StorageReference myStorage = FirebaseStorage.getInstance().getReference(receiver_user.getAvatar());
+                myStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(holder.senderRequestImageView);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
