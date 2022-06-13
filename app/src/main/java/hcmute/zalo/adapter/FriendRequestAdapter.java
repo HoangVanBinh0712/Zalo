@@ -66,6 +66,7 @@ public class FriendRequestAdapter extends BaseAdapter {
         return 0;
     }
     class Holder {
+        //Chứa các view
         CircleImageView senderRequestImageView;
         TextView txtSenderRequestName,txtRequestDay;
         Button btnAccep,btnDeny;
@@ -81,6 +82,7 @@ public class FriendRequestAdapter extends BaseAdapter {
             holder = new Holder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
+            //ánh xạ các view
             holder.senderRequestImageView = (CircleImageView) view.findViewById(R.id.senderRequestImageView);
             holder.txtSenderRequestName = (TextView) view.findViewById(R.id.txtSenderRequestName);
             holder.txtRequestDay = (TextView)view.findViewById(R.id.txtRequestDay);
@@ -91,21 +93,27 @@ public class FriendRequestAdapter extends BaseAdapter {
         else{
             holder = (Holder) view.getTag();
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");;
+        //Định dạng kiểu ngày
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+        //Lấy thông tin người dùng từ mẫu singleton
         main_user = User_SingeTon.getInstance().getUser();
+        //Lấy thông tin những người đã được gửi kết bạn
         FriendRequest friendRequest = arrFriendRequest.get(i);
         holder.txtSenderRequestName.setText(friendRequest.getSenderName());
         holder.txtRequestDay.setText(simpleDateFormat.format(friendRequest.getDateRequest()));
-        //Set anh
+        //Tạo kết nối đến FirebaseStorage
         myRef = FirebaseDatabase.getInstance().getReference("users");
         myRef.child(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 sender_user = snapshot.getValue(User.class);
+                //Lấy địa chỉ ảnh avatar
                 StorageReference myStorage = FirebaseStorage.getInstance().getReference(sender_user.getAvatar());
+                //Tạo sự kiện khi lấy hình ảnh thành công
                 myStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View
                         Picasso.get().load(uri).into(holder.senderRequestImageView);
                     }
                 });
@@ -116,15 +124,15 @@ public class FriendRequestAdapter extends BaseAdapter {
 
             }
         });
-
+        //Bấm nút chấp nhận để kết bạn
         holder.btnAccep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myRef = FirebaseDatabase.getInstance().getReference("friends");
-
+                //Tạo bạn bè cho người gửi
                 Friends friend = new Friends(friendRequest.getSenderPhone(),friendRequest.getSenderName(),new Date());
                 myRef.child(friendRequest.getReceiverPhone()).child(friendRequest.getSenderPhone()).setValue(friend);
-                //Tao cho nguoi gui
+                //Tạo bạn bè cho người nhận
                 Friends friend1 = new Friends(friendRequest.getReceiverPhone(),friendRequest.getReceiverName(),new Date());
                 myRef.child(friendRequest.getSenderPhone()).child(friendRequest.getReceiverPhone()).setValue(friend1);
                 //Xóa bảng request
@@ -157,9 +165,11 @@ public class FriendRequestAdapter extends BaseAdapter {
                 });
             }
         });
+        //Bấm nút từ chối để từ chối lời mời kết bạn
         holder.btnDeny.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Tìm kiếm trong bảng lời mời kết bạn
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
                 myRef.orderByChild("senderPhone").startAt(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -169,6 +179,7 @@ public class FriendRequestAdapter extends BaseAdapter {
                             if(dataSnapshot.getValue(FriendRequest.class).getReceiverPhone().equals(main_user.getPhone()))
                             {
                                 String req_id = dataSnapshot.getKey();
+                                //Xóa lời mời trên database
                                 myRef.child(req_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {

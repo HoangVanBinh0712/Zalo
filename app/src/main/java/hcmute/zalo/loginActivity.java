@@ -234,9 +234,11 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(checkbox_showPassword.isChecked()){
+                    //hiển thị mật khẩu
                     edtPassword1.setInputType(1);
                 }
                 else {
+                    //ẩn mật khẩu
                     edtPassword1.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD | InputType.TYPE_CLASS_TEXT);
                 }
             }

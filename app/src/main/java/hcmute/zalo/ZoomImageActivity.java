@@ -23,37 +23,47 @@ public class ZoomImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoom_image);
+        //ánh xạ các view
         zoomImage = findViewById(R.id.zoomImage);
         imgBack = findViewById(R.id.imgBack);
         btnDownload = findViewById(R.id.btnDownload);
 
+        //Lấy đường dẫn của hình ảnh từ sharePreferences
         Uri uri = Uri.parse(getIntent().getStringExtra("uri"));
-        if (uri.equals(""))
-        {
+        //Nếu không có đường dẫn
+        if (uri.equals("")) {
+            //để default
             zoomImage.setImageResource(R.drawable.thanhpho);
             return;
         }
+        //Đưa ảnh vào trong imageview
         Picasso.get().load(uri).into(zoomImage);
 
+        //Bấm nút back để kết thúc activity
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        //Bấm nút tải xuống để tải hình ảnh về máy
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ZoomImageActivity.this, "Starting download....", Toast.LENGTH_SHORT).show();
+                //tạo bất kỳ tên cho hình ảnh
                 String name = createRandomString();
+                //Bắt đầu tải hình ảnh xuống
                 DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Request request = new DownloadManager.Request(uri);
                 request.setVisibleInDownloadsUi(true);
+                //gắn đường dẫn để lưu hình ảnh
                 request.setDestinationInExternalFilesDir(ZoomImageActivity.this, Environment.DIRECTORY_DOWNLOADS,name+".jpg");
                 downloadManager.enqueue(request);
             }
         });
     }
+    //Tạo 1 chuỗi bất kỳ
     private String createRandomString() {
         String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -63,6 +73,7 @@ public class ZoomImageActivity extends AppCompatActivity {
 
         StringBuilder sb = new StringBuilder();
         Random random = new Random();
+        //Chuỗi có 6 ký tự
         int length = 6;
         for (int i = 0; i < length; i++) {
             int index = random.nextInt(alphaNumeric.length());

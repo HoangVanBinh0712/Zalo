@@ -56,17 +56,21 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
 
     Context context;
     ArrayList<MessageDetails> arrMessDetails;
+    //Gắn loại tin nhắn là của người gửi
     int ITEM_SEND = 1;
+    //Gắn loại tin nhắn là của người nhận
     int ITEM_RECEIVE=2;
     ScheduledExecutorService timer;
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == ITEM_SEND)
-        {
+        //Nếu người gửi gửi tin nhắn
+        if(viewType == ITEM_SEND) {
+            //gắn view là tin nhắn của người gửi
             View view = LayoutInflater.from(context).inflate(R.layout.message_adapter_sent,parent,false);
             return new SenderViewHolder(view);
-        }else{
+        }else{  //Nếu người nhận gửi tin nhắn
+            //gắn view là tin nhắn của người nhận
             View view = LayoutInflater.from(context).inflate(R.layout.message_adapter_received,parent,false);
             return new ReciverViewHolder(view);
         }
@@ -75,17 +79,19 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageDetails messageDetails = arrMessDetails.get(position);
+        //Nếu người gửi gửi tin nhắn
         if(holder.getClass() == SenderViewHolder.class){
-
             SenderViewHolder senderViewHolder = (SenderViewHolder) holder;
-            //message_records 1 trường hợp để tải record lên
+            //nếu message là dạng hình ảnh
             if(messageDetails.getContent().startsWith("message_images/"+ messageDetails.getMessageId())){
-                //Picture
+                //Tạo kết nối đến FirebaseStorage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(messageDetails.getContent());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //lưu đường dẫn hình ảnh
                         senderViewHolder.sendImageUri = uri;
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View
                         Picasso.get().load(uri).fit().centerCrop().into(senderViewHolder.chatPicture);
                     }
                 });
@@ -100,11 +106,14 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 constraintSet.applyTo(senderViewHolder.sendParent_layout);
 
             }
+            //nếu message là dạng voice clip
             else if(messageDetails.getContent().startsWith("message_records/"+ messageDetails.getMessageId())){
+                //Tạo kết nối đến FirebaseStorage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(messageDetails.getContent());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //Tạo media để có thể nghe file ghi âm
                         senderViewHolder.sendMediaPlayer = new MediaPlayer();
                         senderViewHolder.sendMediaPlayer.setAudioAttributes(
                                 new AudioAttributes.Builder()
@@ -113,15 +122,17 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                                         .build()
                                 );
                         try{
+                            //lấy file ghi âm từ đường dẫn
                             senderViewHolder.sendMediaPlayer.setDataSource(context.getApplicationContext(),uri);
                             senderViewHolder.sendMediaPlayer.prepare();
-
+                            //gắn seekbar chạy
                             int millis = senderViewHolder.sendMediaPlayer.getDuration();
                             senderViewHolder.seekbarSend.setMax(millis);
-
+                            //Tạo sự kiện khi file phát âm thanh kết thúc
                             senderViewHolder.sendMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
+                                    //Gán seekbar về vị tri đàu
                                     timer.shutdown();
                                     senderViewHolder.seekbarSend.setProgress(0);
                                     senderViewHolder.btn_actionAudioSend.setImageResource(R.drawable.ic_play);
@@ -144,15 +155,19 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 senderViewHolder.linearAudioSend.setVisibility(View.INVISIBLE);
 
             }
+            //Tạo sự kiện khi nhấn vào nút play hoặc pause
             senderViewHolder.btn_actionAudioSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Nếu media có dữ liệu
                     if(senderViewHolder.sendMediaPlayer!=null){
+                        //Nếu nhấn vào khi media đang chạy thì sẽ dừng lại
                         if(senderViewHolder.sendMediaPlayer.isPlaying()) {
                             senderViewHolder.sendMediaPlayer.pause();
                             senderViewHolder.btn_actionAudioSend.setImageResource(R.drawable.ic_play);
                             timer.shutdown();
                         }
+                        //Nếu nhấn khi media dừng lại thì bắt đầu
                         else {
                             senderViewHolder.sendMediaPlayer.start();
                             senderViewHolder.btn_actionAudioSend.setImageResource(R.drawable.ic_pause);
@@ -170,37 +185,45 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             });
 
             SimpleDateFormat simpleDateFormat;
-
+            //kiểm tra ngày gửi và ngày hiện tại
             Date today = new Date();
+            //Nếu là ngày gửi là ngày hiện tại
             if(today.getYear() == messageDetails.getTimeSended().getYear()
             && today.getMonth() == messageDetails.getTimeSended().getMonth()
                     && today.getDate() == messageDetails.getTimeSended().getDate())
             {
                 //Chỉ hiện thời gian bỏ đi ngày
                 simpleDateFormat = new SimpleDateFormat("hh:mm");
-            }else
-            {
+            }//Nếu ngày gửi không phải là ngày hiện tại
+            else {
+                //Hiện ngày gửi cùng với thời gian
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             senderViewHolder.txtTimeSent.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
+            //Tạo sự kiện khi bấm vào hình ảnh
             senderViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Chuyển sang activity phóng to hình cùng với đường dẫn
                     Intent zoomImageIntent = new Intent(context, ZoomImageActivity.class);
                     zoomImageIntent.putExtra("uri",senderViewHolder.sendImageUri.toString());
                     context.startActivity(zoomImageIntent);
                 }
             });
 
-        }else{
+        } //Nếu người gửi gửi tin nhắn
+        else{
+            //nếu message là dạng hình ảnh
             ReciverViewHolder reciverViewHolder = (ReciverViewHolder) holder;
             if(messageDetails.getContent().startsWith("message_images/"+ messageDetails.getMessageId())){
-                //Picture
+                //Tạo kết nối đến FirebaseStorage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(messageDetails.getContent());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //lưu đường dẫn của hình ảnh
                         reciverViewHolder.receiveImageUri = uri;
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View
                         Picasso.get().load(uri).fit().centerCrop().into(reciverViewHolder.chatPicture);
                     }
                 });
@@ -214,11 +237,14 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 constraintSet.connect(R.id.receiveTime,ConstraintSet.TOP,R.id.chatPicture,ConstraintSet.BOTTOM,0);
                 constraintSet.applyTo(reciverViewHolder.receiveParent_layout);
 
-            }else if(messageDetails.getContent().startsWith("message_records/"+ messageDetails.getMessageId())){
+            }//nếu message là voice clip
+            else if(messageDetails.getContent().startsWith("message_records/"+ messageDetails.getMessageId())){
+                //Tạo kết nối đến FirebaseStorage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(messageDetails.getContent());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //lấy file ghi âm từ đường dẫn
                         reciverViewHolder.receiveMediaPlayer = new MediaPlayer();
                         reciverViewHolder.receiveMediaPlayer.setAudioAttributes(
                                 new AudioAttributes.Builder()
@@ -227,15 +253,17 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                                         .build()
                         );
                         try{
+                            //đưa dữ liệu vào media
                             reciverViewHolder.receiveMediaPlayer.setDataSource(context.getApplicationContext(),uri);
                             reciverViewHolder.receiveMediaPlayer.prepare();
-
+                            //gắn seekbar chạy
                             int millis = reciverViewHolder.receiveMediaPlayer.getDuration();
                             reciverViewHolder.seekbarReceive.setMax(millis);
-
+                            //tạo sự kiện khi media kết thúc
                             reciverViewHolder.receiveMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
+                                    //Gán seekbar về vị tri đàu
                                     timer.shutdown();
                                     reciverViewHolder.seekbarReceive.setProgress(0);
                                     reciverViewHolder.btn_actionAudioReceive.setImageResource(R.drawable.ic_play);
@@ -297,15 +325,18 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             });
             //reciverViewHolder.receiveMessage.setText(messageDetails.getContent());
            // Picasso.get().load(uri).fit().centerCrop().into(holder.imageBoxChat);
+            //tạo sự kiện khi bấm vào nút play hoặc pause
             reciverViewHolder.btn_actionAudioReceive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Nếu media có dữ liệu
                     if(reciverViewHolder.receiveMediaPlayer != null){
+                        //Nếu nhấn vào khi media đang chạy thì sẽ dừng lại
                         if(reciverViewHolder.receiveMediaPlayer.isPlaying()) {
                             reciverViewHolder.receiveMediaPlayer.pause();
                             reciverViewHolder.btn_actionAudioReceive.setImageResource(R.drawable.ic_play);
                             timer.shutdown();
-                        }
+                        }//Nếu media đang dừng thì sẽ tiếp tục chạy
                         else {
                             reciverViewHolder.receiveMediaPlayer.start();
                             reciverViewHolder.btn_actionAudioReceive.setImageResource(R.drawable.ic_pause);
@@ -322,22 +353,26 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 }
             });
             SimpleDateFormat simpleDateFormat;
-
+            //Kiểm tra ngày gửi và ngày hiện tại
             Date today = new Date();
+            //Nếu ngày gửi là ngày hiện tại
             if(today.getYear() == messageDetails.getTimeSended().getYear()
                     && today.getMonth() == messageDetails.getTimeSended().getMonth()
                     && today.getDate() == messageDetails.getTimeSended().getDate())
             {
                 //Chỉ hiện thời gian bỏ đi ngày
                 simpleDateFormat = new SimpleDateFormat("hh:mm");;
-            }else
-            {
+            }//Nếu ngày gửi không phải ngày hiện tại
+            else {
+                //Hiện ngày cùng với thời gian gửi
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             reciverViewHolder.receiveTime.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
+            //Tạo sự kiện khi bấm vào hình ảnh
             reciverViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Chuyển sang activity phóng to hình cùng với đường dẫn
                     Intent zoomImageIntent = new Intent(context, ZoomImageActivity.class);
                     zoomImageIntent.putExtra("uri",reciverViewHolder.receiveImageUri.toString());
                     context.startActivity(zoomImageIntent);
@@ -355,11 +390,11 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         User user = User_SingeTon.getInstance().getUser();
         MessageDetails messageDetails = arrMessDetails.get(position);
-        if(messageDetails.getSenderPhone().equals(user.getPhone()))
-        {
+        //Kiểm tra nếu người gửi là người dùng hiện tại thì gán tin nhắn gửi
+        if(messageDetails.getSenderPhone().equals(user.getPhone())) {
             return ITEM_SEND;
-        }else
-        {
+        }//Kiểm tra nếu người gửi không là người dùng hiện tại thì gán tin nhắn nhận
+        else {
             return ITEM_RECEIVE;
         }
     }
@@ -375,6 +410,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
         Uri sendImageUri;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
+            //ánh xạ các view
             sendMessage = itemView.findViewById(R.id.sendMessage);
             txtTimeSent = itemView.findViewById(R.id.txtTimeSent);
             chatPicture = itemView.findViewById(R.id.chatPicture);
@@ -397,6 +433,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
         Uri receiveImageUri;
         public ReciverViewHolder(@NonNull View itemView) {
             super(itemView);
+            //ánh xạ các view
             imgUser = itemView.findViewById(R.id.imgUser);
             receiveMessage = itemView.findViewById(R.id.receiveMessage);
             receiveTime = itemView.findViewById(R.id.receiveTime);

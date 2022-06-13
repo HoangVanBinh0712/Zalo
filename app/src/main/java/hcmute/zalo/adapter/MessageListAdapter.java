@@ -65,6 +65,7 @@ public class MessageListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder{
+        //Chứa các view
         TextView nameBoxChat, lastMessage;
         ImageView imageBoxChat;
     }
@@ -78,7 +79,7 @@ public class MessageListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(layout,null);
-
+            //ánh xạ các view
             holder.imageBoxChat = (ImageView) convertView.findViewById(R.id.imageBoxChat);
             holder.nameBoxChat = (TextView) convertView.findViewById(R.id.nameBoxChat);
             holder.lastMessage = (TextView) convertView.findViewById(R.id.lastMessage);
@@ -88,8 +89,10 @@ public class MessageListAdapter extends BaseAdapter {
         else{
             holder = (ViewHolder) convertView.getTag();
         }
+        //Lấy thông tin người mình nhắn tin
         final Participants participants = lstParticipant.get(position);
         holder.imageBoxChat.setImageBitmap(null);
+        //Kết nối đến bảng users
         DatabaseReference myUserRef = FirebaseDatabase.getInstance().getReference("users");
         myUserRef.child(participants.getUserPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -126,31 +129,38 @@ public class MessageListAdapter extends BaseAdapter {
 
             }
         });
+        //Lấy thông tin người dùng hiện tại từ mẫu singleton
         User currentUser = User_SingeTon.getInstance().getUser();
+        //Tạo kết nối đến bảng tin nhắn chi tiết
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
         myRef.child(participants.getMessageid()).limitToFirst(1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     MessageDetails messageDetails = dataSnapshot.getValue(MessageDetails.class);
+                    //Kiểm tra tin nhắn cuối cùng là voice chat
                     if(messageDetails.getContent().startsWith("message_records/")){
+                        //Nếu người dùng là người tin nhắn cuối cùng
                         if(currentUser.getPhone().equals(messageDetails.getSenderPhone())) {
                             holder.lastMessage.setText("You sent a audio");
-                        }
+                        }//Nếu người dùng không là người tin nhắn cuối cùng
                         else{
                             holder.lastMessage.setText("Your friend sent a audio");
                         }
-                    }else if(messageDetails.getContent().startsWith("message_images/")){
+                    }//Nếu tin nhắn cuối cùng là hình ảnh
+                    else if(messageDetails.getContent().startsWith("message_images/")){
+                        //Nếu người dùng là người tin nhắn cuối cùng
                         if(currentUser.getPhone().equals(messageDetails.getSenderPhone())) {
                             holder.lastMessage.setText("You sent a photo");
-                        }
+                        }//Nếu người dùng không là người tin nhắn cuối cùng
                         else{
                             holder.lastMessage.setText("Your friend send a photo");
                         }
-                    }
+                    }//Nếu tin nhắn cuối cùng là dạng text
                     else {
                         holder.lastMessage.setText(messageDetails.getContent());
                     }
+                    //Lấy ngày gửi cho vào tin nhắn cuối cùng
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
                     holder.lastMessage.append(" "+simpleDateFormat.format(messageDetails.getTimeSended()));
                 }

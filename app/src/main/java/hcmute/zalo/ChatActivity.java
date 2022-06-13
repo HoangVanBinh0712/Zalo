@@ -412,7 +412,7 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     //Nếu được quyền thì chạy Activity chụp ảnh
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    //Request code = 0 .
+                    //Request code = 0
                     startActivityForResult(takePicture, 0);
                 }else
                 {
@@ -629,7 +629,7 @@ public class ChatActivity extends AppCompatActivity {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         //Quền sử dụng micro ghi âm
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
-        //Quyền dùng máy nhả
+        //Quyền dùng máy ảnh
         int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED;
     }

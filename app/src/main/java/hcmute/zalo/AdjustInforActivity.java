@@ -120,9 +120,11 @@ public class AdjustInforActivity extends AppCompatActivity {
                 linearTakeNewImageAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(CheckPermissions())
-                        {
+                        //Kiểm tra quyền sử dụng máy ảnh
+                        if(CheckPermissions()) {
+                            //Gắn loại ảnh là ảnh đại diện
                             type = 1;
+                            //Nếu được quyền thì chạy Activity chụp ảnh
                             Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(takePicture, 0);
                         }else
@@ -171,13 +173,16 @@ public class AdjustInforActivity extends AppCompatActivity {
                         mainpicture.setImageBitmap(UserImageBitmap_SingleTon.getInstance().getAnhbia());
                     }
                 });
+                //Trong dialog ảnh đại diện nhấn vào dòng chụp ảnh sẽ cho phép người dùng chụp ảnh
                 LinearLayout linearTakeNewImageBackground = dialog.findViewById(R.id.linearTakeNewImageBackground);
                 linearTakeNewImageBackground.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(CheckPermissions())
-                        {
+                        //Kiểm tra quyền sử dụng máy ảnh
+                        if(CheckPermissions()) {
+                            //Gắn loại ảnh là ảnh bìa
                             type = 0;
+                            //Nếu được quyền thì chạy Activity chụp ảnh
                             Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(takePicture, 0);
                         }else
@@ -451,27 +456,31 @@ public class AdjustInforActivity extends AppCompatActivity {
         }
     }
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
+    // Kiểm tra các quyền có được cấp chưa
     public boolean CheckPermissions() {
-        // this method is used to check permission
+        //Quyền dùng máy ảnh
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED;
     }
     private void RequestPermissions() {
-        // this method is used to request the
-        // permission for audio recording and storage.
+        //Xin cấp quyền từ hệ thống
         ActivityCompat.requestPermissions(AdjustInforActivity.this, new String[]{CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Sau khi ta chọn chấp nhận hay từ chối sẽ trả kết quả vào hàm này
         switch (requestCode) {
             case REQUEST_AUDIO_PERMISSION_CODE:
                 if (grantResults.length > 0) {
                     boolean permissionToCamera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    //Nếu được chấp nhận hết
                     if (permissionToCamera) {
+                        //Thông báo thành công
                         Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
+                        //Thông báo từ chối
                         Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
                     }
                 }

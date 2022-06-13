@@ -60,6 +60,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
         return 0;
     }
     class Holder {
+        //Giũ các view
         CircleImageView senderRequestImageView;
         TextView txtSenderRequestName,txtRequestDay;
         Button btnCancel;
@@ -73,6 +74,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
             holder = new Holder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
+            //Ánh xạ các view
             holder.senderRequestImageView = (CircleImageView) view.findViewById(R.id.senderRequestImageView);
             holder.txtSenderRequestName = (TextView) view.findViewById(R.id.txtSenderRequestName);
             holder.txtRequestDay = (TextView)view.findViewById(R.id.txtRequestDay);
@@ -82,22 +84,26 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
         else{
             holder = (Holder) view.getTag();
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");;
+        //Định dạng kiểu ngày
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+        //Lấy thông tin người dùng hiện tại từ mẫu singleton
         main_user = User_SingeTon.getInstance().getUser();
-
+        //Lấy thông tin người dùng từ mảng lời mời kết bạn
         FriendRequest friendRequest = arrFriendRequest.get(i);
         holder.txtSenderRequestName.setText(friendRequest.getReceiverName());
         holder.txtRequestDay.setText(simpleDateFormat.format(friendRequest.getDateRequest()));
-        //Set anh
+        //Tạo kết nối đến bảng users
         myRef = FirebaseDatabase.getInstance().getReference("users");
         myRef.child(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 receiver_user = snapshot.getValue(User.class);
+                //Mở nơi lưu ảnh đại diện của người dùng
                 StorageReference myStorage = FirebaseStorage.getInstance().getReference(receiver_user.getAvatar());
                 myStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        //Lấy được Uri thành công. Dùng picasso để đưa hình vào Circle View ảnh đại diện
                         Picasso.get().load(uri).into(holder.senderRequestImageView);
                     }
                 });
@@ -108,24 +114,26 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
 
             }
         });
-
+        //Tạo sự kiện khi bấm vào nút hủy gửi lời mời kết bjan
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Kết nối đến bảng lời mời kết bạn
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
                 myRef.orderByChild("senderPhone").startAt(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for(DataSnapshot dataSnapshot : snapshot.getChildren())
                         {
-                            if(dataSnapshot.getValue(FriendRequest.class).getReceiverPhone().equals(friendRequest.getReceiverPhone()))
-                            {
+                            if(dataSnapshot.getValue(FriendRequest.class).getReceiverPhone().equals(friendRequest.getReceiverPhone())) {
                                 String req_id = dataSnapshot.getKey();
+                                //xóa lời mời kết bạn đã gửi
                                 myRef.child(req_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
                                         arrFriendRequest.remove(i);
                                         notifyDataSetChanged();
+                                        //thông báo
                                         Toast.makeText(context, "Cancel Friend Request Successfully !", Toast.LENGTH_SHORT).show();
                                     }
                                 });

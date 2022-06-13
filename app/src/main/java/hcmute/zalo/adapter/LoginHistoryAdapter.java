@@ -51,7 +51,7 @@ public class LoginHistoryAdapter extends BaseAdapter {
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
-
+            //ánh xạ các view
             holder.textviewDeviceName = (TextView) view.findViewById(R.id.textviewDeviceName);
             holder.textviewLoginDate = (TextView) view.findViewById(R.id.textviewLoginDate);
 
@@ -60,6 +60,7 @@ public class LoginHistoryAdapter extends BaseAdapter {
         else{
             holder = (ViewHolder) view.getTag();
         }
+        //Lấy thông tin lịch đăng nhập và đưa vào các view
         final LoginHistory loginHistory = lstHistory.get(position);
         holder.textviewDeviceName.setText(loginHistory.getDeviceName());
         holder.textviewLoginDate.setText(loginHistory.getDateLogin());

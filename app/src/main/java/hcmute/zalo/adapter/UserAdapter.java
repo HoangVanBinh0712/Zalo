@@ -64,6 +64,7 @@ public class UserAdapter extends BaseAdapter {
         return 0;
     }
     private class ViewHolder{
+        //Giữ các view
         TextView txtUserPhone;
         ImageView btnAddFriend;
         ShapeableImageView imageBoxChat;
@@ -74,12 +75,14 @@ public class UserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        //Lấy thông tin người dùng hiện tại từ mẫu singleton
         main_user = User_SingeTon.getInstance().getUser();
         UserAdapter.ViewHolder holder;
         if(view == null) {
             holder = new UserAdapter.ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layout,null);
+            //ánh xạ các view
             holder.constraintRowUser = (ConstraintLayout) view.findViewById(R.id.constraintRowUser);
             holder.txtUserPhone = (TextView) view.findViewById(R.id.txtUserPhone);
             holder.btnAddFriend = (ImageView) view.findViewById(R.id.btnAddFriend);
@@ -90,6 +93,7 @@ public class UserAdapter extends BaseAdapter {
         else{
             holder = (UserAdapter.ViewHolder) view.getTag();
         }
+        //Lấy thông tin người dùng từ mảng
         User user = arrUser.get(i);
         holder.txtUserPhone.setText(user.getFullname());
         //Kiểm tra xem kết bạn chưa nếu chưa thì hiện nút kết bạn
@@ -97,6 +101,7 @@ public class UserAdapter extends BaseAdapter {
         myRef.child("friends").child(main_user.getPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //Kiểm tra đã kết bạn thì không hiện nút kết bạn
                 if(snapshot.child(user.getPhone()).exists())
                 {
                     holder.btnAddFriend.setVisibility(View.INVISIBLE);
@@ -109,6 +114,7 @@ public class UserAdapter extends BaseAdapter {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                                 FriendRequest friendRequest = dataSnapshot.getValue(FriendRequest.class);
+                                //Không thể gửi lời mời kết bạn đến chình mình
                                 if(!friendRequest.getSenderPhone().equals(main_user.getPhone()))
                                     break;
                                 else {
@@ -135,23 +141,28 @@ public class UserAdapter extends BaseAdapter {
 
             }
         });
+        //Tạo sự kiện khi bấm nút kết bạn
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Tạo lời mời kết bạn
                 String req_id = UUID.randomUUID().toString();
                 FriendRequest fq = new FriendRequest(main_user.getPhone(),main_user.getFullname(),user.getPhone(),user.getFullname(),"Become friend with me");
+                //Thêm dữ liệu người dùng vào bảng kết bạn
                 DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("friend_requests");
                 myRef.child(req_id).setValue(fq);
                 holder.btnAddFriend.setVisibility(View.INVISIBLE);
                 Toast.makeText(context, "Send Request Successfully to " + user.getFullname(), Toast.LENGTH_SHORT).show();
             }
         });
+        //Tạo sự kiện khi bấm vào nút xem trang cá nhân
         holder.btnViewPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Lấy id người cần xem từ sharedPreferences
                 SharedPreferences sharedPreferences = context.getSharedPreferences("dataCookie",Context.MODE_MULTI_PROCESS);
                 sharedPreferences.edit().putString("user_id", user.getPhone()).commit();
+                //Chuyển sang activity xem trang các nhân
                 context.startActivity(new Intent(context, ViewUserPageActivity.class));
             }
         });
