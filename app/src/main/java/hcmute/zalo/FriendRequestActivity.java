@@ -178,6 +178,14 @@ public class FriendRequestActivity extends AppCompatActivity {
                         arrFriendRequest.add(friendRequest);
                     else break;
                 }
+                if (arrFriendRequest.size() == 0){
+                    txtNoRequest.setText("No received request");
+                    txtNoRequest.setVisibility(View.VISIBLE);
+                    lstFriendRequest.setVisibility(View.INVISIBLE);
+                } else {
+                    txtNoRequest.setVisibility(View.INVISIBLE);
+                    lstFriendRequest.setVisibility(View.VISIBLE);
+                }
                 friendRequestAdapter.notifyDataSetChanged();
             }
 

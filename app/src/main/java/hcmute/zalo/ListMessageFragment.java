@@ -100,24 +100,12 @@ public class ListMessageFragment extends Fragment {
     User main_user;
     ArrayList<User> users = new ArrayList<>();
     ArrayList<Participants> participantsList = new ArrayList<>();
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        users = new ArrayList<>();
-        messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
-        listviewMessage.setAdapter(messageListAdapter);
-
-        getListParticipant();
-        messageListAdapter.notifyDataSetChanged();
-    }
-
+    boolean callParticipant = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_list_message, container, false);
-
         //Nếu không có user trả về trang login
         if(User_SingeTon.getInstance().getUser() == null) {
             startActivity(new Intent(getActivity(), loginActivity.class));
@@ -129,13 +117,18 @@ public class ListMessageFragment extends Fragment {
         searchView = view.findViewById(R.id.searchView);
         btn_more = (ImageView) view.findViewById(R.id.btn_more);
         listviewMessage = (ListView) view.findViewById(R.id.listviewMessage);
+        //Khởi tạo adapter
+        messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
+        //Đặt addapter cho listview
+        listviewMessage.setAdapter(messageListAdapter);
+        //Bắt swh kiên onclcick
         btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getListParticipant();
             }
         });
-
+        //Bắt sự kiện khi nhập chữ vào ô tìm kiếm
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -149,6 +142,7 @@ public class ListMessageFragment extends Fragment {
                 listviewMessage.setAdapter(adapter);
                 String search_phone = newText;
                 if(search_phone.length() == 10){
+                    participantsList.clear();
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -171,7 +165,7 @@ public class ListMessageFragment extends Fragment {
                         }
                     });
                 }else if(search_phone.length() == 0) {
-                    getListParticipant();
+                      getListParticipant();
                 }else{
                     users.clear();
                     adapter.notifyDataSetChanged();
@@ -179,7 +173,6 @@ public class ListMessageFragment extends Fragment {
                 return false;
             }
         });
-
         listviewMessage.setClickable(true);
         listviewMessage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -246,18 +239,24 @@ public class ListMessageFragment extends Fragment {
 
             }
         });
+        getListParticipant();
         return view;
     }
     //lấy danh sách những người mà đã nhắn tin
-    private void getListParticipant(){
-        //Kết nối cơ sở dữ liệu
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myParticipantRef = database.getReference("participants");
+    DatabaseReference myParticipantRef;
+    ValueEventListener listener;
 
+    private void getListParticipant(){
+        //Tránh việc hàm bị gọi liên tục 2 lần dẫn đến dữ liệu lộn xộn trong listview
+        if(callParticipant) return;
+        callParticipant = true;
+            //Kết nối cơ sở dữ liệu
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myParticipantRef = database.getReference("participants");
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         main_user = User_SingeTon.getInstance().getUser();
         //Tìm trong bảng participants
-        myParticipantRef.child(main_user.getPhone()).addValueEventListener(new ValueEventListener() {
+        listener = myParticipantRef.child(main_user.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //Xóa mảng cũ
@@ -294,45 +293,46 @@ public class ListMessageFragment extends Fragment {
                                 //Ban đầu thứ tự là đúng
                                 //Thuật toán bubble sort
                                 int len = participantsList.size();
-                                for(int i = 0; i < len; i++)
-                                    for(int j = 0 ; j < len-1 ; j++)
-                                    {
-                                        long num1 = arrDate.get(j).getTime();
-                                        long num2 = arrDate.get(j+1).getTime();
-                                        if(num1 < num2)
+                                if(len == arrDate.size())
+                                {
+                                    for(int i = 0; i < len; i++)
+                                        for(int j = 0 ; j < len-1 ; j++)
                                         {
-                                            //Swap j cho j+1
-                                            Participants part1 = participantsList.get(j);
-                                            Participants part2 = participantsList.get(j+1);
-                                            participantsList.set(j,part2);
-                                            participantsList.set(j+1,part1);
+                                            long num1 = arrDate.get(j).getTime();
+                                            long num2 = arrDate.get(j+1).getTime();
+                                            if(num1 < num2)
+                                            {
+                                                //Swap j cho j+1
+                                                Participants part1 = participantsList.get(j);
+                                                Participants part2 = participantsList.get(j+1);
+                                                participantsList.set(j,part2);
+                                                participantsList.set(j+1,part1);
 
-                                            Date date1 = arrDate.get(j);
-                                            Date date2 = arrDate.get(j+1);
-                                            arrDate.set(j,date2);
-                                            arrDate.set(j+1,date1);
+                                                Date date1 = arrDate.get(j);
+                                                Date date2 = arrDate.get(j+1);
+                                                arrDate.set(j,date2);
+                                                arrDate.set(j+1,date1);
+                                            }
                                         }
-                                    }
+                                }
+
                                 txtNoMessage.setVisibility(View.INVISIBLE);
                                 listviewMessage.setVisibility(View.VISIBLE);
-                                listviewMessage.setAdapter(messageListAdapter);
                                 messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
+                                listviewMessage.setAdapter(messageListAdapter);
                             }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }});
-
-
-            }
+                }
                 if (participantsList.size() == 0) {
                     txtNoMessage.setVisibility(View.VISIBLE);
                     listviewMessage.setVisibility(View.INVISIBLE);
 
                 }
-
+                callParticipant = false;
             }
 
             @Override
@@ -343,4 +343,16 @@ public class ListMessageFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //Khi chuyển qua fragment khác thì tắt các listener đi
+        if (myParticipantRef != null && listener != null){
+            myParticipantRef.removeEventListener(listener);
+        }
+        //Làm mới array list, adapter, listview
+        participantsList.clear();
+        listviewMessage.setAdapter(null);
+        messageListAdapter = null;
+    }
 }

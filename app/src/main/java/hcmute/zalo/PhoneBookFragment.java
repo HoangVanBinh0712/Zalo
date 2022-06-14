@@ -130,7 +130,6 @@ public class PhoneBookFragment extends Fragment {
         listviewPhonebook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("TAG", "onItemClick: "+ phoneBookList.get(i).getPhonebookNumber());
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
                 sharedPreferences.edit().putString("user_id", phoneBookList.get(i).getPhonebookNumber()).commit();
                 startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
@@ -167,6 +166,13 @@ public class PhoneBookFragment extends Fragment {
                             //Xóa danh bạ cũ
                             myPhoneBookRef.child(user.getPhone()).removeValue();
                         }
+
+                        //Xin quyền truy cập
+                        checkPermission();
+                        //getContactListFromPhone();
+                        //Hiển thị người dùng được lưu trong danh bạ trên database
+                        getListPhoneBook();
+                        Toast.makeText(getActivity(), "Update success!!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -174,14 +180,6 @@ public class PhoneBookFragment extends Fragment {
 
                     }
                 });
-
-                //Xin quyền truy cập
-                checkPermission();
-                //getContactListFromPhone();
-                //Hiển thị người dùng được lưu trong danh bạ trên database
-                getListPhoneBook();
-                Toast.makeText(getActivity(), "Update success!!", Toast.LENGTH_SHORT).show();
-
             }
 
         });
@@ -226,7 +224,14 @@ public class PhoneBookFragment extends Fragment {
                             phoneCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                     //Bỏ hết khoảng trắng trong sdt lấy được
+
                     String phone_number = phone.replace(" ", "");
+                    StringBuffer s_phone = new StringBuffer();
+                    //Tách số ra khỏi chuỗi
+                    for (int i = 0; i < phone_number.length(); i++) {
+                        if(Character.isDigit(phone_number.charAt(i)))
+                            s_phone.append(phone_number.charAt(i));
+                    }
                     String phone_name = name.toString();
                     //Tiến hành tìm kiếm trên FirebaseDatabase
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -236,11 +241,11 @@ public class PhoneBookFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //Nếu số điện thoại trong danh bạ đã đăng ký tài khoản
-                            if (snapshot.child(phone_number).exists()) {
+                            if (snapshot.child(s_phone.toString()).exists()) {
                                 //Thêm vào database
-                                PhoneBook phoneBook = new PhoneBook(user.getPhone(), phone_name, phone_number);
+                                PhoneBook phoneBook = new PhoneBook(user.getPhone(), phone_name, s_phone.toString());
                                 DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
-                                myPhoneBookRef.child(user.getPhone()).child(phone_number).setValue(phoneBook);
+                                myPhoneBookRef.child(user.getPhone()).child(s_phone.toString()).setValue(phoneBook);
                             }
                         }
 

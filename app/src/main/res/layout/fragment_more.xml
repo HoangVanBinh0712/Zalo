@@ -47,12 +47,6 @@
                     android:textSize="18dp"
                     android:textColor="@color/black"/>
             </LinearLayout>
-            <ImageView
-                android:layout_marginTop="9dp"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/baseline_chevron_right_24"/>
-
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="30dp"
@@ -60,23 +54,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/lineartop"
-
             >
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/baseline_person_outline_24"/>
             <TextView
-                android:layout_width="280dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Account"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="16dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_chevron_right_24"/>
+                android:textSize="16dp"
+                android:drawableRight="@drawable/baseline_chevron_right_24"
+                android:layout_marginRight="5dp"/>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/linearNotification"
@@ -90,16 +82,14 @@
                 android:layout_height="36dp"
                 android:src="@drawable/baseline_notifications_none_24"/>
             <TextView
-                android:layout_width="280dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Notification"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="16dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_chevron_right_24"/>
+                android:textSize="16dp"
+                android:drawableRight="@drawable/baseline_chevron_right_24"
+                android:layout_marginRight="5dp"/>
         </LinearLayout>
         <TextView
             android:id="@+id/line"
@@ -120,16 +110,14 @@
                 android:layout_height="36dp"
                 android:src="@drawable/baseline_privacy_tip_24"/>
             <TextView
-                android:layout_width="280dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Privacy"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="16dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_chevron_right_24"/>
+                android:textSize="16dp"
+                android:drawableRight="@drawable/baseline_chevron_right_24"
+                android:layout_marginRight="5dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="20dp"
@@ -143,16 +131,14 @@
                 android:layout_height="36dp"
                 android:src="@drawable/baseline_help_outline_24"/>
             <TextView
-                android:layout_width="280dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Helps"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="16dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_chevron_right_24"/>
+                android:textSize="16dp"
+                android:drawableRight="@drawable/baseline_chevron_right_24"
+                android:layout_marginRight="5dp"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
