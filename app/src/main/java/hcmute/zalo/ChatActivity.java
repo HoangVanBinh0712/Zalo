@@ -242,7 +242,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-            //Lấy tiếp 9 ti nhắn tiếp theo, sự kiện addListenerForSingleValueEvent chỉ chạy 1 lần kẻ cả khi có sự thay đổi trong Database
+            //Lấy tiếp 9 tin nhắn tiếp theo, sự kiện addListenerForSingleValueEvent chỉ chạy 1 lần kẻ cả khi có sự thay đổi trong Database
             myRef.child(message_id).limitToFirst(10).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

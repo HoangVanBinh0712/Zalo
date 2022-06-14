@@ -266,7 +266,6 @@ public class AccountInformationFragment extends Fragment {
         {
             //Kiểm tra nếu đã có ảnh mới thực hiện lấy ảnh đại diện
             if(!user.getAvatar().equals("")) {
-                Toast.makeText(getActivity(), "Load Storage", Toast.LENGTH_SHORT).show();
                 //Đưa dữ liệu cho ảnh đại diện dùng Firebase Storage
                 storage = FirebaseStorage.getInstance();
                 storageReference = storage.getReference(user.getAvatar());

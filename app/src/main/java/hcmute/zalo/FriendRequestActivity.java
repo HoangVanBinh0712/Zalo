@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     ImageView btnBack;
     ListView lstFriendRequest;
     TextView txtReceived,txtSended;
+    TextView txtNoRequest;
     //Khở tạo các biến sử dụng
     ArrayList<FriendRequest> arrFriendRequest;
     User main_user;
@@ -47,6 +49,7 @@ public class FriendRequestActivity extends AppCompatActivity {
         lstFriendRequest = findViewById(R.id.lstFriendRequest);
         txtReceived = findViewById(R.id.txtReceived);
         txtSended = findViewById(R.id.txtSended);
+        txtNoRequest = findViewById(R.id.txtNoRequest);
         //Bắt sự kiện onclick
         txtReceived.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +72,18 @@ public class FriendRequestActivity extends AppCompatActivity {
                                 arrFriendRequest.add(friendRequest);
                             else break;
                         }
+                        if (arrFriendRequest.size() == 0){
+                            txtNoRequest.setText("No received request");
+                            txtNoRequest.setVisibility(View.VISIBLE);
+                            lstFriendRequest.setVisibility(View.INVISIBLE);
+                        } else {
+                            txtNoRequest.setVisibility(View.INVISIBLE);
+                            lstFriendRequest.setVisibility(View.VISIBLE);
+                        }
                         //Set adapter cho listview và thông báo dữ liệu thay đổi cho adapter
                         lstFriendRequest.setAdapter(friendRequestAdapter);
                         friendRequestAdapter.notifyDataSetChanged();
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -108,9 +118,19 @@ public class FriendRequestActivity extends AppCompatActivity {
                                 arrFriendRequest.add(friendRequest);
                             else break;
                         }
+                        if (arrFriendRequest.size() == 0){
+                            txtNoRequest.setText("No sended request");
+                            txtNoRequest.setVisibility(View.VISIBLE);
+                            lstFriendRequest.setVisibility(View.INVISIBLE);
+                        } else {
+                            txtNoRequest.setVisibility(View.INVISIBLE);
+                            lstFriendRequest.setVisibility(View.VISIBLE);
+                        }
                         //Set adapter cho listview và thông báo dữ liệu thay đổi cho adapter
+
                         lstFriendRequest.setAdapter(sendedFriendRequestAdapter);
                         sendedFriendRequestAdapter.notifyDataSetChanged();
+
                     }
 
                     @Override

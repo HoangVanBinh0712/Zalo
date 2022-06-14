@@ -66,11 +66,23 @@
                 android:textAlignment="center" />
         </TableRow>
     </TableLayout>
+    <TextView
+        android:id="@+id/txtNoRequest"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tableLayout"
+        android:text="No friend request"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:visibility="invisible"
+        />
 
     <ListView
         android:id="@+id/lstFriendRequest"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tableLayout"/>
+        android:layout_below="@id/tableLayout"
+        android:layout_marginTop="5dp" />
 </RelativeLayout>

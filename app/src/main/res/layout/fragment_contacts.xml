@@ -33,7 +33,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+        <TextView
+            android:id="@+id/txtNofriend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/constraint_contacts"
+            android:text="You have no friend !"
+            android:textSize="25dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:visibility="invisible"/>
         <ListView
             android:id="@+id/lstFriends"
             android:layout_below="@+id/constraint_contacts"

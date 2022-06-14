@@ -150,7 +150,6 @@ public class MoreFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //Thất bại thì sẽ in ra lỗi
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {

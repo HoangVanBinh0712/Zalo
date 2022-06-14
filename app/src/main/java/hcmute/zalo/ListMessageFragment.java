@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -88,6 +89,7 @@ public class ListMessageFragment extends Fragment {
         }
     }
 
+    TextView txtNoMessage;
     View view;
     SearchView searchView;
     ImageView btn_more;
@@ -123,6 +125,7 @@ public class ListMessageFragment extends Fragment {
         }
 
         //ánh xạ
+        txtNoMessage = view.findViewById(R.id.txtNoMessage);
         searchView = view.findViewById(R.id.searchView);
         btn_more = (ImageView) view.findViewById(R.id.btn_more);
         listviewMessage = (ListView) view.findViewById(R.id.listviewMessage);
@@ -150,13 +153,16 @@ public class ListMessageFragment extends Fragment {
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            //Tìm trong bảng user có người dùng đó không
                             if(snapshot.child(search_phone).exists()){
-                                //Có user với số điện thoại thì hiện ra.
                                 found_user = snapshot.child(search_phone).getValue(User.class);
                                 users.clear();
                                 users.add(found_user);
                                 adapter.notifyDataSetChanged();
+                                listviewMessage.setVisibility(View.VISIBLE);
+                                txtNoMessage.setVisibility(View.INVISIBLE);
+                            }else{
+                                listviewMessage.setVisibility(View.INVISIBLE);
+                                txtNoMessage.setVisibility(View.VISIBLE);
                             }
                         }
 
@@ -280,11 +286,13 @@ public class ListMessageFragment extends Fragment {
                                 arrDate.add(new Date(0,0,0));
 
                             }
+                            //Sắp xếp tin nhắn theo thứ tự thời gian gần nhất
                             if(finalI == len - 1 )
                             {
                                 //Tai vong cuoi cung tien hanh sap xep
                                 //Sap xep lai participantsList theo arrDate
                                 //Ban đầu thứ tự là đúng
+                                //Thuật toán bubble sort
                                 int len = participantsList.size();
                                 for(int i = 0; i < len; i++)
                                     for(int j = 0 ; j < len-1 ; j++)
@@ -305,6 +313,8 @@ public class ListMessageFragment extends Fragment {
                                             arrDate.set(j+1,date1);
                                         }
                                     }
+                                txtNoMessage.setVisibility(View.INVISIBLE);
+                                listviewMessage.setVisibility(View.VISIBLE);
                                 listviewMessage.setAdapter(messageListAdapter);
                                 messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
                             }
@@ -317,6 +327,12 @@ public class ListMessageFragment extends Fragment {
 
 
             }
+                if (participantsList.size() == 0) {
+                    txtNoMessage.setVisibility(View.VISIBLE);
+                    listviewMessage.setVisibility(View.INVISIBLE);
+
+                }
+
             }
 
             @Override

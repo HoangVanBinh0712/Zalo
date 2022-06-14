@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +81,7 @@ public class ContactsFragment extends Fragment {
     //Khai báo các view sử dụng
     View view;
     ListView lstFriends;
+    TextView txtNofriend;
     //Khai báo adapter
     UserAdapter userAdapter;
     //Khai báo biến
@@ -90,6 +92,7 @@ public class ContactsFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Ánh xạ
         view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        txtNofriend = view.findViewById(R.id.txtNofriend);
         lstFriends = view.findViewById(R.id.lstFriends);
         //Khởi tạo mảng
         arrUser = new ArrayList<>();
@@ -132,6 +135,8 @@ public class ContactsFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //Đưa user vào trong Arraylist
                             arrUser.add(snapshot.getValue(User.class));
+                            lstFriends.setVisibility(View.VISIBLE);
+                            txtNofriend.setVisibility(View.INVISIBLE);
                             userAdapter.notifyDataSetChanged();
                         }
 
@@ -140,6 +145,11 @@ public class ContactsFragment extends Fragment {
 
                         }
                     });
+                }
+                if(arrUser.size() == 0)
+                {
+                    txtNofriend.setVisibility(View.VISIBLE);
+                    lstFriends.setVisibility(View.INVISIBLE);
                 }
             }
 

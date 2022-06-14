@@ -9,7 +9,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:background="#e2e2e2"
-        android:text="Giới thiệu bản thân"
+        android:text="Change Self Introduction"
         android:textColor="@color/black"
         android:gravity="center"
         android:textSize="20dp"
@@ -30,7 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xác nhận"
+        android:text="Confirm"
         android:backgroundTint="#2196F3"
         android:id="@+id/btnConfirmEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#2196F3"
-        android:text="Hủy"
+        android:text="Cancel"
         android:id="@+id/btnCancelEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
         app:layout_constraintRight_toRightOf="@+id/txtDescription"/>

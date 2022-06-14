@@ -46,6 +46,19 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/txtNoMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/constraint_menu"
+            android:text="You don't have chat history"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            />
+
         <ListView
             android:id="@+id/listviewMessage"
             android:layout_width="match_parent"
