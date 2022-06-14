@@ -115,8 +115,7 @@ public class PhoneBookFragment extends Fragment {
         listviewPhonebook = (ListView) view.findViewById(R.id.listviewPhonebook);
 
         //Nếu không có user trả về trang login
-        if(user == null)
-        {
+        if(user == null) {
             startActivity(new Intent(getActivity(), loginActivity.class));
             getActivity().finish();
         }
@@ -133,7 +132,7 @@ public class PhoneBookFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("TAG", "onItemClick: "+ phoneBookList.get(i).getPhonebookNumber());
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
-                sharedPreferences.edit().putString("user_id", phoneBookList.get(i).getUserPhone()).commit();
+                sharedPreferences.edit().putString("user_id", phoneBookList.get(i).getPhonebookNumber()).commit();
                 startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
             }
         });
@@ -148,7 +147,7 @@ public class PhoneBookFragment extends Fragment {
             public void onClick(View v) {
                 //Lấy thời gian cập nhập
                 Date currentTime = Calendar.getInstance().getTime();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 timeUpdate = dateFormat.format(currentTime);
                 //Lưu thời gian cập nhập lên sharedPreferences
                 sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
@@ -178,9 +177,11 @@ public class PhoneBookFragment extends Fragment {
 
                 //Xin quyền truy cập
                 checkPermission();
+                //getContactListFromPhone();
                 //Hiển thị người dùng được lưu trong danh bạ trên database
                 getListPhoneBook();
                 Toast.makeText(getActivity(), "Update success!!", Toast.LENGTH_SHORT).show();
+
             }
 
         });
@@ -294,4 +295,5 @@ public class PhoneBookFragment extends Fragment {
             checkPermission();
         }
     }
+
 }
