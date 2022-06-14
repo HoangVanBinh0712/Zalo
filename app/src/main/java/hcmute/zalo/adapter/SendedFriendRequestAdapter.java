@@ -94,7 +94,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
         holder.txtRequestDay.setText(simpleDateFormat.format(friendRequest.getDateRequest()));
         //Tạo kết nối đến bảng users
         myRef = FirebaseDatabase.getInstance().getReference("users");
-        myRef.child(friendRequest.getSenderPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(friendRequest.getReceiverPhone()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 receiver_user = snapshot.getValue(User.class);
