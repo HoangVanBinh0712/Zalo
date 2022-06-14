@@ -147,7 +147,7 @@ public class PhoneBookFragment extends Fragment {
             public void onClick(View v) {
                 //Lấy thời gian cập nhập
                 Date currentTime = Calendar.getInstance().getTime();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 timeUpdate = dateFormat.format(currentTime);
                 //Lưu thời gian cập nhập lên sharedPreferences
                 sharedPreferences = getActivity().getSharedPreferences("dataTimePhonebook",MODE_PRIVATE);
