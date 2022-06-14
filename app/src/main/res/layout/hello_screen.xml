@@ -53,7 +53,7 @@
         android:layout_width="300sp"
         android:layout_height="70sp"
         android:layout_marginBottom="64dp"
-        android:backgroundTint="#0343E5"
+        android:backgroundTint="#2196F3"
         android:fontFamily="sans-serif-thin"
         android:text="Start Messaging"
         android:textAllCaps="false"

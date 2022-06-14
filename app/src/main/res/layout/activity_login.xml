@@ -56,7 +56,7 @@
         android:layout_height="75sp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="4dp"
-        android:backgroundTint="#0343E5"
+        android:backgroundTint="#2196F3"
         android:fontFamily="sans-serif-medium"
         android:text="LOGIN"
         android:textSize="18sp"

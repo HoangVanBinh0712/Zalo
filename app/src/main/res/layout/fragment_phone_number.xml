@@ -114,7 +114,7 @@
                 android:layout_height="60sp"
                 android:textColor="@color/white"
                 android:text="Change phone number"
-                android:backgroundTint="#0343E5"
+                android:backgroundTint="#2196F3"
                 android:layout_gravity="center"
                 app:cornerRadius="35sp"
                 />

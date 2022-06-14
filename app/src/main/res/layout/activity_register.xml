@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -13,7 +14,7 @@
         android:fontFamily="sans-serif-medium"
         android:paddingTop="15sp"
         android:text="REGISTER"
-        android:textColor="#C90343E5"
+        android:textColor="#2196F3"
         android:textSize="30sp"
         android:textStyle="bold" />
 
@@ -195,7 +196,7 @@
         android:layout_below="@+id/edtPassword2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20sp"
-        android:backgroundTint="#0343E5"
+        android:backgroundTint="#2196F3"
         android:fontFamily="sans-serif-thin"
         android:text="Create account"
         android:textSize="18sp"

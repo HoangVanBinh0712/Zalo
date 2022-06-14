@@ -31,12 +31,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Xác nhận"
+        android:backgroundTint="#2196F3"
         android:id="@+id/btnConfirmEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
         android:text="Hủy"
         android:id="@+id/btnCancelEditDescription"
         app:layout_constraintTop_toBottomOf="@+id/txtDescription"
