@@ -85,7 +85,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
         //Định dạng kiểu ngày
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         //Lấy thông tin người dùng hiện tại từ mẫu singleton
         main_user = User_SingeTon.getInstance().getUser();
         //Lấy thông tin người dùng từ mảng lời mời kết bạn
