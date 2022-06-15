@@ -155,7 +155,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 senderViewHolder.linearAudioSend.setVisibility(View.INVISIBLE);
 
             }
-            //Tạo sự kiện khi nhấn vào nút play hoặc pause
+            //Bấm vào nút để dừng hoặc tiếp tục file audio
             senderViewHolder.btn_actionAudioSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -200,7 +200,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             senderViewHolder.txtTimeSent.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
-            //Tạo sự kiện khi bấm vào hình ảnh
+            //Bấm vào hình ảnh để xem hình ảnh ở chế độ phóng to
             senderViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -325,7 +325,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
             });
             //reciverViewHolder.receiveMessage.setText(messageDetails.getContent());
            // Picasso.get().load(uri).fit().centerCrop().into(holder.imageBoxChat);
-            //tạo sự kiện khi bấm vào nút play hoặc pause
+            //Bấm vào nút để dừng hoặc tiếp tục file audio
             reciverViewHolder.btn_actionAudioReceive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -368,7 +368,7 @@ public class MessageDetailsAdapter extends RecyclerView.Adapter {
                 simpleDateFormat = new SimpleDateFormat("dd-M hh:mm");
             }
             reciverViewHolder.receiveTime.setText(simpleDateFormat.format(messageDetails.getTimeSended()));
-            //Tạo sự kiện khi bấm vào hình ảnh
+            //Bấm vào hình ảnh để xem hình ảnh ở chế độ phóng to
             reciverViewHolder.chatPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

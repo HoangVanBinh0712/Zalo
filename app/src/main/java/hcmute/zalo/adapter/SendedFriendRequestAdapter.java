@@ -114,7 +114,7 @@ public class SendedFriendRequestAdapter extends BaseAdapter {
 
             }
         });
-        //Tạo sự kiện khi bấm vào nút hủy gửi lời mời kết bjan
+        //Tạo sự kiện khi bấm vào nút để hủy gửi lời mời kết bạn
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

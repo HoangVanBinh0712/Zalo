@@ -125,8 +125,10 @@ public class PhoneBookFragment extends Fragment {
         //Load thông tin vào listview
         adapter = new PhonebookAdapter(getActivity(),R.layout.phonebook_row,phoneBookList);
         listviewPhonebook.setAdapter(adapter);
+        //Lấy danh sách người dùng trong danh bạ mà có tài khoản
         getListPhoneBook();
 
+        //Bấm vào người dùng để đến trang profile của họ
         listviewPhonebook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -185,7 +187,7 @@ public class PhoneBookFragment extends Fragment {
 
         return view;
     }
-
+    //Kiểm tra có được quyền đọc danh bạ không
     private void checkPermission(){
         //Xin quyền truy cập
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
