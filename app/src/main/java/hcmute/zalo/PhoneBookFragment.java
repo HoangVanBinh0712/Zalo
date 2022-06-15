@@ -170,8 +170,7 @@ public class PhoneBookFragment extends Fragment {
                         //Xin quyền truy cập
                         checkPermission();
                         //getContactListFromPhone();
-                        //Hiển thị người dùng được lưu trong danh bạ trên database
-                        getListPhoneBook();
+
                         Toast.makeText(getActivity(), "Update success!!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -246,6 +245,8 @@ public class PhoneBookFragment extends Fragment {
                                 PhoneBook phoneBook = new PhoneBook(user.getPhone(), phone_name, s_phone.toString());
                                 DatabaseReference myPhoneBookRef = database.getReference("PhoneBook");
                                 myPhoneBookRef.child(user.getPhone()).child(s_phone.toString()).setValue(phoneBook);
+                                //Hiển thị người dùng được lưu trong danh bạ trên database
+                                getListPhoneBook();
                             }
                         }
 

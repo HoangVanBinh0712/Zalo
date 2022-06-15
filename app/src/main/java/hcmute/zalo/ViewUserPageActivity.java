@@ -119,15 +119,12 @@ public class ViewUserPageActivity extends AppCompatActivity {
                         if (snapshot.child(message_id_1).exists()) {
 
                             //Đã có cuộc hội thoại giữa 2 người.
-                            Log.d("TAG", "Đã có" + message_id_1);
                             sharedPreferences.edit().putString("message_id", message_id_1).commit();
                         } else if (snapshot.child(message_id_2).exists()) {
-                            Log.d("TAG", "Đã có" + message_id_2);
                             sharedPreferences.edit().putString("message_id", message_id_2).commit();
 
                         } else {
                             //Chưa có hội thoại giữa 2 người
-                            Log.d("TAG", "Chưa có và tiến hành tạo");
                             //Tiến hành thêm hội thoại.
                             //Tạo một message
                             Message message = new Message(message_id_1, user.getFullname());
