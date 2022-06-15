@@ -69,10 +69,15 @@ public class PasswordFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    //Khai báo các view
     View view;
+    //btnBackChangePassword: Nút trở về
     ImageView btnBackChangePassword;
+    //Nút hiện mật khẩu
     TextView txtShowPassword;
+    //Các edittext để nhập mật khẩu cũ, mật khẩu mới và xác nhận mật khẩu mới
     EditText edittextCurrentPassword,edittextNewPassword,edittextConfirmNewPassword;
+    //Nút xác nhận thay đổi
     Button btnConfirmChangePassword;
 
     @Override
@@ -173,6 +178,7 @@ public class PasswordFragment extends Fragment {
 
         return view;
     }
+    //Hàm để đăng xuất
     private void logout(){
         //Gán User là null và trả về trang login
         User_SingeTon user_singeTon = User_SingeTon.getInstance();

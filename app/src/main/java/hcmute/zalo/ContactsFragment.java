@@ -80,12 +80,15 @@ public class ContactsFragment extends Fragment {
     }
     //Khai báo các view sử dụng
     View view;
+    //Listview hiển thị danh sách bạn bè
     ListView lstFriends;
+    //Nếu không có bạn bè thì hiện textview này lên
     TextView txtNofriend;
     //Khai báo adapter
     UserAdapter userAdapter;
-    //Khai báo biến
+    //Mảng chứa danh sách bạn bè
     ArrayList<User> arrUser;
+    //Khai báo biến lưu thông tin người dùng hiện tại
     User main_user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,18 +103,18 @@ public class ContactsFragment extends Fragment {
         userAdapter = new UserAdapter(getActivity(),R.layout.user_row,arrUser);
         //Set adapter cho listview
         lstFriends.setAdapter(userAdapter);
-        //Bắt sự kiện click vào listview Item
-        lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Mở trang cá nhân của đối tượng lên
-                //Lưu user_id vào sharedPreferences
-                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
-                sharedPreferences.edit().putString("user_id", arrUser.get(i).getPhone()).commit();
-                //Chạy activity
-                startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
-            }
-        });
+//        //Bắt sự kiện click vào listview Item. Chuyển đến trang cá nhân người dùng được chọn
+//        lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                //Mở trang cá nhân của đối tượng lên
+//                //Lưu user_id vào sharedPreferences
+//                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
+//                sharedPreferences.edit().putString("user_id", arrUser.get(i).getPhone()).commit();
+//                //Chạy activity
+//                startActivity(new Intent(getActivity(), ViewUserPageActivity.class));
+//            }
+//        });
         //Lấy danh sách bạn bè
         //Sử dụng Mẫu SingleTon lấy user hiện tại ra
         main_user = User_SingeTon.getInstance().getUser();
@@ -158,7 +161,7 @@ public class ContactsFragment extends Fragment {
 
             }
         });
-
+        //Nhấn vào thì chuyển qua trang trò chuyện với người dùng đó
         lstFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -207,6 +210,7 @@ public class ContactsFragment extends Fragment {
                             sharedPreferences.edit().putString("message_id", message_id_1).commit();
 
                         }
+                        //Mở trang trò chuyện
                         startActivity(new Intent(getActivity(), ChatActivity.class));
                     }
 

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+    //Khai báo BottomNavigationView. Hiện thanh ở dưới màn hình
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         //Mặc định là navchats
         bottomNavigationView.setSelectedItemId(R.id.navchats);
     }
-    //Khở tạo các Fragment
+    //Khởi tạo các Fragment
     MoreFragment moreFragment = new MoreFragment();
     ListMessageFragment listMessageFragment = new ListMessageFragment();
     PhoneBookFragment phoneBookFragment = new PhoneBookFragment();
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
     }
-
+    //Biến để đếm số lượng lần bấm nút back của người dùng, Nếu là 2 thì thoát
     int counter = 0;
     @Override
     public void onBackPressed() {

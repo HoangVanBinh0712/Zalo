@@ -46,7 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         //Ánh xạ với các view object
         anhxa();
-        //Bắt sự kiện khi bấm vào Textview
+        //Bắt sự kiện khi bấm vào Textview txtRegisterToLogin.
+        //Chuyển sang LoginActitvity
         txtRegisterToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

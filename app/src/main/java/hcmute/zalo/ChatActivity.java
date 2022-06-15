@@ -74,23 +74,40 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class ChatActivity extends AppCompatActivity {
 
     //Khai báo các view và các biến được sử dụng
+    //Nút gửi tin nhắn.
     ImageView sendMessageButton;
+    //Hiển thị tên người đang nhắn tin
     TextView txtUserChatName;
+    //Vùng nhập tin nhắn
     EditText inputMessage;
+    //Thông tin người dùng hiện tại
     User main_user = User_SingeTon.getInstance().getUser();
+    //Danh sách các tin nhắn của 2 người
     ArrayList<MessageDetails> messageDetails;
+    //Vùng hiện danh sách các tin nhắn
     RecyclerView rcvChat;
+    //Adapter để hiện tin nhắn cho RecyclerView
     MessageDetailsAdapter messageDetailsAdapter;
+    //Dùng để tạo cuộn màn hình để tải thêm dữ liệu tin nhắn
     NestedScrollView idNestedSV;
+    //Đếm thời gian thu âm
     Chronometer recordTimer;
+    //Hiện avatar người nhắn tin
     CircleImageView imageProfileChat;
+    //Biến đếm số lượng tin nhắn cần tải lên
     int count = 0;
+    //Hiện thanh đang tải khi tải thêm tin nhắn
     ProgressBar progressBar;
+    //Hiện các nút gửi âm thanh, hình ảnh, nút trở về
     ImageView iconMedia, iconMicro,imageBack;
+    //Biến lưu id của cuộc trò chuyện, số điện thoại của người nhận
     String message_id, viewer;
+    //Hiện nút camera trong vùng nhập tin nhắn
     ImageView iconCamera;
     //Các biến dùng cho việc chọn hình ảnh từ gallery
+    //Biến để chia trường hợp khi lấy ảnh
     private int PICK_IMAGE_REQUEST = 22;
+    //Biến chứa Uri của hình ảnh sau khi chọn
     private Uri filePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
         messageDetailsAdapter = new MessageDetailsAdapter(ChatActivity.this,messageDetails);
         //Set adapter cho RecyclerView
         rcvChat.setAdapter(messageDetailsAdapter);
-        //Bắt sự kiện onClick
+        //Bắt sự kiện onClick. Nhấn vào hiện lên trang cá nhân của người nhận tin nhắn
         imageProfileChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +146,7 @@ public class ChatActivity extends AppCompatActivity {
                 startActivity(new Intent(ChatActivity.this, ViewUserPageActivity.class));
             }
         });
-        //Sự kiện khi nhập thông tin trong Edittext
+        //Sự kiện khi nhập thông tin trong Edittext khi có chữ thì ẩn các icon đi và khi không có sẽ hiện lên lại
         inputMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -161,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        //Bắt sự kiện onclick
+        //Bắt sự kiện onclick. Bấm vô trở lại trang trước
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +191,7 @@ public class ChatActivity extends AppCompatActivity {
         //lấy id của phòng chat trong SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("dataCookie", Context.MODE_MULTI_PROCESS);
         message_id = sharedPreferences.getString("message_id","");
-        //lấy id của người nhận
+        //lấy id của người nhận từ message_id
         if(main_user.getPhone().equals(message_id.substring(0,10))){
             viewer = message_id.substring(11);
         }
@@ -269,7 +286,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
-        //Sự kiện vuốt màn hình xuống
+        //Sự kiện vuốt màn hình xuống để tải thêm tin nhắn
         idNestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -305,7 +322,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-        //Bấm nút gửi đẻ gửi tin nhắn (dạng text)
+        //Bấm nút gửi đẻ gửi tin nhắn (dạng text).
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -353,7 +370,7 @@ public class ChatActivity extends AppCompatActivity {
                 return true;
             }
         });
-        //Bắt sự kiện click vào icon Mcro
+        //Bắt sự kiện click vào icon Micro 1 lần nửa để kết thúc ghi âm
         iconMicro.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -403,7 +420,7 @@ public class ChatActivity extends AppCompatActivity {
                 return false;
             }
         });
-        //Sự kiện khi nhấn vào IconCamera
+        //Sự kiện khi nhấn vào IconCamera. Xin quyền camera và bật camera để chụp ảnh
         iconCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -497,7 +514,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //Chọn ảnh
+        //Chọn ảnh xong vào đây
         if (requestCode == PICK_IMAGE_REQUEST    && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Lấy được uri của ảnh
             filePath = data.getData();
@@ -507,7 +524,7 @@ public class ChatActivity extends AppCompatActivity {
 
         }else if (requestCode == 0 && resultCode == RESULT_OK && data != null)
         {
-            //Chụp ảnh
+            //Chụp ảnh xong thì vào block này
             //Lấy bitmap của ảnh
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
             //Đổi bitmap thành byte array
@@ -621,8 +638,9 @@ public class ChatActivity extends AppCompatActivity {
                     });
         }
     }
+    //CHia trường hợp khi xin quyền xong
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
-
+        //Kiểm tra quyền của ứng dụng
     public boolean CheckPermissions() {
         // Kiểm tra các quyền có được cấp chưa
         //Quyền viết dữ liệu vào bộ nhớ
@@ -633,13 +651,15 @@ public class ChatActivity extends AppCompatActivity {
         int result2 = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED;
     }
+    //Xin quyền từ hệ thống
     private void RequestPermissions() {
         //Xin cấp quyền từ hệ thống
         ActivityCompat.requestPermissions(ChatActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE, CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
+    // Sau khi ta chọn chấp nhận hay từ chối sẽ trả kết quả vào hàm này
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // Sau khi ta chọn chấp nhận hay từ chối sẽ trả kết quả vào hàm này
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_AUDIO_PERMISSION_CODE:
@@ -660,7 +680,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
     //Khai báo biến dùng cho việc ghi âm
+    //Tên của file khi lưu
     private static String mFileName = null;
+    //Biến hệ thống dùng để ghi âm
     private MediaRecorder mRecorder;
 
     private void startRecording() {

@@ -65,12 +65,17 @@ public class UserAdapter extends BaseAdapter {
     }
     private class ViewHolder{
         //Giữ các view
+        //Textview hiện số điện thoại
         TextView txtUserPhone;
+        //Nút kết bạn
         ImageView btnAddFriend;
+        //Nút hiện hình ảnh của tin nhắn
         ShapeableImageView imageBoxChat;
         ConstraintLayout constraintRowUser;
+        //Nút xem trang cá nhân
         Button btnViewPage;
     }
+    //Lưu thông tin người dùng
     User main_user;
 
     @Override
@@ -141,7 +146,7 @@ public class UserAdapter extends BaseAdapter {
 
             }
         });
-        //Tạo sự kiện khi bấm nút kết bạn
+        //Tạo sự kiện khi bấm nút kết bạn. Gửi lời mời kết bạn
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +160,7 @@ public class UserAdapter extends BaseAdapter {
                 Toast.makeText(context, "Send Request Successfully to " + user.getFullname(), Toast.LENGTH_SHORT).show();
             }
         });
-        //Tạo sự kiện khi bấm vào nút xem trang cá nhân
+        //Tạo sự kiện khi bấm vào nút xem trang cá nhân. Hiện trang cá nhân của người dùng dược chọn khi nhấn vào
         holder.btnViewPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

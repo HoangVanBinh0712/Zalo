@@ -57,9 +57,12 @@ public class PhoneNumberFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    //Chức năng này chưa được hoàn thành
+    //Khai báo các view
     View view;
+    //Nút trở lại
     ImageView btnBack;
+    //Nút đổi số điện thoại
     Button btnChangePhone;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +80,8 @@ public class PhoneNumberFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountFragment).commit();
             }
         });
-        //Bấm nút changephone để chuyển sang trang đổi mk
+        //Bấm nút changephone để chuyển sang trang đổi số điện thoại
+        //Chức năng này chưa được hoàn thành
         btnChangePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

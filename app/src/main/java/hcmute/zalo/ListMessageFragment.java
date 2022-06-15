@@ -89,17 +89,29 @@ public class ListMessageFragment extends Fragment {
         }
     }
 
+    //Khai báo các view
+    //txtNoMessage: Khi listview không có phần tử thì hiện ra cho người dùng
     TextView txtNoMessage;
     View view;
+    //Thanh tìm kiếm để tìm kiếm
     SearchView searchView;
+    //Nút này để tải lại trang
     ImageView btn_more;
+    //Listview hiện các cuộc hội thoại
     ListView listviewMessage;
+    //Adapter người dùng
     UserAdapter adapter;
+    //Adapter tin nhắn
     MessageListAdapter messageListAdapter;
+    //Người dùng tìm thấy
     User found_user;
+    //Người dùng hiện tại
     User main_user;
+    //Mảng chứa người dùng
     ArrayList<User> users = new ArrayList<>();
+    //Mảng chưa cuộc hội thoại mà người dùng tham gia
     ArrayList<Participants> participantsList = new ArrayList<>();
+    //Biến dùng để tránh việc hàm getListParticipant bị gọi 2 lần liên tiếp
     boolean callParticipant = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,40 +133,53 @@ public class ListMessageFragment extends Fragment {
         messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
         //Đặt addapter cho listview
         listviewMessage.setAdapter(messageListAdapter);
-        //Bắt swh kiên onclcick
+        //Bắt swh kiên onclcick. Nhấn vào thì tải lại danh sách cuộc trò chuyện
         btn_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getListParticipant();
             }
         });
-        //Bắt sự kiện khi nhập chữ vào ô tìm kiếm
+        //Bắt sự kiện khi nhập chữ vào ô tìm kiếm.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.clearFocus();
                 return false;
             }
-
+            //Khi thay đổi thông tin tìm kiếm chạy vào hàm này
             @Override
             public boolean onQueryTextChange(String newText) {
+                //Khởi tạo adapter
                 adapter = new UserAdapter(getActivity(),R.layout.user_row,users);
+                //đặt adapter user cho listview
                 listviewMessage.setAdapter(adapter);
                 String search_phone = newText;
+                //Kiểm tra độ dài của số điện thoại
                 if(search_phone.length() == 10){
+                    //Clear Mảng tham gia hội thoại
                     participantsList.clear();
+                    //Tạo kết nối đến bảng users và dọc dữ liệu
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+                    //addListenerForSingleValueEvent sự kiện đọc 1 lần
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.child(search_phone).exists()){
+                                //Nếu tồn tại số điện thoại tìm kiếm
+                                //Lưu lại thông tin người dùng đó
                                 found_user = snapshot.child(search_phone).getValue(User.class);
+                                //Làm mới mảng người dùng
                                 users.clear();
+                                //Thêm một phần tử
                                 users.add(found_user);
+                                //Thông báo thay đổi cho userdapter
                                 adapter.notifyDataSetChanged();
+                                //Hiện listview
                                 listviewMessage.setVisibility(View.VISIBLE);
                                 txtNoMessage.setVisibility(View.INVISIBLE);
                             }else{
+                                //Nếu không có hiện txtNoMessage
                                 listviewMessage.setVisibility(View.INVISIBLE);
                                 txtNoMessage.setVisibility(View.VISIBLE);
                             }
@@ -165,8 +190,10 @@ public class ListMessageFragment extends Fragment {
                         }
                     });
                 }else if(search_phone.length() == 0) {
+                    //Nếu độ dài sđt là 0 thì tải lại danh sách nhắn tin
                       getListParticipant();
                 }else{
+                    //Còn lại thì k làm gì
                     users.clear();
                     adapter.notifyDataSetChanged();
                 }
@@ -174,6 +201,7 @@ public class ListMessageFragment extends Fragment {
             }
         });
         listviewMessage.setClickable(true);
+        //Sự kiện khi nhấn vào listview. Chuyển đến trang trò chuyện của 2 người
         listviewMessage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -239,11 +267,14 @@ public class ListMessageFragment extends Fragment {
 
             }
         });
+        //Lấy danh sách trò chuyện tin nhắn
         getListParticipant();
         return view;
     }
     //lấy danh sách những người mà đã nhắn tin
+    //Biến để dọc ghi dữ liệu trên cơ sở dữ liệu
     DatabaseReference myParticipantRef;
+    //Biến sự kiện
     ValueEventListener listener;
 
     private void getListParticipant(){
@@ -271,6 +302,7 @@ public class ListMessageFragment extends Fragment {
                 int len = participantsList.size();
                 for(int i = 0; i < len; i++)
                 {
+                    //Ánh xạ qua bảng chi tiết tin nhắn để lấy tin nhắn mới nhất
                     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("message_details");
                     int finalI = i;
                     myRef.child(participantsList.get(i).getMessageid()).limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -285,6 +317,7 @@ public class ListMessageFragment extends Fragment {
                                 arrDate.add(new Date(0,0,0));
 
                             }
+                            //Mảng arrDate chứa thời gian của tin nhắn mới nhất của hai người dùng
                             //Sắp xếp tin nhắn theo thứ tự thời gian gần nhất
                             if(finalI == len - 1 )
                             {
@@ -315,7 +348,8 @@ public class ListMessageFragment extends Fragment {
                                             }
                                         }
                                 }
-
+                                //Hiện listview lên
+                                //Cài đặt messageListAdapter cho listview
                                 txtNoMessage.setVisibility(View.INVISIBLE);
                                 listviewMessage.setVisibility(View.VISIBLE);
                                 messageListAdapter = new MessageListAdapter(getActivity(),R.layout.message_row,participantsList);
@@ -328,6 +362,7 @@ public class ListMessageFragment extends Fragment {
                         }});
                 }
                 if (participantsList.size() == 0) {
+                    //Nếu không có danh sách người đã nhắn tin hiển thị là không có
                     txtNoMessage.setVisibility(View.VISIBLE);
                     listviewMessage.setVisibility(View.INVISIBLE);
 
@@ -343,6 +378,7 @@ public class ListMessageFragment extends Fragment {
 
     }
 
+    //Khi view bị tắt đi. tiến hành hủy Eventlistener: listener và làm mới lại listview.
     @Override
     public void onDestroy() {
         super.onDestroy();

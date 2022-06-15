@@ -77,8 +77,11 @@ public class MoreFragment extends Fragment {
     }
 //Khai báo các View
     View view;
+    //Khai báo các layout hiển thị chức năng
     LinearLayout linearAccount,lineartop,linearPrivacy;
+    //CircleImageView Hiển thị hình ảnh của người dùng
     private CircleImageView profile_image;
+    //TextView: Hiển thị tên và số điện thoại của ngời dùng
     private TextView txtUserPhone,txtUserName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,7 +104,7 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(getActivity(), loginActivity.class));
             getActivity().finish();
         }
-        //Bắt sự kiện onclick
+        //Bắt sự kiện onclick. Chuyển đến AccountFragment
         linearAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +113,7 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountFragment).commit();
             }
         });
-        //Bắt sự kiện onclick
+        //Bắt sự kiện onclick. Chuyển đến AccountInformationFragment
         lineartop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +122,7 @@ public class MoreFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, accountInformationFragment).commit();
             }
         });
-        //Bắt sự kiện onclick
+        //Bắt sự kiện onclick. Chuyển đến PrivacyFragment
         linearPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

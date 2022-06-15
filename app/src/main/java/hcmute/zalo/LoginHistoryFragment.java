@@ -72,12 +72,17 @@ public class LoginHistoryFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    //Khai báo các view
     private View view;
+    //Nút trở về
     private ImageView btnBackPageHistory;
+    //List view hiện danh sách lịch sử đăng nhập
     private ListView listviewHistory;
+    //Adapter cho listview
     LoginHistoryAdapter adapter;
+    //Mảng chứa lịch sử đăng nhập
     ArrayList<LoginHistory> historyList;
+    //Người dùng hiện tại
     User user;
     User_SingeTon user_singeTon;
 
@@ -96,7 +101,7 @@ public class LoginHistoryFragment extends Fragment {
         adapter = new LoginHistoryAdapter(getActivity(),R.layout.history_row,historyList);
         listviewHistory.setAdapter(adapter);
 
-        //Bắt sự kiện khi bấm vào nút back
+        //Bắt sự kiện khi bấm vào nút back. Trở về AccountFragment
         btnBackPageHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +117,7 @@ public class LoginHistoryFragment extends Fragment {
 
         return view;
     }
-
+    //Hàm lấy lịch sử đăng nhập và đưa lên listview
     private void getListHistory() {
         //Kết nối cơ sở dữ liệu và truy xuất vào bảng lịch sử đăng nhập
         FirebaseDatabase database = FirebaseDatabase.getInstance();

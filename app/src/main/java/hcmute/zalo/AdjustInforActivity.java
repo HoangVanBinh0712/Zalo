@@ -47,11 +47,13 @@ import hcmute.zalo.model.User;
 
 public class AdjustInforActivity extends AppCompatActivity {
 
-    //Các text view
+    //Các text view để hiển thị tên các chức năng và khi bấm vào hiển thị giao diện cho các chức năng đó
     private TextView txtUserName,txtInformation,txtChangeAvatar,txtChangeBackground,txtChangeDescription;
+    //Nút trở về
     private ImageView btnBack;
     //Gọi mẫu single ton lấy ra user
     User_SingeTon user_singeTon = User_SingeTon.getInstance();
+    //user là thông tin người dùng hiện tại
     User user = user_singeTon.getUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         //Hiện tên của user trên txtUsername
         txtUserName.setText(user.getFullname());
         //Bắt sự kiện cho các textview khi click vào
-        //Cho textview thông tin
+        //Cho textview thông tin. Bấm vào hiện lên trang đổi thông tin
         txtInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +77,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 startActivity(new Intent(AdjustInforActivity.this,ChangeInformationActivity.class));
             }
         });
-        //Cho textview đổi ảnh đại diện
+        //Cho textview đổi ảnh đại diện. Bấm vào hiện lên dialog chọn kiểu đổi ảnh đại diện
         txtChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +89,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 //Trong dialog ảnh đại diện nhấn vào dòng chọn ảnh trong điện thoại sẽ hiện lên hình ảnh trong điện thoại cho người dùng chọn
                 //Ánh xạ
                 LinearLayout linearChooseImageAvatar = dialog.findViewById(R.id.linearChooseImageAvatar);
-                //Bắt sự kiện click
+                //Bắt sự kiện click. Bấm vào mở danh mục ảnh để chọn ảnh đại diện
                 linearChooseImageAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -98,7 +100,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 });
                 //Ánh xạ
                 LinearLayout linearViewAvatar = dialog.findViewById(R.id.linearViewAvatar);
-                //Bắt sự kiện click
+                //Bắt sự kiện click. bấm vào để xem phóng to ảnh đại diện
                 linearViewAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -146,7 +148,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 dialog.show();
                 //Ánh xạ
                 LinearLayout linearChooseBackgroundImage = dialog.findViewById(R.id.linearChooseBackgroundImage);
-                //Bắt sự kiện click
+                //Bắt sự kiện click. Bấm vào sẽ hiện danh mục hình ảnh chọn ảnh cho ảnh bìa
                 linearChooseBackgroundImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -156,7 +158,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 });
                 //Ánh xạ
                 LinearLayout linearViewBackground = dialog.findViewById(R.id.linearViewBackground);
-                //Bắt sự kiện click
+                //Bắt sự kiện click. Bấm vào để xem phóng to ảnh bìa
                 linearViewBackground.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -193,7 +195,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 });
             }
         });
-        //Cho textview đổi giới thiệu bản thân
+        //Cho textview đổi giới thiệu bản thân. Nhấn vào hiện lên dialog đổi giới thiệu bản thân
         txtChangeDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +203,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 DialogChangeDescription();
             }
         });
-        // Cho nút Back
+        // Cho nút Back. Nhấn bào thì tắt activity
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,8 +212,9 @@ public class AdjustInforActivity extends AppCompatActivity {
         });
     }
     //Các view cho DialogChangeDescription
+    //Hiển thị giới thiệu bản thân
     private EditText txtDescription;
-    //Các button
+    //Các button. nút confirm để xác nhận thay đổi, cancel để hủy
     private Button btnConfirmEditDescription,btnCancelEditDescription;
     public void DialogChangeDescription() {
         final Dialog dialog = new Dialog(this);
@@ -221,9 +224,9 @@ public class AdjustInforActivity extends AppCompatActivity {
         btnConfirmEditDescription = dialog.findViewById(R.id.btnConfirmEditDescription);
         txtDescription = dialog.findViewById(R.id.txtDescription);
 
-        //Đưa giới thiệu của người dùng vào edittext
+        //Đưa giới thiệu của người dùng vào edittext để hiển thị
         txtDescription.setText(user.getDescription());
-        //Tạo sự kiện click cho nút hủy
+        //Tạo sự kiện click cho nút hủy. Nhấn vào tắt dialog
         btnCancelEditDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -231,7 +234,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        //Tạo sự kiện cho nút xác nhận
+        //Tạo sự kiện cho nút xác nhận. Nhấn vào thì cập nhật lại giới thiệu
         btnConfirmEditDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -250,7 +253,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-    //Khai báo các biến cục bộ
+    //Khai báo các biến cục bộ dùng cho chọn ảnh
     private final int PICK_IMAGE_REQUEST = 22;
     private int type;
     private Uri filePath;
@@ -266,7 +269,7 @@ public class AdjustInforActivity extends AppCompatActivity {
         //Mở hoạt động chọn ảnh
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
-    //Sau khi chọn ảnh xong chạy vào hàm này
+    //Sau khi chọn ảnh, chụp ảnh xong chạy vào hàm này
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -299,20 +302,22 @@ public class AdjustInforActivity extends AppCompatActivity {
                 && resultCode == RESULT_OK
                 && data != null)
         {
+            //Nếu là chụp ảnh
+            //Lấy hình ảnh vừa chụp
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            //Chuyển bitmap thành byte
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
             byte[] byteArray = stream.toByteArray();
-            //Từ camera
+            //Lấy thời gian hiện tại
             Date today = new Date();
             String pic_id = Long.toString(today.getTime());
             // Hiện ProgressDialog trong khi đang tải lên
             ProgressDialog progressDialog
                     = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
-
             progressDialog.show();
-            //Khai báo FirebaseStorage
+            //Khai báo FirebaseStorage để đọc và viết lên cơ sở dữ liệu
             FirebaseStorage storage;
             StorageReference storageReference;
 
@@ -320,6 +325,7 @@ public class AdjustInforActivity extends AppCompatActivity {
             storageReference = storage.getReference();
             // Đi vào nhánh con
             StorageReference ref;
+            //Type = 1 là ảnh đại diện, 0 là ảnh bìa
             if(type == 1){
                 ref = storageReference.child("images/" + user.getPhone() + "_avatar");
             }else
@@ -455,6 +461,7 @@ public class AdjustInforActivity extends AppCompatActivity {
                     });
         }
     }
+    //Biến dùng chia trường hợp khi cấp quyền cho ứng dụng
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     // Kiểm tra các quyền có được cấp chưa
     public boolean CheckPermissions() {
@@ -462,16 +469,16 @@ public class AdjustInforActivity extends AppCompatActivity {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED;
     }
+    //Xin cấp quyền từ hệ thống
     private void RequestPermissions() {
-        //Xin cấp quyền từ hệ thống
         ActivityCompat.requestPermissions(AdjustInforActivity.this, new String[]{CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
-
+    //Sau khi được cấp quyền, hay từ chối chạy vào hàm này
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Sau khi ta chọn chấp nhận hay từ chối sẽ trả kết quả vào hàm này
         switch (requestCode) {
+            //Bắt trường hợp
             case REQUEST_AUDIO_PERMISSION_CODE:
                 if (grantResults.length > 0) {
                     boolean permissionToCamera = grantResults[0] == PackageManager.PERMISSION_GRANTED;

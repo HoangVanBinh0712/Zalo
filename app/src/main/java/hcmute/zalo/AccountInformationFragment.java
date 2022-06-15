@@ -100,14 +100,22 @@ public class AccountInformationFragment extends Fragment {
         }
     }
 
+    //Khai báo các view
     private View view;
+    //background chứa ảnh bìa, btnBack là nút trở lại, btnEditInfor nhấn vào để hiện thêm chức năng
     private ImageView background,btnBack,btnEditInfor;
+    //avatar chứa ảnh đại diện
     private CircleImageView avatar;
+    //View hiển thị tên và mô tả bản thân
     private TextView txtfullname, txtdescription;
+    //Biến dùng để xác nhận hàm xử lý sau khi chọn ảnh thành công
     private final int PICK_IMAGE_REQUEST = 22;
+    //Uri của hình ảnh sau khi chọn từ danh mục hình ảnh
     private Uri filePath;
+    //Biến của Firebase. Để viết và đọc dữ liệu từ Firebase Storage
     FirebaseStorage storage;
     StorageReference storageReference;
+    //Biến lưu thông tin người dùng
     User user;
     User_SingeTon user_singeTon;
     private int type;
@@ -122,14 +130,14 @@ public class AccountInformationFragment extends Fragment {
         btnEditInfor = (ImageView) view.findViewById(R.id.btnEditInfor);
         txtfullname = view.findViewById(R.id.txtFullName);
         txtdescription = view.findViewById(R.id.txtDescription);
-        //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm).
+        //Tạo sự kiện onclick cho nút sửa thông tin (nút 3 chấm). Nhấn vào để hiện thêm chức năng thay đổi
         btnEditInfor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(),AdjustInforActivity.class));
             }
         });
-        //Tạo sự kiên click cho ảnh bìa, ảnh đại diện. show lên dialog để thay đổi ảnh bìa, ảnh đại diện
+        //Tạo sự kiên click cho ảnh bìa. Nhấn vào show lên dialog để thay đổi ảnh bìa
         background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,6 +185,7 @@ public class AccountInformationFragment extends Fragment {
                 });
             }
         });
+        //Tạo sự kiên click cho ảnh đại diện. Nhấn vào show lên dialog để thay đổi ảnh đại diện
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,7 +251,7 @@ public class AccountInformationFragment extends Fragment {
 
         return view;
     }
-
+    //Hàm này dùng để đưa thông tin người dùng vào các view để hiện thị
     void putDataToView(){
         //Dùng mẫu thiết kế singleTon để lưu lại user sau khi login
         user_singeTon = User_SingeTon.getInstance();
@@ -328,10 +337,11 @@ public class AccountInformationFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select image..."), PICK_IMAGE_REQUEST);
     }
-    //Sau khi chọn ảnh xong chạy vào hàm này
+    //Sau khi chọn ảnh, chụp ảnh xong chạy vào hàm này
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Chọn ảnh xong chạy vào điều kiện này
         if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == getActivity().RESULT_OK
                 && data != null
@@ -345,7 +355,7 @@ public class AccountInformationFragment extends Fragment {
                 // Chuyển thành bitmap và đưa vào ảnh đại diện
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),filePath);
                 UserImageBitmap_SingleTon userImageBitmap_singleTon = UserImageBitmap_SingleTon.getInstance();
-
+                //Type 1 là ảnh đại diện, 0 là ảnh bìa
                 if(this.type == 1) {
                     userImageBitmap_singleTon.setAnhdaidien(bitmap);
                     avatar.setImageBitmap(bitmap);
@@ -364,6 +374,7 @@ public class AccountInformationFragment extends Fragment {
                 && resultCode == getActivity().RESULT_OK
                 && data != null)
         {
+            //Sau khi chụp ảnh bằng camera xong chạy vào block này
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             selectedImage.compress(Bitmap.CompressFormat.PNG,100,stream);
@@ -517,18 +528,22 @@ public class AccountInformationFragment extends Fragment {
                     });
         }
     }
+    //Biến dùng để chia trường hợp xin permission từ hệ thống
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
+    //Hàm kiểm tra quyền của ứng dụng
     public boolean CheckPermissions() {
         // Kiểm tra các quyền có được cấp chưa
         //Quyền dùng máy ảnh
         int result = ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), CAMERA);
         return result == PackageManager.PERMISSION_GRANTED;
     }
+    //Hàm dùng để xin quyền sử dụng camera
     private void RequestPermissions() {
         //Xin cấp quyền từ hệ thống
         ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
+    //Sau khi người dùng xác nhận hay từ chối cấp quyền sẽ chạy hàm này
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

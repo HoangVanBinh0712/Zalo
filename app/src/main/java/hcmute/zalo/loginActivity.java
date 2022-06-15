@@ -79,7 +79,7 @@ public class loginActivity extends AppCompatActivity {
         edtPhonenum = findViewById(R.id.edtPhonenum);
         btnLogin = findViewById(R.id.btnLogin);
         checkbox_showPassword = findViewById(R.id.checkbox_showPassword);
-        // Sự kiện click nút đăng nhập
+        // Sự kiện click nút đăng nhập. kiểm tra thông tin
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

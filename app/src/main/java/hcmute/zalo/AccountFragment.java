@@ -65,18 +65,21 @@ public class AccountFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    //Khai báo cáo View
     View view;
+    //Nút back để trờ về trang trước
     ImageView btnBack;
+    //Các text view hiện các chức năng
     TextView txtChangePassword, txtLoginHistory,txtLogOut,txtAddFriendRequest,txtPhonenumber;
     LinearLayout linearChangeNumber;
+    //Biến chưa thông tin người dùng hiện tại
     User main_user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //Anh xạ các view
+        //Dùng singleTon để lấy user hiện tại
         main_user = User_SingeTon.getInstance().getUser();
+        //Anh xạ các view
         view = (View)inflater.inflate(R.layout.fragment_account, container, false);
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
         txtChangePassword = (TextView) view.findViewById(R.id.txtChangePassword);
@@ -86,7 +89,7 @@ public class AccountFragment extends Fragment {
         txtAddFriendRequest = view.findViewById(R.id.txtAddFriendRequest);
         txtPhonenumber = view.findViewById(R.id.txtPhonenumber);
         txtPhonenumber.setText("(+84) " + main_user.getPhone());
-        //bắt sự kiện onclick cho nút back
+        //bắt sự kiện onclick cho nút back -> Khi nhấn vào sẽ quay về trang trước
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,7 +98,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, moreFragment).commit();
             }
         });
-        //bắt sự kiện onclick khi nhấn vào change password
+        //bắt sự kiện onclick khi nhấn vào hiển thị trang đổi mật khẩu
         txtChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +107,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, passwordFragment).commit();
             }
         });
-        //Bắt sự kiện onClick của textview linearChangeNumber
+        //Bắt sự kiện onClick của textview linearChangeNumber. Nhấn vào chuyển đến trang đổi số điện thoại (Chức năng này chưa được cài đặt)
         linearChangeNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +116,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, phoneNumberFragment).commit();
             }
         });
-        //Bắt sự kiện onClick của textview txtLoginHistory
+        //Bắt sự kiện onClick của textview txtLoginHistory. Bấm vào hiển thị lên trang hiện danh sách lịch sử đăng nhập
         txtLoginHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +125,7 @@ public class AccountFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,loginHistoryFragment).commit();
             }
         });
-        //Bắt sự kiện onClick của textview txtLogout
+        //Bắt sự kiện onClick của textview txtLogout. Nhấn vào sẽ đăng xuất và chuyển đến trang đăng nhập
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,7 +146,8 @@ public class AccountFragment extends Fragment {
 
             }
         });
-        //Bắt sự kiện onClick của textview txtAddFriendRequest
+        //Bắt sự kiện onClick của textview txtAddFriendRequest.
+        // Nhấn vào hiển thị lên trang hiện danh sách cái lời mời kết bạn, cũng như lời mời kết bạn đã gửi
         txtAddFriendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -20,7 +20,7 @@ public class BeginActivity extends AppCompatActivity {
         setContentView(R.layout.hello_screen);
         //Ánh xạ Button "btn_start" bên file xml
         btn_start = findViewById(R.id.btn_start);
-        //Bắt sự kiện khi bấm vào Button
+        //Bắt sự kiện khi bấm vào Button. Nhấn vào chuyển sang trang login
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

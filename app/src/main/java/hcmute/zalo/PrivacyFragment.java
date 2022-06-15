@@ -56,8 +56,10 @@ public class PrivacyFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    //Chức năng này chưa được hoàn thành
     //Khai báo các view
     View view;
+    //Nút trở lại
     ImageView btnBack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +67,7 @@ public class PrivacyFragment extends Fragment {
         // Ánh xạ các view
         view = inflater.inflate(R.layout.fragment_privacy, container, false);
         btnBack = (ImageView) view.findViewById(R.id.btnBack);
-        //Bắt sự kiện onclick
+        //Bắt sự kiện onclick bấm vào trở lại MoreFragment
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
